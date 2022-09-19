@@ -91,6 +91,7 @@ def run_test(input_data_path):
 
 if __name__ == '__main__':
     # input_data_dir = "C:\\Glossary_Terms\\datasets\\"
-    # input_data_dir = '../../Desktop/jupyter/office_project/acryl_glossary_term/dataset/'
+    # input_data_dir = '../../../../../../jupyter/office_project/acryl_glossary_term/dataset/'
     input_data_dir = './'
     run_test(input_data_dir)
+

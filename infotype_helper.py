@@ -457,3 +457,88 @@ def inspect_for_full_name(metadata, values, config):
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
     return confidence_level, debug_info
+
+
+def inspect_for_age(metadata, values, config):
+    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
+    metadata_score = {}
+    blank_metadata = {}
+    debug_info = {}
+
+    # Values logic
+    if metadata_weights.get(VALUES, 0) > 0:
+        values_score = 0
+        try:
+            if config[VALUES][PREDICTION_TYPE] == 'regex':
+                raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
+            elif config[VALUES][PREDICTION_TYPE] == 'library':
+                values_series = pd.Series(values).dropna()
+                # Check if column is convertible to int dtype
+                int_col = values_series.astype(int)
+                # Check is fraction values are present
+                bool_out = np.round(values_series) == values_series
+                if bool_out.all():
+                    max_val = int_col.max()
+                    min_val = int_col.min()
+                    age_range = max_val - min_val
+                    num_unique = int_col.nunique()
+                    if max_val <= 120 and min_val >= 0:
+                        # Add 0.7 score if all values are within [0, 120]
+                        values_score += 0.7
+                        # Add 0.1 score if range is more than np.minimum(len(df)/50, 60)
+                        if age_range > np.minimum(len(values) / 50, 60):
+                            values_score += 0.1
+                        # Add 0.2 score if num unique values is more than np.minimum(len(df)/50, 40)
+                        if num_unique >= np.minimum(len(values) / 50, 40):
+                            values_score += 0.2
+                    else:
+                        values_score = 0
+                else:
+                    values_score = 0
+            else:
+                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+        except Exception as e:
+            # traceback.print_exc()
+            # values_score = 0
+            pass
+        metadata_score[DEBUG_INFO_VALUES] = values_score
+
+    # Name Logic
+    if metadata_weights.get(NAME, 0) > 0:
+        if metadata.name == '':
+            blank_metadata[DEBUG_INFO_NAME] = True
+            name_score = 0
+        else:
+            blank_metadata[DEBUG_INFO_NAME] = False
+            name_score = match_regex(metadata.name, config[NAME][REGEX])
+        metadata_score[DEBUG_INFO_NAME] = name_score
+
+    # Description_Logic
+    if metadata_weights.get(DESCRIPTION, 0) > 0:
+        if metadata.description == '':
+            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
+            description_score = 0
+        else:
+            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
+            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+
+    # Datatype_Logic
+    if metadata_weights.get(DATATYPE, 0) > 0:
+        if metadata.datatype == '':
+            blank_metadata[DEBUG_INFO_DATATYPE] = True
+            datatype_score = 0
+        else:
+            blank_metadata[DEBUG_INFO_DATATYPE] = False
+            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+
+    confidence_level = 0
+    for key in metadata_score.keys():
+        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
+        if blank_metadata.get(key, ""):
+            debug_info[key] = f"0.0 (Blank {key} Metadata)"
+        else:
+            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    confidence_level = np.round(confidence_level, 2)
+    return confidence_level, debug_info
