@@ -8,7 +8,9 @@ import re
 from infotype_utils import match_regex, match_datatype, match_regex_for_values
 from constants import *
 
-nlp = spacy.load('en_core_web_sm')
+nlp_english = spacy.load('en_core_web_sm')
+nlp_multilanguage = spacy.load("xx_ent_wiki_sm")
+nlp_list = [nlp_english, nlp_multilanguage]
 
 
 def inspect_for_email_address(metadata, values, config):
@@ -20,26 +22,18 @@ def inspect_for_email_address(metadata, values, config):
     # Value Logic
     if metadata_weights.get(VALUES, 0) > 0:
         values_score = 0
-        try:
-            values = pd.Series(values).astype(str)
-            # values = [str(val) for val in values]  # TODO: check for alternate approach in python to improve time
-            #  complexity
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
-                values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise "Currently prediction type 'library' is not supported for infotype Email Address"
-            else:
-                raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
-        except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+        if config[VALUES][PREDICTION_TYPE] == 'regex':
+            values_score = match_regex_for_values(values, config[VALUES][REGEX])
+        elif config[VALUES][PREDICTION_TYPE] == 'library':
+            raise "Currently prediction type 'library' is not supported for infotype Email Address"
+        else:
+            raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
         values_score = np.round(values_score, 2)
         metadata_score[DEBUG_INFO_VALUES] = values_score
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
@@ -49,7 +43,7 @@ def inspect_for_email_address(metadata, values, config):
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -59,8 +53,7 @@ def inspect_for_email_address(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        # TODO: Change string comparison to "if not metadata.datatype or not metadata.datatype.strip()"
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -93,17 +86,21 @@ def inspect_for_street_address(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 raise "Currently prediction type 'regex' is not supported for infotype Street Address"
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                entity_counts = {}
+                entity_count = 0
+                entity_of_interest = ["FAC", "LOC", "ORG"]
                 for value in values:
-                    doc = nlp(value)
-                    for ent in doc.ents:
-                        if entity_counts.get(ent.label_, -1) == -1:
-                            entity_counts[ent.label_] = 0
-                        entity_counts[ent.label_] += 1
-                all_loc_score = 1.5 * (entity_counts.get("FAC", 0) +
-                                       1.5 * entity_counts.get("LOC", 0) +
-                                       entity_counts.get("ORG", 0)) / len(values)
-                values_score = np.minimum(all_loc_score, 1)
+                    for nlp in nlp_list:
+                        doc = nlp(value)
+                        entity_flag_for_language = 0
+                        for ent in doc.ents:
+                            if ent.label_ in entity_of_interest:
+                                entity_count += 1.5
+                                entity_flag_for_language = 1
+                                break
+                        if entity_flag_for_language == 1:
+                            break
+                name_score = entity_count / len(values)
+                values_score = np.minimum(name_score, 1)
             else:
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
         except Exception as e:
@@ -115,7 +112,7 @@ def inspect_for_street_address(metadata, values, config):
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
@@ -125,7 +122,7 @@ def inspect_for_street_address(metadata, values, config):
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -135,7 +132,7 @@ def inspect_for_street_address(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -151,6 +148,7 @@ def inspect_for_street_address(metadata, values, config):
         else:
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info
 
 
@@ -173,7 +171,7 @@ def inspect_for_gender(metadata, values, config):
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
             if values_score == 0:
                 if values.nunique() <= 5:  # TODO: check possible appropriate unique values of gender
-                    values_score = 0.5  # TODO: instead of 0.5 let's use weight as 0.3
+                    values_score = 0.3  # TODO: instead of 0.5 let's use weight as 0.3
         except Exception as e:
             # traceback.print_exc()
             # values_score = 0
@@ -183,17 +181,17 @@ def inspect_for_gender(metadata, values, config):
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
             blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.description, config[NAME][REGEX])
+            name_score = match_regex(metadata.name, config[NAME][REGEX])
         metadata_score[DEBUG_INFO_NAME] = name_score
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -203,7 +201,7 @@ def inspect_for_gender(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -219,6 +217,7 @@ def inspect_for_gender(metadata, values, config):
         else:
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info
 
 
@@ -245,14 +244,13 @@ def inspect_for_credit_card_number(metadata, values, config):
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
         except Exception as e:
             # traceback.print_exc()
-            # values_score = 0 # TODO: do we require it to set it to 0?
             pass
         values_score = np.round(values_score, 2)
         metadata_score[DEBUG_INFO_VALUES] = values_score
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
@@ -262,7 +260,7 @@ def inspect_for_credit_card_number(metadata, values, config):
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -272,7 +270,7 @@ def inspect_for_credit_card_number(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -288,6 +286,7 @@ def inspect_for_credit_card_number(metadata, values, config):
         else:
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info
 
 
@@ -348,7 +347,7 @@ def inspect_for_phone_number(metadata, values, config):
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
@@ -358,7 +357,7 @@ def inspect_for_phone_number(metadata, values, config):
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -368,7 +367,7 @@ def inspect_for_phone_number(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -384,6 +383,7 @@ def inspect_for_phone_number(metadata, values, config):
         else:
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info
 
 
@@ -400,15 +400,22 @@ def inspect_for_full_name(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                entity_counts = {}
+                entity_count = 0
+                entity_of_interest = ["PERSON"]
                 for value in values:
-                    doc = nlp(value)
-                    for ent in doc.ents:
-                        if entity_counts.get(ent.label_, -1) == -1:
-                            entity_counts[ent.label_] = 0
-                        entity_counts[ent.label_] += 1
-                values_score = (entity_counts.get("PERSON")) / len(values)
-                values_score = np.minimum(values_score, 1)
+                    for nlp in nlp_list:
+                        doc = nlp(value)
+                        entity_flag_for_language = 0
+                        for ent in doc.ents:
+                            if ent.label_ in entity_of_interest:
+                                entity_count += 1
+                                entity_flag_for_language = 1
+                                break
+                        if entity_flag_for_language == 1:
+                            break
+                name_score = entity_count / len(values)
+
+                values_score = np.minimum(name_score, 1)
             else:
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
         except Exception as e:
@@ -420,7 +427,7 @@ def inspect_for_full_name(metadata, values, config):
 
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
+        if not metadata.name or not metadata.name.strip():
             blank_metadata[DEBUG_INFO_NAME] = True
             name_score = 0
         else:
@@ -430,7 +437,7 @@ def inspect_for_full_name(metadata, values, config):
 
     # Description_Logic
     if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
+        if not metadata.description or not metadata.description.strip():
             blank_metadata[DEBUG_INFO_DESCRIPTION] = True
             description_score = 0
         else:
@@ -440,7 +447,7 @@ def inspect_for_full_name(metadata, values, config):
 
     # Datatype_Logic
     if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
+        if not metadata.datatype or not metadata.datatype.strip():
             blank_metadata[DEBUG_INFO_DATATYPE] = True
             datatype_score = 0
         else:
@@ -456,6 +463,7 @@ def inspect_for_full_name(metadata, values, config):
         else:
             debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info
 
 

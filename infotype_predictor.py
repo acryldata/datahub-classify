@@ -1,5 +1,6 @@
 from supported_infotypes import infotypes_to_use
 from helper_classes import InfotypeProposal
+import pandas as pd
 
 
 def get_infotype_function_mapping():
@@ -27,9 +28,9 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
             config_dict = global_config[infotype]
 
             # call the infotype prediction function
-            # TODO: remove all None values from the list of values
             # TODO: If a percentage of samples are None (e.g. 70-80 %) then raise a warning
             # (confidence is calculated over only 20-30% of values)
+            column_info.values = pd.Series(column_info.values).dropna()
             confidence_level, debug_info = infotype_fn(column_info.metadata, column_info.values, config_dict)
 
             if confidence_level > confidence_level_threshold:
