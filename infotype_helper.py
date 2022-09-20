@@ -5,23 +5,20 @@ import traceback
 import phonenumbers
 import re
 
-from infotype_utils import match_regex, match_datatype, match_regex_for_values
+from infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
 from constants import *
 
 nlp_english = spacy.load('en_core_web_sm')
-nlp_multilanguage = spacy.load("xx_ent_wiki_sm")
-nlp_list = [nlp_english, nlp_multilanguage]
+spacy_models_list = [nlp_english]
 
 
 def inspect_for_email_address(metadata, values, config):
-    # TODO: change the variable name "metadata_weights" to "prediction_factors_weights"
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    # TODO: change the variable name "prediction_factors_weights" to "prediction_factors_weights"
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Value Logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         if config[VALUES][PREDICTION_TYPE] == 'regex':
             values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -30,85 +27,65 @@ def inspect_for_email_address(metadata, values, config):
         else:
             raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # TODO: Keep only debug_info dict,
     # TODO: probably we don't require two separate dictionaries (blank_metadata & metadata_score)
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
+
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
     # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
-
     return confidence_level, debug_info
 
 
 def inspect_for_street_address(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Values logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 raise "Currently prediction type 'regex' is not supported for infotype Street Address"
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
-                entity_of_interest = ["FAC", "LOC", "ORG"]
+                entities_of_interest = ["FAC", "LOC", "ORG"]
+                weight = 1.5
                 for value in values:
                     # TODO: think of spacy common code into a function,
                     # TODO: use this common function at in other functions (inspect_for_full_name)
                     # TODO: rename nlp_list to spacy_model_list, also think of renaming 'nlp' to some intuitive name
-                    for nlp in nlp_list:
-                        doc = nlp(value)
-                        entity_flag_for_language = 0
-                        for ent in doc.ents:
-                            if ent.label_ in entity_of_interest:
-                                entity_count += 1.5
-                                # TODO: see if we have break label feature in python then we don't need following flag
-                                entity_flag_for_language = 1
-                                break
-                        if entity_flag_for_language == 1:
-                            break
-                name_score = entity_count / len(values)
-                values_score = np.minimum(name_score, 1)
+                    if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                        entity_count += 1*weight
+                entities_score = entity_count / len(values)
+                values_score = np.minimum(entities_score, 1)
             else:
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
         except Exception as e:
@@ -116,58 +93,47 @@ def inspect_for_street_address(metadata, values, config):
             # values_score = 0
             pass
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
 
     return confidence_level, debug_info
 
 
 def inspect_for_gender(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Value Logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             values = pd.Series(values).astype(str)
@@ -185,58 +151,47 @@ def inspect_for_gender(metadata, values, config):
             # values_score = 0
             pass
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
 
     return confidence_level, debug_info
 
 
 def inspect_for_credit_card_number(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Value Logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             values = pd.Series(values).astype(str)
@@ -254,54 +209,43 @@ def inspect_for_credit_card_number(metadata, values, config):
             # traceback.print_exc()
             pass
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
 
     return confidence_level, debug_info
 
 
 def inspect_for_phone_number(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # TODO: shall we have these country codes in config?
@@ -330,7 +274,7 @@ def inspect_for_phone_number(metadata, values, config):
                  "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
 
     # Values logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
@@ -351,79 +295,63 @@ def inspect_for_phone_number(metadata, values, config):
             # values_score = 0
             pass
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
 
     return confidence_level, debug_info
 
 
 def inspect_for_full_name(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Values logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
-                entity_of_interest = ["PERSON"]
+                entities_of_interest = ["PERSON"]
+                weight = 1
                 for value in values:
-                    for nlp in nlp_list:
-                        doc = nlp(value)
-                        entity_flag_for_language = 0
-                        for ent in doc.ents:
-                            if ent.label_ in entity_of_interest:
-                                entity_count += 1
-                                entity_flag_for_language = 1
-                                break
-                        if entity_flag_for_language == 1:
-                            break
-                name_score = entity_count / len(values)
-
-                values_score = np.minimum(name_score, 1)
+                    # TODO: think of spacy common code into a function,
+                    # TODO: use this common function at in other functions (inspect_for_full_name)
+                    # TODO: rename nlp_list to spacy_model_list, also think of renaming 'nlp' to some intuitive name
+                    if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                        entity_count += 1 * weight
+                entities_score = entity_count / len(values)
+                values_score = np.minimum(entities_score, 1)
             else:
                 raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
         except Exception as e:
@@ -431,58 +359,47 @@ def inspect_for_full_name(metadata, values, config):
             # values_score = 0
             pass
         values_score = np.round(values_score, 2)
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+        debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
+    if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
 
     return confidence_level, debug_info
 
 
 def inspect_for_age(metadata, values, config):
-    metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    metadata_score = {}
-    blank_metadata = {}
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Values logic
-    if metadata_weights.get(VALUES, 0) > 0:
+    if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
@@ -517,44 +434,37 @@ def inspect_for_age(metadata, values, config):
             # traceback.print_exc()
             # values_score = 0
             pass
-        metadata_score[DEBUG_INFO_VALUES] = values_score
+
+    debug_info[VALUES] = values_score
+
 
     # Name Logic
-    if metadata_weights.get(NAME, 0) > 0:
-        if metadata.name == '':
-            blank_metadata[DEBUG_INFO_NAME] = True
-            name_score = 0
+    if prediction_factors_weights.get(NAME, 0) > 0:
+        if not metadata.name or not metadata.name.strip():
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+
         else:
-            blank_metadata[DEBUG_INFO_NAME] = False
-            name_score = match_regex(metadata.name, config[NAME][REGEX])
-        metadata_score[DEBUG_INFO_NAME] = name_score
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
-    if metadata_weights.get(DESCRIPTION, 0) > 0:
-        if metadata.description == '':
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = True
-            description_score = 0
+    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
+        if not metadata.description or not metadata.description.strip():
+            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DESCRIPTION] = False
-            description_score = match_regex(metadata.description, config[DESCRIPTION][REGEX])
-        metadata_score[DEBUG_INFO_DESCRIPTION] = description_score
+            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
 
     # Datatype_Logic
-    if metadata_weights.get(DATATYPE, 0) > 0:
-        if metadata.datatype == '':
-            blank_metadata[DEBUG_INFO_DATATYPE] = True
-            datatype_score = 0
+    if prediction_factors_weights.get(DATATYPE, 0) > 0:
+        if not metadata.datatype or not metadata.datatype.strip():
+            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            blank_metadata[DEBUG_INFO_DATATYPE] = False
-            datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-        metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
+            debug_info[DATATYPE]  = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
-    for key in metadata_score.keys():
-        confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
-        if blank_metadata.get(key, ""):
-            debug_info[key] = f"0.0 (Blank {key} Metadata)"
-        else:
-            debug_info[key] = np.round(metadata_weights[key] * metadata_score[key], 2)
+    for key in debug_info.keys():
+        if type(debug_info[key])!= str:
+            confidence_level += np.round(prediction_factors_weights[key] * debug_info[key], 2)
     confidence_level = np.round(confidence_level, 2)
+
     return confidence_level, debug_info

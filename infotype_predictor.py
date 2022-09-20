@@ -30,6 +30,9 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
             # call the infotype prediction function
             # TODO: Raise an exception if total non-null values are less than 50
             column_info.values = pd.Series(column_info.values).dropna()
+            if len(column_info.values) < 50:
+                raise f"The total non-null values for {column_info.metadata.name} column are {len(column_info.values)}"\
+                      f".Please provide more than 50 non- null values."
             confidence_level, debug_info = infotype_fn(column_info.metadata, column_info.values, config_dict)
 
             if confidence_level > confidence_level_threshold:

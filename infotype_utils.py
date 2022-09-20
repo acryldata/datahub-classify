@@ -1,4 +1,5 @@
 import re
+import traceback
 
 
 # TODO: Exception handling
@@ -54,6 +55,15 @@ def match_regex_for_values(values, regex_list):
                 break
         except Exception as e:
             # TODO: print the exception for debugging purpose
-            pass
+            traceback.print_exc()
     values_score = sum(values_score_list) / length_values
     return values_score
+
+
+def detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+    for spacy_model in spacy_models_list:
+        doc = spacy_model(value)
+        for ent in doc.ents:
+            if ent.label_ in entities_of_interest:
+                return True
+    return False
