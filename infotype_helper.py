@@ -14,6 +14,7 @@ nlp_list = [nlp_english, nlp_multilanguage]
 
 
 def inspect_for_email_address(metadata, values, config):
+    # TODO: change the variable name "metadata_weights" to "prediction_factors_weights"
     metadata_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     metadata_score = {}
     blank_metadata = {}
@@ -31,6 +32,8 @@ def inspect_for_email_address(metadata, values, config):
         values_score = np.round(values_score, 2)
         metadata_score[DEBUG_INFO_VALUES] = values_score
 
+    # TODO: Keep only debug_info dict,
+    # TODO: probably we don't require two separate dictionaries (blank_metadata & metadata_score)
     # Name Logic
     if metadata_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
@@ -61,6 +64,7 @@ def inspect_for_email_address(metadata, values, config):
             datatype_score = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
         metadata_score[DEBUG_INFO_DATATYPE] = datatype_score
 
+    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in metadata_score.keys():
         confidence_level += np.round(metadata_weights[key] * metadata_score[key], 2)
@@ -89,12 +93,16 @@ def inspect_for_street_address(metadata, values, config):
                 entity_count = 0
                 entity_of_interest = ["FAC", "LOC", "ORG"]
                 for value in values:
+                    # TODO: think of spacy common code into a function,
+                    # TODO: use this common function at in other functions (inspect_for_full_name)
+                    # TODO: rename nlp_list to spacy_model_list, also think of renaming 'nlp' to some intuitive name
                     for nlp in nlp_list:
                         doc = nlp(value)
                         entity_flag_for_language = 0
                         for ent in doc.ents:
                             if ent.label_ in entity_of_interest:
                                 entity_count += 1.5
+                                # TODO: see if we have break label feature in python then we don't need following flag
                                 entity_flag_for_language = 1
                                 break
                         if entity_flag_for_language == 1:

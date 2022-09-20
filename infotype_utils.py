@@ -9,6 +9,9 @@ def match_regex(text_to_match, regex_list):
     match_score = 0
     for pattern in regex_list:
         try:
+            # TODO: evaluate a case if [A-Za-z] is present in the pattern then it will not give any error,
+            # TODO: are there any other cases like above?
+            pattern = pattern.lower()
             cleaned_pattern = ''.join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (re.fullmatch(pattern, original_text)):
                 match_score = 1
@@ -22,12 +25,13 @@ def match_regex(text_to_match, regex_list):
                 pass
         except Exception as e:
             pass
-    match_score = round(match_score, 2)
     return match_score
 
 
 # Match data type
 def match_datatype(dtype_to_match, dtype_list):
+    dtype_list = [str(s).lower() for s in dtype_list]
+    dtype_to_match = dtype_to_match.lower()
     if dtype_to_match in dtype_list:
         match_score = 1
     else:
@@ -48,7 +52,8 @@ def match_regex_for_values(values, regex_list):
             values_score_list.append(len(matches))
             if len(values) == 0:
                 break
-        except:
+        except Exception as e:
+            # TODO: print the exception for debugging purpose
             pass
     values_score = sum(values_score_list) / length_values
     return values_score

@@ -28,8 +28,7 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
             config_dict = global_config[infotype]
 
             # call the infotype prediction function
-            # TODO: If a percentage of samples are None (e.g. 70-80 %) then raise a warning
-            # (confidence is calculated over only 20-30% of values)
+            # TODO: Raise an exception if total non-null values are less than 50
             column_info.values = pd.Series(column_info.values).dropna()
             confidence_level, debug_info = infotype_fn(column_info.metadata, column_info.values, config_dict)
 
