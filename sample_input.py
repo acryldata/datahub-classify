@@ -186,10 +186,10 @@ input1 = {
             'Values': 0.5
         },
         'Name': {
-            'regex': ["age[ -_]+.*", ".*[ -_]+age", 'age']
+            'regex': ["age[ -_]+.*", ".*[ -_]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
         },
         'Description': {
-            'regex': ["age[ -_]+.*", ".*[ -_]+age", 'age']
+            'regex': ["age[ -_]+.*", ".*[ -_]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age'"]
         },
         'Datatype': {
             'type': ['int']
