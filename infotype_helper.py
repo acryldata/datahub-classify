@@ -13,12 +13,10 @@ spacy_models_list = [nlp_english]
 
 
 def inspect_for_email_address(metadata, values, config):
-    # TODO: change the variable name "prediction_factors_weights" to "prediction_factors_weights"
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
     # Value Logic
-    # TODO: this code needs to be in the try-catch block
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         if config[VALUES][PREDICTION_TYPE] == 'regex':
@@ -30,8 +28,6 @@ def inspect_for_email_address(metadata, values, config):
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # TODO: Keep only debug_info dict,
-    # TODO: probably we don't require two separate dictionaries (blank_metadata & metadata_score)
     # Name Logic
     if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
@@ -53,7 +49,6 @@ def inspect_for_email_address(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
@@ -77,12 +72,8 @@ def inspect_for_street_address(metadata, values, config):
                 entities_of_interest = ["FAC", "LOC", "ORG"]
                 weight = 1.5
                 for value in values:
-                    # TODO: think of spacy common code into a function,
-                    # TODO: use this common function at in other functions (inspect_for_full_name)
-                    # TODO: rename nlp_list to spacy_model_list, also think of renaming 'nlp' to some intuitive name
                     if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
-                        # TODO: this is like entity_count = entity_count + 1 * 1.5
-                        entity_count += 1 * weight
+                        entity_count += weight
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
@@ -115,7 +106,6 @@ def inspect_for_street_address(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
@@ -168,11 +158,9 @@ def inspect_for_gender(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
-            # TODO: remove the np.round() from the following statement
             confidence_level += prediction_factors_weights[key] * debug_info[key]
     confidence_level = np.round(confidence_level, 2)
 
@@ -225,7 +213,6 @@ def inspect_for_credit_card_number(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
@@ -309,7 +296,6 @@ def inspect_for_phone_number(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
@@ -334,9 +320,6 @@ def inspect_for_full_name(metadata, values, config):
                 entities_of_interest = ["PERSON"]
                 weight = 1
                 for value in values:
-                    # TODO: think of spacy common code into a function,
-                    # TODO: use this common function at in other functions (inspect_for_full_name)
-                    # TODO: rename nlp_list to spacy_model_list, also think of renaming 'nlp' to some intuitive name
                     if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
                         entity_count += weight
                 entities_score = entity_count / len(values)
@@ -371,7 +354,6 @@ def inspect_for_full_name(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
@@ -395,10 +377,8 @@ def inspect_for_age(metadata, values, config):
                 values_series = pd.Series(values)
                 # Check if column is convertible to int dtype
                 int_col = values_series.astype(int)
-                # TODO: use 5 and 95 percentile and min and max value
-                max_val = int_col.max()
-                min_val = int_col.min()
-                # age_range = max_val - min_val
+                max_val = np.percentile(int_col, 95)
+                min_val = np.percentile(int_col, 5)
                 num_unique = int_col.nunique()
                 if max_val <= 120 and min_val > 0:
                     # Add 0.5 score if all values are within [0, 120]
@@ -441,7 +421,6 @@ def inspect_for_age(metadata, values, config):
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
 
-    # TODO: modify the code considering only one dictionary i.e. debug_info{}
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
