@@ -56,6 +56,7 @@ input1 = {
         },
         'Name': {
             'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "card"]
+            # TODO: shall we include 'credit' word in the regex
         },
         'Description': {
             'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "card"]
@@ -104,6 +105,7 @@ input1 = {
                       "^(landline){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^(fax){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "phone", "telephone", "landline", "mobile", "tel", "fax"]
+            # TODO: "cell number", "contact number" can also be a valid column names for phone number
         },
         'Description': {
             'regex': ["^((phone)|(ph[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
@@ -186,10 +188,10 @@ input1 = {
             'Values': 0.5
         },
         'Name': {
-            'regex': ["age[ -_]+.*", ".*[ -_]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
+            'regex': ["age[^a-zA-Z0-9]+.*", ".*[^a-zA-Z0-9]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
         },
         'Description': {
-            'regex': ["age[ -_]+.*", ".*[ -_]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age'"]
+            'regex': ["age[^a-zA-Z0-9]+.*", ".*[^a-zA-Z0-9]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
         },
         'Datatype': {
             'type': ['int']

@@ -164,6 +164,9 @@ def inspect_for_gender(metadata, values, config):
             confidence_level += prediction_factors_weights[key] * debug_info[key]
     confidence_level = np.round(confidence_level, 2)
 
+    # TODO: handle a case where you have name confidence as 1 and value confidence as 0,
+    # TODO: elevate the value confidence (set to 0.8 or 0.9) by looking at number of unique values (if < 4 or 5)
+
     return confidence_level, debug_info
 
 
