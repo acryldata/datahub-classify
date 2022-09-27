@@ -97,23 +97,28 @@ input1 = {
         'Name': {
             'regex': [".*phone.*number.*", ".*number.*phone.*", ".*phone.*num.*", ".*phone.*num.*",
                       ".*mobile.*number.*", ".*number.*mobile.*", ".*telephone.*number.*",
+                      ".*cell.*number.*", ".*number.*cell.*", ".*cell.*num.*", ".*cell.*num.*",
+                      ".*contact.*number.*", ".*number.*contact.*", ".*contact.*num.*", ".*contact.*num.*",
                       ".*number.*telephone.*", ".*landline.*number.*", ".*number.*landline.*", ".*fax.*number.*",
-                      ".*number.*fax.*", "phone", "telephone", "landline", "mobile", "tel", "fax",
+                      ".*number.*fax.*", "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact',
                       "^((phone)|(ph[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
+                      "^(cell){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
+                      "^(contact){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^((mobile)|(mob[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^((telephone)|(tel[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^(landline){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^(fax){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "phone", "telephone", "landline", "mobile", "tel", "fax"]
-            # TODO: "cell number", "contact number" can also be a valid column names for phone number
         },
         'Description': {
             'regex': ["^((phone)|(ph[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
+                      "^(cell){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
+                      "^(contact){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^((mobile)|(mob[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^((telephone)|(tel[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^(landline){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
                       "^(fax){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "phone", "telephone", "landline", "mobile", "tel", "fax"]
+                      "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact']
         },
         'Datatype': {
             'type': ['int', 'str']
