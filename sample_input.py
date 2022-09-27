@@ -3,10 +3,10 @@
 input1 = {
     'Email_Address': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.3,
-            'Description': 0.1,
-            'Datatype': 0.1,
-            'Values': 0.5
+            'Name': 0.4,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.6
         },
         'Name': {
             'regex': ["^.*mail.*id.*$", "^.*mail.*address.*$", "^.*mail.*add.*$", "email", "mail"]
@@ -26,10 +26,10 @@ input1 = {
 
     'Gender': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.3,
-            'Description': 0.1,
-            'Datatype': 0.1,
-            'Values': 0.5
+            'Name': 0.4,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.6
         },
         'Name': {
             'regex': ["^.*gender.*$", "^.*sex.*$", "gender", "sex"]
@@ -49,10 +49,10 @@ input1 = {
 
     'Credit_Card_Number': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.3,
-            'Description': 0.1,
-            'Datatype': 0.1,
-            'Values': 0.5
+            'Name': 0.6,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.4
         },
         'Name': {
             'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "card"]
@@ -89,9 +89,9 @@ input1 = {
 
     'Phone_Number': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.3,
-            'Description': 0.1,
-            'Datatype': 0.1,
+            'Name': 0.5,
+            'Description': 0,
+            'Datatype': 0,
             'Values': 0.5
         },
         'Name': {
@@ -132,10 +132,10 @@ input1 = {
 
     'Street_Address': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.3,
-            'Description': 0.1,
-            'Datatype': 0.1,
-            'Values': 0.5
+            'Name': 0.4,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.6
         },
 
         'Name': {
@@ -162,10 +162,10 @@ input1 = {
 
     'Full_Name': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.1,
-            'Description': 0.1,
-            'Datatype': 0.1,
-            'Values': 0.7
+            'Name': 0.4,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.6
         },
         'Name': {
             'regex': [".*person.*name.*", ".*name.*person.*", ".*user.*name.*", ".*name.*user.*",
@@ -187,10 +187,10 @@ input1 = {
 
     'Age': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.5,
+            'Name': 0.65,
             'Description': 0,
             'Datatype': 0,
-            'Values': 0.5
+            'Values': 0.35
         },
         'Name': {
             'regex': ["age[^a-zA-Z0-9]+.*", ".*[^a-zA-Z0-9]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
