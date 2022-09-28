@@ -60,7 +60,7 @@ def populate_column_info_list(data_list):
     return column_info_list
 
 
-def test_predict_infotype(column_info_list, confidence_threshold, input_dict):
+def check_predict_infotype(column_info_list, confidence_threshold, input_dict):
     start_time = datetime.now()
     column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict)
     end_time = datetime.now()
@@ -79,6 +79,7 @@ def test_predict_infotype(column_info_list, confidence_threshold, input_dict):
                 print('Debug Info: ', col_info.infotype_proposals[i].debug_info)
                 print('--------------------')
         print("\n================================\n")
+    return column_info_pred_list
 
 
 def run_test(input_data_path):
@@ -86,7 +87,7 @@ def run_test(input_data_path):
     data_list = get_public_data(input_data_path)
     column_info_list = populate_column_info_list(data_list)
     confidence_threshold = 0.6
-    test_predict_infotype(column_info_list, confidence_threshold, input_dict)
+    check_predict_infotype(column_info_list, confidence_threshold, input_dict)
 
 
 if __name__ == '__main__':
