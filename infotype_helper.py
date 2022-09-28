@@ -161,7 +161,7 @@ def inspect_for_gender(metadata, values, config):
     # TODO: handle a case where you have name confidence as 1 and value confidence as 0,
     # TODO: elevate the value confidence (set to 0.8 or 0.9) by looking at number of unique values (if < 4 or 5)
     if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
-            and debug_info.get(VALUES, None) and debug_info[VALUES] == 0:
+            and prediction_factors_weights.get(VALUES, 0)  and debug_info[VALUES] == 0:
         num_unique_values = len(values.unique())
         if num_unique_values < 5:
             debug_info[VALUES] = 0.9
@@ -262,24 +262,23 @@ def inspect_for_phone_number(metadata, values, config):
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
-        try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
-                raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                valid_phone_numbers_count = 0
-                for value in values:
+        if config[VALUES][PREDICTION_TYPE] == 'regex':
+            raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
+        elif config[VALUES][PREDICTION_TYPE] == 'library':
+            valid_phone_numbers_count = 0
+            for value in values:
+                try:
                     for code in iso_codes:
                         parsed_number = phonenumbers.parse(value, code)
                         if phonenumbers.is_possible_number(parsed_number):
                             valid_phone_numbers_count += 1
                             break
-                values_score = valid_phone_numbers_count / len(values)
-            else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
-        except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+                except:
+                    pass
+            values_score = valid_phone_numbers_count / len(values)
+        else:
+            raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
