@@ -160,11 +160,22 @@ def inspect_for_gender(metadata, values, config):
 
     # TODO: handle a case where you have name confidence as 1 and value confidence as 0,
     # TODO: elevate the value confidence (set to 0.8 or 0.9) by looking at number of unique values (if < 4 or 5)
+<<<<<<< HEAD
     if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
             and prediction_factors_weights.get(VALUES, 0)  and debug_info[VALUES] == 0:
         num_unique_values = len(values.unique())
         if num_unique_values < 5:
             debug_info[VALUES] = 0.9
+=======
+    try:
+        if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
+                and VALUES in debug_info.keys() and debug_info[VALUES] == 0:
+            num_unique_values = len(values.unique())
+            if num_unique_values < 5:
+                debug_info[VALUES] = 0.9
+    except Exception as e:
+        pass
+>>>>>>> 1fd7b2915287677cc89d52850cd7036c50a89d83
 
     confidence_level = 0
     for key in debug_info.keys():

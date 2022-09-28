@@ -1,5 +1,6 @@
 from supported_infotypes import infotypes_to_use
 from helper_classes import InfotypeProposal
+from infotype_utils import perform_basic_checks
 import pandas as pd
 
 
@@ -18,6 +19,9 @@ def get_infotype_function_mapping():
 def predict_infotypes(column_infos, confidence_level_threshold, global_config):
     # assert type(column_infos) == list, "type of column_infos should be list"
     infotype_function_map = get_infotype_function_mapping()
+    print(f"Total columns to be processed --> {len(column_infos)}")
+    print(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
+    print("===========================================================")
     for column_info in column_infos:
         print("processing column: ", column_info.metadata.name)
 
@@ -29,14 +33,18 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
 
             # call the infotype prediction function
             column_info.values = pd.Series(column_info.values).dropna()
-            if len(column_info.values) < 50:
-                raise f"The total non-null values for {column_info.metadata.name} column are {len(column_info.values)}"\
-                      f".Please provide more than 50 non-null values."
-            confidence_level, debug_info = infotype_fn(column_info.metadata, column_info.values, config_dict)
-
-            if confidence_level > confidence_level_threshold:
-                infotype_proposal = InfotypeProposal(infotype, confidence_level, debug_info)
-                proposal_list.append(infotype_proposal)
-            column_info.infotype_proposals = proposal_list
+            try:
+                if perform_basic_checks(column_info.metadata, column_info.values, config_dict, infotype):
+                    confidence_level, debug_info = infotype_fn(column_info.metadata, column_info.values, config_dict)
+                    if confidence_level > confidence_level_threshold:
+                        infotype_proposal = InfotypeProposal(infotype, confidence_level, debug_info)
+                        proposal_list.append(infotype_proposal)
+                else:
+                    raise "Failed basic checks for infotype - %s and column - %s" % \
+                          (infotype, column_info.metadata.name)
+            except Exception as e:
+                # traceback.print_exc()
+                pass
+        column_info.infotype_proposals = proposal_list
     print("===========================================")
     return column_infos

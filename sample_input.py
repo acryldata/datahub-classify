@@ -162,10 +162,10 @@ input1 = {
 
     'Full_Name': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
+            'Name': 0.3,
             'Description': 0,
             'Datatype': 0,
-            'Values': 0.6
+            'Values': 0.7
         },
         'Name': {
             'regex': [".*person.*name.*", ".*name.*person.*", ".*user.*name.*", ".*name.*user.*",

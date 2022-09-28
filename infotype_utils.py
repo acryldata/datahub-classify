@@ -1,5 +1,6 @@
 import re
 import traceback
+from constants import *
 
 
 # TODO: Exception handling
@@ -67,3 +68,15 @@ def detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
             if ent.label_ in entities_of_interest:
                 return True
     return False
+
+
+def perform_basic_checks(metadata, values, config_dict, infotype=None):
+    basic_checks_status = True
+    # TODO: Removed the minimum 50 values restriction as per Mayuri's suggestion
+    # TODO: Mayuri - for demo we have less values, max 20 values
+    # TODO: update the minimum values threshold to 50
+    minimum_values_threshold = 1
+    if config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None) and len(values) < minimum_values_threshold:
+        basic_checks_status = False
+    # TODO: Add more basic checks
+    return basic_checks_status
