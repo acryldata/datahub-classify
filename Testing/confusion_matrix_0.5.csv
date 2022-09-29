@@ -1,0 +1,9 @@
+,Street_Address,Gender,Credit_Card_Number,Email_Address,Phone_Number,Full_Name,Age,no_infotype
+Street_Address,9,0,0,0,0,0,0,0
+Gender,0,10,0,0,0,0,0,0
+Credit_Card_Number,0,0,3,0,0,0,0,0
+Email_Address,0,0,0,5,0,0,0,0
+Phone_Number,0,0,0,0,7,0,0,0
+Full_Name,0,0,0,0,0,10,0,4
+Age,0,0,0,0,0,0,3,0
+no_infotype,22,0,0,0,0,2,1,270
