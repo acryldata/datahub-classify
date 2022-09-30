@@ -26,7 +26,6 @@ input1 = {
             'library': []
         }
     },
-
     'Gender': {
         'Prediction_Factors_and_Weights': {
             'Name': 0.4,
@@ -99,26 +98,26 @@ input1 = {
             'Values': 0.6
         },
         'Name': {
-            'regex': [".*phone.*num.*", ".*num.*phone.*",
-                      ".*[^a-z]+ph[^a-z]+.*num.*", ".*num.*[^a-z]+ph[^a-z]+.*",
-                      ".*mobile.*num.*", ".*num.*mobile.*",
-                      ".*telephone.*num.*", ".*num.*telephone.*",
-                      ".*cell.*num.*", ".*num.*cell.*",
-                      ".*contact.*num.*", ".*num.*contact.*",
-                      ".*landline.*num.*", ".*num.*landline.*",
-                      ".*fax.*num.*", ".*num.*fax.*",
+            'regex': [".*phone.*(num|no).*", ".*(num|no).*phone.*",
+                      ".*[^a-z]+ph[^a-z]+.*(num|no).*", ".*(num|no).*[^a-z]+ph[^a-z]+.*",
+                      ".*mobile.*(num|no).*", ".*(num|no).*mobile.*",
+                      ".*telephone.*(num|no).*", ".*(num|no).*telephone.*",
+                      ".*cell.*(num|no).*", ".*(num|no).*cell.*",
+                      ".*contact.*(num|no).*", ".*(num|no).*contact.*",
+                      ".*landline.*(num|no).*", ".*(num|no).*landline.*",
+                      ".*fax.*(num|no).*", ".*(num|no).*fax.*",
                       "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact'
                       ]
         },
         'Description': {
-            'regex': [".*phone.*num.*", ".*num.*phone.*",
-                      ".*[^a-z]+ph[^a-z]+.*num.*", ".*num.*[^a-z]+ph[^a-z]+.*",
-                      ".*mobile.*num.*", ".*num.*mobile.*",
-                      ".*telephone.*num.*", ".*num.*telephone.*",
-                      ".*cell.*num.*", ".*num.*cell.*",
-                      ".*contact.*num.*", ".*num.*contact.*",
-                      ".*landline.*num.*", ".*num.*landline.*",
-                      ".*fax.*num.*", ".*num.*fax.*",
+            'regex': [".*phone.*(num|no).*", ".*(num|no).*phone.*",
+                      ".*[^a-z]+ph[^a-z]+.*(num|no).*", ".*(num|no).*[^a-z]+ph[^a-z]+.*",
+                      ".*mobile.*(num|no).*", ".*(num|no).*mobile.*",
+                      ".*telephone.*(num|no).*", ".*(num|no).*telephone.*",
+                      ".*cell.*(num|no).*", ".*(num|no).*cell.*",
+                      ".*contact.*(num|no).*", ".*(num|no).*contact.*",
+                      ".*landline.*(num|no).*", ".*(num|no).*landline.*",
+                      ".*fax.*(num|no).*", ".*(num|no).*fax.*",
                       "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact'
                       ]
         },
