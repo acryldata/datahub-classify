@@ -1,6 +1,11 @@
 import os
 import sys
 import inspect
+import numpy as np
+import pandas as pd
+from sklearn.metrics import confusion_matrix
+import json
+import pytest
 
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
@@ -8,18 +13,10 @@ sys.path.insert(0, parentdir)
 
 from main import check_predict_infotype
 from helper_classes import Metadata, ColumnInfo
-import pytest
 from sample_input import input1 as input_dict
 from supported_infotypes import infotypes_to_use
-import pandas as pd
-from sklearn.metrics import confusion_matrix
-import json
-import numpy as np
 
-# input_data_dir = "C:\\Glossary_Terms\\datasets\\"
-# input_data_dir = '../../../../../../jupyter/office_project/acryl_glossary_term/dataset/'
 input_data_dir = './datasets/'
-
 confidence_threshold = 0.6
 
 
@@ -68,9 +65,9 @@ def populate_column_info_list(public_data_list):
                 'Name': col,
                 'Description': f'This column contains name of the {col}',
                 'Datatype': 'str',
+                'Dataset_Name': dataset_name
             }
             metadata = Metadata(fields)
-            metadata.dataset_name = dataset_name
             if len(data[col].dropna()) > 1000:
                 values = data[col].dropna().values[:1000]
             else:
@@ -87,6 +84,9 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
     with open("expected_output/expected_infotypes_UNIT_TESTING.json") as file:
         expected_output_unit_testing = json.load(file)
 
+    with open("expected_output/expected_infotypes_confidence_slabs.json") as file:
+        expected_infotypes_confidence_slabs = json.load(file)
+
     for dataset in public_data_list.keys():
         for col in public_data_list[dataset].columns:
 
@@ -95,19 +95,27 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
             if expected_output_ideal[dataset][col] not in infotypes_to_use:
                 expected_output_ideal[dataset][col] = "no_infotype"
 
+            if col not in expected_infotypes_confidence_slabs[dataset].keys():
+                expected_infotypes_confidence_slabs[dataset][col] = 0.0
+            if expected_infotypes_confidence_slabs[dataset][col] not in infotypes_to_use:
+                expected_infotypes_confidence_slabs[dataset][col] = 0.0
+
             if col not in expected_output_unit_testing[dataset].keys():
                 expected_output_unit_testing[dataset][col] = "no_infotype"
-            # if expected_output_unit_testing[dataset][col] not in infotypes_to_use:
-            #     expected_output_unit_testing[dataset][col] = "no_infotype"
-    return expected_output_ideal, expected_output_unit_testing
+
+    return expected_output_ideal, expected_output_unit_testing, expected_infotypes_confidence_slabs
 
 
 def get_best_infotype_pred(public_data_list, confidence_threshold, expected_output_unit_testing):
     column_info_list = populate_column_info_list(public_data_list)
     column_info_pred_list = check_predict_infotype(column_info_list, confidence_threshold, input_dict)
     public_data_predicted_infotype = dict()
+    # get_thresholds_for_unit_test = dict()
+    public_data_predicted_infotype_confidence = dict()
     for dataset in public_data_list.keys():
         public_data_predicted_infotype[dataset] = dict()
+        # get_thresholds_for_unit_test[dataset] = dict()
+        public_data_predicted_infotype_confidence[dataset] = dict()
         for col in public_data_list[dataset].columns:
             for col_info in column_info_pred_list:
                 if col_info.metadata.name == col and col_info.metadata.dataset_name == dataset:
@@ -117,6 +125,8 @@ def get_best_infotype_pred(public_data_list, confidence_threshold, expected_outp
                         for i in range(len(col_info.infotype_proposals)):
                             if col_info.infotype_proposals[i].confidence_level > highest_confidence_level:
                                 public_data_predicted_infotype[dataset][col] = col_info.infotype_proposals[i].infotype
+                                # get_thresholds_for_unit_test[dataset][col] = col_info.infotype_proposals[i].confidence_level
+                                public_data_predicted_infotype_confidence[dataset][col] = col_info.infotype_proposals[i].confidence_level
                                 highest_confidence_level = col_info.infotype_proposals[i].confidence_level
                                 if expected_output_unit_testing[dataset][col] not in (
                                         infotypes_to_use + ["no_infotype"]):
@@ -124,16 +134,21 @@ def get_best_infotype_pred(public_data_list, confidence_threshold, expected_outp
                     else:
                         if expected_output_unit_testing[dataset][col] not in (infotypes_to_use + ["no_infotype"]):
                             expected_output_unit_testing[dataset][col] = "no_infotype"
+                        public_data_predicted_infotype_confidence[dataset][col] = 0.0
+    # with open("infotype_threholds.json", "w") as filename:
+    #     json.dump(get_thresholds_for_unit_test, filename)
+    return public_data_predicted_infotype, expected_output_unit_testing,public_data_predicted_infotype_confidence
 
-    return public_data_predicted_infotype, expected_output_unit_testing
 
-
-def get_pred_exp_infotype_mapping(public_data_predicted_infotype, public_data_expected_infotype):
+def get_pred_exp_infotype_mapping(public_data_predicted_infotype, public_data_expected_infotype,
+                                  expected_infotypes_confidence_slabs, public_data_predicted_infotype_confidence):
     mapping = []
     for dataset in public_data_predicted_infotype.keys():
         for col in public_data_predicted_infotype[dataset].keys():
             mapping.append((dataset, col, public_data_predicted_infotype[dataset][col],
-                            public_data_expected_infotype[dataset][col]))
+                            public_data_expected_infotype[dataset][col],
+                            expected_infotypes_confidence_slabs[dataset][col],
+                            public_data_predicted_infotype_confidence[dataset][col]))
     return mapping
 
 
@@ -146,7 +161,7 @@ def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
     prediction_stats["FP"] = 0
     prediction_stats["TN"] = 0
     prediction_stats["FN"] = 0
-    for data_name, col_name, pred_val, true_val in mapping:
+    for data_name, col_name, pred_val, true_val, _, _ in mapping:
         if pred_val == true_val:
             current_tp_value = prediction_stats.loc[prediction_stats["InfoType_Name"] == true_val, "TP"].values
             current_tp_value += 1
@@ -181,18 +196,29 @@ def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
 
 
 public_data_list = get_public_data(input_data_dir)
-expected_output_ideal, expected_output_unit_testing = get_public_data_expected_output(public_data_list,
-                                                                                      infotypes_to_use)
-public_data_predicted_infotype, expected_output_unit_testing = get_best_infotype_pred(public_data_list,
+expected_output_ideal, expected_output_unit_testing, expected_infotypes_confidence_slabs=\
+                                get_public_data_expected_output(public_data_list, infotypes_to_use)
+public_data_predicted_infotype, expected_output_unit_testing, public_data_predicted_infotype_confidence =\
+                                                                                      get_best_infotype_pred(public_data_list,
                                                                                       confidence_threshold,
                                                                                       expected_output_unit_testing)
-infotype_mapping_ideal = get_pred_exp_infotype_mapping(public_data_predicted_infotype, expected_output_ideal)
+infotype_mapping_ideal = get_pred_exp_infotype_mapping(public_data_predicted_infotype,
+                                                       expected_output_ideal,
+                                                       expected_infotypes_confidence_slabs,
+                                                       public_data_predicted_infotype_confidence)
 infotype_mapping_unit_testing = get_pred_exp_infotype_mapping(public_data_predicted_infotype,
-                                                              expected_output_unit_testing)
+                                                              expected_output_unit_testing,
+                                                              expected_infotypes_confidence_slabs,
+                                                              public_data_predicted_infotype_confidence)
+
 get_prediction_statistics(infotype_mapping_ideal, infotypes_to_use, confidence_threshold)
 
 
-@pytest.mark.parametrize("dataset_name,column_name, output_proposals, expected_output",
-                         [(a, b, c, d) for a, b, c, d in infotype_mapping_unit_testing])
-def test_public_datasets(dataset_name, column_name, output_proposals, expected_output):
-    assert output_proposals == expected_output, f"failed for column '{column_name}' in {dataset_name}"
+@pytest.mark.parametrize("dataset_name,column_name, predicted_output, expected_output,"
+                         "expected_confidence_slab, predicted_output_confidence",
+                         [(a, b, c, d, e, f) for a, b, c, d, e, f in infotype_mapping_unit_testing])
+def test_public_datasets(dataset_name, column_name, predicted_output, expected_output,
+                         expected_confidence_slab,predicted_output_confidence):
+    assert predicted_output == expected_output, f"Test1 failed for column '{column_name}' in {dataset_name}"
+    assert predicted_output_confidence >= expected_confidence_slab, f"Test2 failed for column '{column_name}' in " \
+                                                                    f"{dataset_name}"
