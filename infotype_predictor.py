@@ -44,7 +44,7 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
                           (infotype, column_info.metadata.name)
             except Exception as e:
                 # traceback.print_exc()
-                pass
+                print(e)
         column_info.infotype_proposals = proposal_list
     print("===========================================")
     return column_infos
