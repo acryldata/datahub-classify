@@ -9,16 +9,19 @@ input1 = {
             'Values': 0.6
         },
         'Name': {
-            'regex': ["^.*mail.*id.*$", "^.*mail.*address.*$", "^.*mail.*add.*$", "email", "mail"]
+            'regex': ["^.*mail.*id.*$", "^.*id.*mail.*$",
+                      "^.*mail.*add.*$", "^.*add.*mail.*$",
+                      "email", "mail"]
         },
         'Description': {
-            'regex': ["^.*mail.*id.*$", "^.*mail.*address.*$", "^.*mail.*add.*$", "email", "mail"]
+            'regex': ["^.*mail.*id.*$", "^.*mail.*add.*$", "email", "mail"]
         },
         'Datatype': {
             'type': ['str']
         },
         'Values': {
             'prediction_type': 'regex',
+            # TODO: Check correctness of /b
             'regex': [r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"],
             'library': []
         }
@@ -42,24 +45,22 @@ input1 = {
         },
         'Values': {
             'prediction_type': 'regex',
-            'regex': ["male", "female", "man", "woman", "m", "f", "men", "women", "w"],
+            'regex': ["male", "female", "man", "woman", "m", "f", "w", "men", "women"],
             'library': []
         }
     },
-
-    'Credit_Card_Number': {
+    'Credit_Debit_Card_Number': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.6,
+            'Name': 0.4,
             'Description': 0,
             'Datatype': 0,
-            'Values': 0.4
+            'Values': 0.6
         },
         'Name': {
-            'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "card"]
-            # TODO: shall we include 'credit' word in the regex
+            'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "^.*credit.*card.*$", "^.*debit.*card.*$"]
         },
         'Description': {
-            'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "card"]
+            'regex': ["^.*card.*number.*$", "^.*number.*card.*$", "^.*credit.*card.*$", "^.*debit.*card.*$"]
         },
         'Datatype': {
             'type': ['str', 'int']
@@ -80,7 +81,10 @@ input1 = {
                       r"^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$",
                       r"^(62[0-9]{14,17})$",
                       r"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})$",
-                      r"^(4903|4905|4911|4936|6333|6759)[0-9]{12}|(4903|4905|4911|4936|6333|6759)[0-9]{14}|(4903|4905|4911|4936|6333|6759)[0-9]{15}|564182[0-9]{10}|564182[0-9]{12}|564182[0-9]{13}|633110[0-9]{10}|633110[0-9]{12}|633110[0-9]{13}$",
+                      r"^(4903|4905|4911|4936|6333|6759)[0-9]{12}|(4903|4905|4911|4936|"
+                      r"6333|6759)[0-9]{14}|(4903|4905|4911|4936|6333|6759)[0-9]{15}|564182"
+                      r"[0-9]{10}|564182[0-9]{12}|564182[0-9]{13}|633110[0-9]{10}|633110[0-9]"
+                      r"{12}|633110[0-9]{13}$",
                       r"^(6334|6767)[0-9]{12}|(6334|6767)[0-9]{14}|(6334|6767)[0-9]{15}$"
                       ],
             'library': []
@@ -89,36 +93,34 @@ input1 = {
 
     'Phone_Number': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.5,
+            'Name': 0.4,
             'Description': 0,
             'Datatype': 0,
-            'Values': 0.5
+            'Values': 0.6
         },
         'Name': {
-            'regex': [".*phone.*number.*", ".*number.*phone.*", ".*phone.*num.*", ".*phone.*num.*",
-                      ".*mobile.*number.*", ".*number.*mobile.*", ".*telephone.*number.*",
-                      ".*cell.*number.*", ".*number.*cell.*", ".*cell.*num.*", ".*cell.*num.*",
-                      ".*contact.*number.*", ".*number.*contact.*", ".*contact.*num.*", ".*contact.*num.*",
-                      ".*number.*telephone.*", ".*landline.*number.*", ".*number.*landline.*", ".*fax.*number.*",
-                      ".*number.*fax.*", "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact',
-                      "^((phone)|(ph[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(cell){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(contact){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^((mobile)|(mob[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^((telephone)|(tel[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(landline){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(fax){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "phone", "telephone", "landline", "mobile", "tel", "fax"]
+            'regex': [".*phone.*num.*", ".*num.*phone.*",
+                      ".*[^a-z]+ph[^a-z]+.*num.*", ".*num.*[^a-z]+ph[^a-z]+.*",
+                      ".*mobile.*num.*", ".*num.*mobile.*",
+                      ".*telephone.*num.*", ".*num.*telephone.*",
+                      ".*cell.*num.*", ".*num.*cell.*",
+                      ".*contact.*num.*", ".*num.*contact.*",
+                      ".*landline.*num.*", ".*num.*landline.*",
+                      ".*fax.*num.*", ".*num.*fax.*",
+                      "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact'
+                      ]
         },
         'Description': {
-            'regex': ["^((phone)|(ph[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(cell){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(contact){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^((mobile)|(mob[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^((telephone)|(tel[.]{0,1})){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(landline){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "^(fax){1}[^a-z0-9]{0,1}((num)|(no[.]{0,1})|(number)){0,1}[^a-z]*$",
-                      "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact']
+            'regex': [".*phone.*num.*", ".*num.*phone.*",
+                      ".*[^a-z]+ph[^a-z]+.*num.*", ".*num.*[^a-z]+ph[^a-z]+.*",
+                      ".*mobile.*num.*", ".*num.*mobile.*",
+                      ".*telephone.*num.*", ".*num.*telephone.*",
+                      ".*cell.*num.*", ".*num.*cell.*",
+                      ".*contact.*num.*", ".*num.*contact.*",
+                      ".*landline.*num.*", ".*num.*landline.*",
+                      ".*fax.*num.*", ".*num.*fax.*",
+                      "phone", "telephone", "landline", "mobile", "tel", "fax", 'cell', 'contact'
+                      ]
         },
         'Datatype': {
             'type': ['int', 'str']
@@ -132,23 +134,25 @@ input1 = {
 
     'Street_Address': {
         'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
+            'Name': 0.5,
             'Description': 0,
             'Datatype': 0,
-            'Values': 0.6
+            'Values': 0.5
         },
 
         'Name': {
-            'regex': [".*street.*address.*", ".*address.*street.*", ".*street.*add.*", ".*add.*street.*",
-                      ".*full.*address.*", ".*address.*full.*", ".*full.*add.*", ".*add.*full.*",
-                      ".*mail.*address.*", ".*address.*mail.*", ".*mail.*add.*", ".*add.*mail.*",
-                      "address", "street", "add"]
+            'regex': [".*street.*add.*", ".*add.*street.*",
+                      ".*full.*add.*", ".*add.*full.*",
+                      ".*mail.*add.*", ".*add.*mail.*",
+                      "add[^a-z]+",
+                      "address", "street"]
         },
         'Description': {
-            'regex': [".*street.*address.*", ".*address.*street.*", ".*street.*add.*", ".*add.*street.*",
-                      ".*full.*address.*", ".*address.*full.*", ".*full.*add.*", ".*add.*full.*",
-                      ".*mail.*address.*", ".*address.*mail.*", ".*mail.*add.*", ".*add.*mail.*",
-                      "address", "street", "add"]
+            'regex': [".*street.*add.*", ".*add.*street.*",
+                      ".*full.*add.*", ".*add.*full.*",
+                      ".*mail.*add.*", ".*add.*mail.*",
+                      "add[^a-z]+",
+                      "address", "street"]
         },
         'Datatype': {
             'type': ['str']
@@ -168,12 +172,16 @@ input1 = {
             'Values': 0.7
         },
         'Name': {
-            'regex': [".*person.*name.*", ".*name.*person.*", ".*user.*name.*", ".*name.*user.*",
-                      ".*full.*name.*", ".*name.*full.*", "fullname", "name", "person", "user"]
+            'regex': [".*person.*name.*", ".*name.*person.*",
+                      ".*user.*name.*", ".*name.*user.*",
+                      ".*full.*name.*", ".*name.*full.*",
+                      "fullname", "name", "person", "user"]
         },
         'Description': {
-            'regex': [".*person.*name.*", ".*name.*person.*", ".*user.*name.*", ".*name.*user.*",
-                      ".*full.*name.*", ".*name.*full.*", "fullname", "name", "person", "user"]
+            'regex': [".*person.*name.*", ".*name.*person.*",
+                      ".*user.*name.*", ".*name.*user.*",
+                      ".*full.*name.*", ".*name.*full.*",
+                      "fullname", "name", "person", "user"]
         },
         'Datatype': {
             'type': ['str']
@@ -181,7 +189,7 @@ input1 = {
         'Values': {
             'prediction_type': 'library',
             'regex': [],
-            'library': []
+            'library': ['spacy']
         }
     },
 
@@ -193,10 +201,10 @@ input1 = {
             'Values': 0.35
         },
         'Name': {
-            'regex': ["age[^a-zA-Z0-9]+.*", ".*[^a-zA-Z0-9]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
+            'regex': ["age[^a-z]+.*", ".*[^a-z]+age", ".*[^a-z]+age[^a-z]+.*", "age"]
         },
         'Description': {
-            'regex': ["age[^a-zA-Z0-9]+.*", ".*[^a-zA-Z0-9]+age", ".*[^a-zA-Z0-9]+age[^a-zA-Z0-9]+.*", "age"]
+            'regex': ["age[^a-z]+.*", ".*[^a-z]+age", ".*[^a-z]+age[^a-z]+.*", "age"]
         },
         'Datatype': {
             'type': ['int']
@@ -204,7 +212,7 @@ input1 = {
         'Values': {
             'prediction_type': 'library',
             'regex': [],
-            'library': []
+            'library': ['rule_based_logic']
         }
     }
 }
