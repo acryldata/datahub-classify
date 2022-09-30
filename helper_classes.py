@@ -22,3 +22,4 @@ class Metadata:
         self.name = meta_info.get('Name', None)
         self.description = meta_info.get('Description', None)
         self.datatype = meta_info.get('Datatype', None)
+        self.dataset_name = meta_info.get('Dataset_Name', None)
