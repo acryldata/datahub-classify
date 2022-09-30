@@ -178,7 +178,7 @@ def inspect_for_gender(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_credit_card_number(metadata, values, config):
+def inspect_for_credit_debit_card_number(metadata, values, config):
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
