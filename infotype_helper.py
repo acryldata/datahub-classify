@@ -19,12 +19,17 @@ def inspect_for_email_address(metadata, values, config):
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
-        if config[VALUES][PREDICTION_TYPE] == 'regex':
-            values_score = match_regex_for_values(values, config[VALUES][REGEX])
-        elif config[VALUES][PREDICTION_TYPE] == 'library':
-            raise "Currently prediction type 'library' is not supported for infotype Email Address"
-        else:
-            raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
+        try:
+            if config[VALUES][PREDICTION_TYPE] == 'regex':
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
+            elif config[VALUES][PREDICTION_TYPE] == 'library':
+                raise "Currently prediction type 'library' is not supported for infotype Email Address"
+            else:
+                raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
+        except Exception as e:
+            # traceback.print_exc()
+            # values_score = 0
+            pass
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
