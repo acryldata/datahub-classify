@@ -3,19 +3,19 @@ import sys
 import inspect
 import numpy as np
 import pandas as pd
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, precision_score, recall_score
 import json
 import pytest
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
 
 from main import check_predict_infotype
 from helper_classes import Metadata, ColumnInfo
 from sample_input import input1 as input_dict
 from supported_infotypes import infotypes_to_use
 
-
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
 
 input_data_dir = './datasets/'
 confidence_threshold = 0.6
@@ -168,40 +168,15 @@ def get_pred_exp_infotype_mapping(public_data_predicted_infotype, public_data_ex
 def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
     infotypes_to_use.append("no_infotype")
     all_infotypes = infotypes_to_use
-    prediction_stats = pd.DataFrame()
-    prediction_stats["InfoType_Name"] = all_infotypes
-    prediction_stats["TP"] = 0
-    prediction_stats["FP"] = 0
-    prediction_stats["TN"] = 0
-    prediction_stats["FN"] = 0
-    # TODO: can we use sklearn functionality to get precision/recall instead of following code?
-    for data_name, col_name, pred_val, true_val, _, _ in mapping:
-        if pred_val == true_val:
-            current_tp_value = prediction_stats.loc[prediction_stats["InfoType_Name"] == true_val, "TP"].values
-            current_tp_value += 1
-            prediction_stats.loc[prediction_stats["InfoType_Name"] == true_val, "TP"] = current_tp_value
-            true_neg_infotypes = [infotype for infotype in all_infotypes if infotype != true_val]
-            for infotype in true_neg_infotypes:
-                current_tn_value = prediction_stats.loc[prediction_stats["InfoType_Name"] == infotype, "TN"].values
-                current_tn_value += 1
-                prediction_stats.loc[prediction_stats["InfoType_Name"] == infotype, "TN"] = current_tn_value
-        elif pred_val != true_val:
-            current_fn_value = prediction_stats.loc[prediction_stats["InfoType_Name"] == true_val, "FN"].values
-            current_fn_value += 1
-            prediction_stats.loc[prediction_stats["InfoType_Name"] == true_val, "FN"] = current_fn_value
-            current_fp_value = prediction_stats.loc[prediction_stats["InfoType_Name"] == pred_val, "FP"].values
-            current_fp_value += 1
-            prediction_stats.loc[prediction_stats["InfoType_Name"] == pred_val, "FP"] = current_fp_value
-            # TODO: don't we need to consider infotypes other than pred_val and true_val for TN case?
-    prediction_stats["Precision"] = np.round(prediction_stats["TP"] / (prediction_stats["TP"] + prediction_stats["FP"]),
-                                             2)
-    prediction_stats["Recall"] = np.round(prediction_stats["TP"] / (prediction_stats["TP"] + prediction_stats["FN"]), 2)
     y_true = [s[3] for s in mapping]
     y_pred = [s[2] for s in mapping]
+    prediction_stats = pd.DataFrame()
+    prediction_stats["Infotype"] = all_infotypes
+    prediction_stats["Precision"] = precision_score(y_true, y_pred, average=None, labels=all_infotypes)
+    prediction_stats["Recall"] = recall_score(y_true, y_pred, average=None, labels=all_infotypes)
     df_confusion_matrix = pd.DataFrame(confusion_matrix(y_true, y_pred, labels=all_infotypes),
                                        columns=[info + "_predicted" for info in all_infotypes],
                                        index=[info + "_actual" for info in all_infotypes])
-
     print("*************Prediction Statistics***************************")
     print(prediction_stats)
     print("********************")
