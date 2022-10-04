@@ -5,8 +5,8 @@ import traceback
 import phonenumbers
 import re
 
-from infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
-from constants import *
+from datahub_classify.infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
+from datahub_classify.constants import *
 
 nlp_english = spacy.load('en_core_web_sm')
 spacy_models_list = [nlp_english]

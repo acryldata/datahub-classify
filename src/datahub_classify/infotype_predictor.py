@@ -1,13 +1,17 @@
-from supported_infotypes import infotypes_to_use
-from helper_classes import InfotypeProposal
-from infotype_utils import perform_basic_checks
+import importlib
+import logging
+from datahub_classify.supported_infotypes import infotypes_to_use
+from datahub_classify.helper_classes import InfotypeProposal
+from datahub_classify.infotype_utils import perform_basic_checks
 import pandas as pd
+logger = logging.getLogger(__name__)
+
 
 
 def get_infotype_function_mapping():
     from inspect import getmembers, isfunction
-    module_name = 'infotype_helper'
-    module = __import__(module_name)
+    module_name = "datahub_classify.infotype_helper"
+    module = importlib.import_module(module_name)
     module_fn_dict = dict(getmembers(module, isfunction))
     infotype_function_map = {}
     for infotype in infotypes_to_use:
@@ -19,11 +23,11 @@ def get_infotype_function_mapping():
 def predict_infotypes(column_infos, confidence_level_threshold, global_config):
     # assert type(column_infos) == list, "type of column_infos should be list"
     infotype_function_map = get_infotype_function_mapping()
-    print(f"Total columns to be processed --> {len(column_infos)}")
-    print(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
-    print("===========================================================")
+    logger.debug(f"Total columns to be processed --> {len(column_infos)}")
+    logger.debug(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
+    logger.debug("===========================================================")
     for column_info in column_infos:
-        print("processing column: ", column_info.metadata.name)
+        logger.debug(f"processing column: {column_info.metadata.name}")
 
         # iterate over all infotype functions
         proposal_list = []
@@ -44,7 +48,7 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
                           (infotype, column_info.metadata.name)
             except Exception as e:
                 # traceback.print_exc()
-                print(e)
+                logger.warning(f"Failed to extract info type due to {e}", exc_info=e)
         column_info.infotype_proposals = proposal_list
-    print("===========================================")
+    logger.debug("===========================================")
     return column_infos
