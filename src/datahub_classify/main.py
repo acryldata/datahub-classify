@@ -1,8 +1,8 @@
 import pandas as pd
 from datetime import datetime
 
-from helper_classes import Metadata, ColumnInfo
-from infotype_predictor import predict_infotypes
+from datahub_classify.helper_classes import Metadata, ColumnInfo
+from datahub_classify.infotype_predictor import predict_infotypes
 
 
 def get_public_data(input_data_path):
