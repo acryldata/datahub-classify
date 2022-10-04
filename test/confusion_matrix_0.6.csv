@@ -1,9 +1,9 @@
-,Street_Address_predicted,Gender_predicted,Credit_Card_Number_predicted,Email_Address_predicted,Phone_Number_predicted,Full_Name_predicted,Age_predicted,no_infotype_predicted
+,Street_Address_predicted,Gender_predicted,Credit_Debit_Card_Number_predicted,Email_Address_predicted,Phone_Number_predicted,Full_Name_predicted,Age_predicted,no_infotype_predicted
 Street_Address_actual,9,0,0,0,0,0,0,0
 Gender_actual,0,10,0,0,0,0,0,0
-Credit_Card_Number_actual,0,0,2,0,0,0,0,1
+Credit_Debit_Card_Number_actual,0,0,3,0,0,0,0,0
 Email_Address_actual,0,0,0,5,0,0,0,0
 Phone_Number_actual,0,0,0,0,7,0,0,0
 Full_Name_actual,0,0,0,0,0,7,0,7
 Age_actual,0,0,0,0,0,0,3,0
-no_infotype_actual,0,0,0,0,0,1,0,294
+no_infotype_actual,1,0,0,0,0,1,0,293
