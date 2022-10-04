@@ -4,6 +4,6 @@ Gender,1.0,1.0
 Credit_Debit_Card_Number,1.0,1.0
 Email_Address,1.0,1.0
 Phone_Number,1.0,1.0
-Full_Name,0.875,0.5
+Full_Name,0.9230769230769231,0.8571428571428571
 Age,1.0,1.0
-no_infotype,0.9766666666666667,0.9932203389830508
+no_infotype,0.9932203389830508,0.9932203389830508
