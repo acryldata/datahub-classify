@@ -1,1 +1,93 @@
-{"data1": {"SEX": 0.9, "AGE": 0.9}, "data2": {"Person": 0.8, "Current Age": 0.9, "Retirement Age": 0.8, "Gender": 1.0, "Address": 0.8}, "data3": {"address": 0.6}, "data4": {"Card_Number": 0.6}, "data5": {"Card Number": 0.8}, "data6": {}, "data7": {}, "data8": {}, "data9": {"TEL": 0.7, "FAX": 0.9, "E_MAIL": 1.0, "ADD1": 0.7, "ADD2": 0.6, "CEO_MD": 0.6, "G_MANAGER": 0.6}, "data10": {"ADD1": 0.8, "ADD2": 0.6, "TEL": 0.8, "FAX": 0.9, "E_MAIL": 0.9, "CEO_MD": 0.7, "G_MANAGER": 0.6}, "data11": {"ADD1": 0.9, "ADD2": 0.7, "Telephone": 0.8, "Fax": 0.9, "E-Mail Address": 1.0, "CEO & Managing Director": 0.6, "General Manager": 0.7}, "data12": {"Address": 0.6, "E-mail": 1.0}, "data13": {"gender": 0.9, "email": 1.0, "phone": 1.0, "street_address": 0.7}, "data14": {"CODE_GENDER": 1.0}, "data15": {}, "data16": {"credit card": 0.6}, "data17": {}, "data18": {"gender": 1.0}, "data19": {"gender": 1.0}, "data20": {"sex": 0.9}, "data21": {"RawText": 0.6}, "data22": {}, "data23": {"sex": 1.0}, "data24": {"athlete_sex": 0.8}, "data25": {}, "data26": {"gender": 1.0}}
+{
+    "data1": {
+        "SEX": 0.9,
+        "AGE": 0.9
+    },
+    "data2": {
+        "Person": 0.8,
+        "Current Age": 0.9,
+        "Retirement Age": 0.8,
+        "Gender": 1.0,
+        "Address": 0.8
+    },
+    "data3": {
+        "address": 0.6
+    },
+    "data4": {
+        "Card_Number": 0.6
+    },
+    "data5": {
+        "Card Number": 0.8
+    },
+    "data6": {},
+    "data7": {},
+    "data8": {},
+    "data9": {
+        "TEL": 0.7,
+        "FAX": 0.9,
+        "E_MAIL": 1.0,
+        "ADD1": 0.7,
+        "ADD2": 0.6,
+        "CEO_MD": 0.6,
+        "G_MANAGER": 0.6
+    },
+    "data10": {
+        "ADD1": 0.8,
+        "ADD2": 0.6,
+        "TEL": 0.8,
+        "FAX": 0.9,
+        "E_MAIL": 0.9,
+        "CEO_MD": 0.7,
+        "G_MANAGER": 0.6
+    },
+    "data11": {
+        "ADD1": 0.9,
+        "ADD2": 0.7,
+        "Telephone": 0.8,
+        "Fax": 0.9,
+        "E-Mail Address": 1.0,
+        "CEO & Managing Director": 0.6,
+        "General Manager": 0.7
+    },
+    "data12": {
+        "Address": 0.6,
+        "E-mail": 1.0
+    },
+    "data13": {
+        "gender": 0.9,
+        "email": 1.0,
+        "phone": 1.0,
+        "street_address": 0.7
+    },
+    "data14": {
+        "CODE_GENDER": 1.0
+    },
+    "data15": {},
+    "data16": {
+        "credit card": 0.6
+    },
+    "data17": {},
+    "data18": {
+        "gender": 1.0
+    },
+    "data19": {
+        "gender": 1.0
+    },
+    "data20": {
+        "sex": 0.9
+    },
+    "data21": {
+        "RawText": 0.6
+    },
+    "data22": {},
+    "data23": {
+        "sex": 1.0
+    },
+    "data24": {
+        "athlete_sex": 0.8
+    },
+    "data25": {},
+    "data26": {
+        "gender": 1.0
+    }
+}
