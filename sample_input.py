@@ -21,8 +21,7 @@ input1 = {
         },
         'Values': {
             'prediction_type': 'regex',
-            # TODO: Check correctness of /b
-            'regex': [r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"],
+            'regex': [r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}"],
             'library': []
         }
     },
