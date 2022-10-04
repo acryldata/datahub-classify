@@ -7,22 +7,23 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score
 import json
 import pytest
 
+# TODO: Figure out a way to import from outer directories without using the 3 lines below
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from main import check_predict_infotype
+from infotype_predictor import predict_infotypes
 from helper_classes import Metadata, ColumnInfo
 from sample_input import input1 as input_dict
 from supported_infotypes import infotypes_to_use
 
-
-input_data_dir = './datasets/'
+current_wdr = os.getcwd()
+input_data_dir = current_wdr + "\\datasets\\"
+input_jsons_dir = current_wdr + "\\expected_output\\"
 confidence_threshold = 0.6
 
 
 def get_public_data(input_data_path):
-    # TODO: Iterate over the directory and load all datasets
     data1 = pd.read_csv(input_data_path + "UCI_Credit_Card.csv")
     data2 = pd.read_csv(input_data_path + "Age2_address1_credit_card3.csv")
     data3 = pd.read_csv(input_data_path + "list_of_real_usa_addresses.csv")
@@ -80,31 +81,21 @@ def populate_column_info_list(public_data_list):
 
 
 def get_public_data_expected_output(public_data_list, infotypes_to_use):
-    # TODO: use the absolute path
-    # TODO: following code will not work if I run this code from parent directory instead of test dir
-    # TODO: from readability perspective, format all three json files (may use some online json formatter)
-    with open("expected_output/expected_infotypes_IDEAL.json") as file:
+    with open(input_jsons_dir + "expected_infotypes_IDEAL.json") as file:
         expected_output_ideal = json.load(file)
-    with open("expected_output/expected_infotypes_UNIT_TESTING.json") as file:
+    with open(input_jsons_dir + "expected_infotypes_UNIT_TESTING.json") as file:
         expected_output_unit_testing = json.load(file)
-    with open("expected_output/expected_infotypes_confidence_slabs.json") as file:
+    with open(input_jsons_dir + "expected_infotypes_confidence_slabs.json") as file:
         expected_infotypes_confidence_slabs = json.load(file)
 
     for dataset in public_data_list.keys():
         for col in public_data_list[dataset].columns:
-
-            # TODO: can we combine following two conditions with or instead of two if statement?
-            # TODO: "e.g. if cond1 or cond2:"
-            # TODO: why are we using "no_infotype" string instead of None?
-            if col not in expected_output_ideal[dataset].keys():
-                expected_output_ideal[dataset][col] = "no_infotype"
-            if expected_output_ideal[dataset][col] not in infotypes_to_use:
+            if (col not in expected_output_ideal[dataset].keys()) or (expected_output_ideal[dataset][col] not in
+                                                                      infotypes_to_use):
                 expected_output_ideal[dataset][col] = "no_infotype"
 
-            # TODO: can we combine following two conditions with or instead of two if statement?
-            if col not in expected_infotypes_confidence_slabs[dataset].keys():
-                expected_infotypes_confidence_slabs[dataset][col] = 0.0
-            if expected_infotypes_confidence_slabs[dataset][col] not in infotypes_to_use:
+            if (col not in expected_infotypes_confidence_slabs[dataset].keys()) or (expected_infotypes_confidence_slabs[dataset][col]
+                                                                                    not in infotypes_to_use):
                 expected_infotypes_confidence_slabs[dataset][col] = 0.0
 
             if col not in expected_output_unit_testing[dataset].keys():
@@ -115,8 +106,7 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
 
 def get_best_infotype_pred(public_data_list, confidence_threshold, expected_output_unit_testing):
     column_info_list = populate_column_info_list(public_data_list)
-    # TODO: think of directly calling "predict_infotypes()" function if print statements are not required
-    column_info_pred_list = check_predict_infotype(column_info_list, confidence_threshold, input_dict)
+    column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict)
     public_data_predicted_infotype = dict()
     # get_thresholds_for_unit_test = dict()
     public_data_predicted_infotype_confidence = dict()
@@ -130,18 +120,19 @@ def get_best_infotype_pred(public_data_list, confidence_threshold, expected_outp
                     public_data_predicted_infotype[dataset][col] = "no_infotype"
                     if len(col_info.infotype_proposals) > 0:
                         highest_confidence_level = 0
+                        infotype_assigned = None
                         for i in range(len(col_info.infotype_proposals)):
                             if col_info.infotype_proposals[i].confidence_level > highest_confidence_level:
-                                # TODO: highest confidence value and associated infotype assignment in the dict can be done outside of the loop
-                                # TODO: just initialize highest_confidence_level and infotype variable in the for loop
-                                public_data_predicted_infotype[dataset][col] = col_info.infotype_proposals[i].infotype
                                 # get_thresholds_for_unit_test[dataset][col] = col_info.infotype_proposals[i].confidence_level
-                                public_data_predicted_infotype_confidence[dataset][col] = col_info.infotype_proposals[i].confidence_level
                                 highest_confidence_level = col_info.infotype_proposals[i].confidence_level
-                                # TODO: what is the use of following condition?
-                                if expected_output_unit_testing[dataset][col] not in (
+                                infotype_assigned = col_info.infotype_proposals[i].infotype
+                        public_data_predicted_infotype[dataset][col] = infotype_assigned
+                        public_data_predicted_infotype_confidence[dataset][col] = highest_confidence_level
+
+                        # TODO: what is the use of following condition?
+                        if expected_output_unit_testing[dataset][col] not in (
                                         infotypes_to_use + ["no_infotype"]):
-                                    expected_output_unit_testing[dataset][col] = col_info.infotype_proposals[i].infotype
+                                    expected_output_unit_testing[dataset][col] = infotype_assigned
                     else:
                         if expected_output_unit_testing[dataset][col] not in (infotypes_to_use + ["no_infotype"]):
                             expected_output_unit_testing[dataset][col] = "no_infotype"
@@ -156,12 +147,11 @@ def get_pred_exp_infotype_mapping(public_data_predicted_infotype, public_data_ex
     mapping = []
     for dataset in public_data_predicted_infotype.keys():
         for col in public_data_predicted_infotype[dataset].keys():
-            # TODO: shall we have same order of infotype and confidence just for uniform sequence
-            # TODO: (dataset, col, pred_infotype, exp_infotype, pred_confidence, exp_confidence)
             mapping.append((dataset, col, public_data_predicted_infotype[dataset][col],
                             public_data_expected_infotype[dataset][col],
-                            expected_infotypes_confidence_slabs[dataset][col],
-                            public_data_predicted_infotype_confidence[dataset][col]))
+                            public_data_predicted_infotype_confidence[dataset][col],
+                            expected_infotypes_confidence_slabs[dataset][col]
+                           ))
     return mapping
 
 
@@ -186,6 +176,7 @@ def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
 
 
 # TODO: think of adding 'if __name__ == “main”' block for following executable code
+# if __name__ == '__main__':
 public_data_list = get_public_data(input_data_dir)
 expected_output_ideal, expected_output_unit_testing, expected_infotypes_confidence_slabs = \
                                 get_public_data_expected_output(public_data_list, infotypes_to_use)
@@ -206,10 +197,10 @@ get_prediction_statistics(infotype_mapping_ideal, infotypes_to_use, confidence_t
 
 
 @pytest.mark.parametrize("dataset_name,column_name, predicted_output, expected_output,"
-                         "expected_confidence_slab, predicted_output_confidence",
+                         "predicted_output_confidence, expected_confidence_slab",
                          [(a, b, c, d, e, f) for a, b, c, d, e, f in infotype_mapping_unit_testing])
 def test_public_datasets(dataset_name, column_name, predicted_output, expected_output,
-                         expected_confidence_slab,predicted_output_confidence):
+                         predicted_output_confidence, expected_confidence_slab):
     assert predicted_output == expected_output, f"Test1 failed for column '{column_name}' in {dataset_name}"
     assert predicted_output_confidence >= expected_confidence_slab, f"Test2 failed for column '{column_name}' in " \
                                                                     f"{dataset_name}"
