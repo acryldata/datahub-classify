@@ -71,7 +71,7 @@ def inspect_for_street_address(metadata, values, config):
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
-                raise "Currently prediction type 'regex' is not supported for infotype Street Address"
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
                 entities_of_interest = ["FAC", "LOC", "ORG"]
@@ -162,9 +162,6 @@ def inspect_for_gender(metadata, values, config):
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-
-    # TODO: handle a case where you have name confidence as 1 and value confidence as 0,
-    # TODO: elevate the value confidence (set to 0.8 or 0.9) by looking at number of unique values (if < 4 or 5)
     try:
         if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
                 and VALUES in debug_info.keys() and debug_info[VALUES] == 0:
@@ -272,7 +269,7 @@ def inspect_for_phone_number(metadata, values, config):
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
-                raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 valid_phone_numbers_count = 0
                 for value in values:
@@ -333,7 +330,7 @@ def inspect_for_full_name(metadata, values, config):
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
-                raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
                 entities_of_interest = ["PERSON"]
@@ -391,7 +388,7 @@ def inspect_for_age(metadata, values, config):
         values_score = 0
         try:
             if config[VALUES][PREDICTION_TYPE] == 'regex':
-                raise "Currently prediction type 'regex' is not supported for infotype Phone Number"
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 values_series = pd.Series(values)
                 # Check if column is convertible to int dtype
