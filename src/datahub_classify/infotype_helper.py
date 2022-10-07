@@ -334,10 +334,12 @@ def inspect_for_full_name(metadata, values, config):
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
                 entities_of_interest = ["PERSON"]
+                # TODO: if len(str) > 50 , assign 0 score to that value
                 weight = 1
                 for value in values:
-                    if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
-                        entity_count += weight
+                    if len(value) <= 50:
+                        if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                            entity_count += weight
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
@@ -369,6 +371,14 @@ def inspect_for_full_name(metadata, values, config):
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+
+    # TODO: If name_score==1 and val_score< 0.5 make val_score = 0.8
+    try:
+        if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
+                and VALUES in debug_info.keys() and 0.5 > debug_info[VALUES] > 0.1:
+            debug_info[VALUES] = 0.8
+    except Exception as e:
+        pass
 
     confidence_level = 0
     for key in debug_info.keys():
