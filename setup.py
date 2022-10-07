@@ -15,7 +15,7 @@ def get_long_description():
 base_requirements = {
     "spacy",
     "phonenumbers",
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.0.0/en_core_web_sm-3.0.0.tar.gz"
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz"
 }
 
 setuptools.setup(
