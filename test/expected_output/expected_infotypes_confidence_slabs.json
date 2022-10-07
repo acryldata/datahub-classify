@@ -89,5 +89,24 @@
     "data25": {},
     "data26": {
         "gender": 1.0
+    },
+    "data27": {
+        "Sex": 0.0,
+        "Age Group": 0.0
+    },
+    "data28": {
+        "Sex": 0.0,
+        "Age": 0.0
+    },
+    "data29": {
+        "Age": 0.0
+    },
+    "data30": {
+        "age": 0.0
+    },
+    "data31": {
+        "Name": 0.0,
+        "Gender": 0.0,
+        "Age of death": 0.0
     }
 }

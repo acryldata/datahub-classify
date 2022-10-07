@@ -97,5 +97,24 @@
     "data26": {
         "name": "Full_Name",
         "gender": "Gender"
+    },
+    "data27": {
+        "Sex": "Gender",
+        "Age Group": "Age"
+    },
+    "data28": {
+        "Sex": "Gender",
+        "Age": "Age"
+    },
+    "data29": {
+        "Age": "Age"
+    },
+    "data30": {
+        "age": "Age"
+    },
+    "data31": {
+        "Name": "Full_Name",
+        "Gender": "Gender",
+        "Age of death": "Age"
     }
 }
