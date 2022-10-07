@@ -12,10 +12,10 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 
-from infotype_predictor import predict_infotypes
-from helper_classes import Metadata, ColumnInfo
-from sample_input import input1 as input_dict
-from supported_infotypes import infotypes_to_use
+from datahub_classify.infotype_predictor import predict_infotypes
+from datahub_classify.helper_classes import Metadata, ColumnInfo
+from datahub_classify.sample_input import input1 as input_dict
+from datahub_classify.supported_infotypes import infotypes_to_use
 
 current_wdr = os.getcwd()
 input_data_dir = current_wdr + "\\datasets\\"

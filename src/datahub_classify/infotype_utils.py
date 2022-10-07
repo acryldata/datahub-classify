@@ -1,6 +1,7 @@
 import re
 import traceback
-from constants import *
+
+from datahub_classify.constants import *
 
 
 # TODO: Exception handling
