@@ -44,8 +44,8 @@ def predict_infotypes(column_infos, confidence_level_threshold, global_config):
                         infotype_proposal = InfotypeProposal(infotype, confidence_level, debug_info)
                         proposal_list.append(infotype_proposal)
                 else:
-                    raise "Failed basic checks for infotype - %s and column - %s" % \
-                          (infotype, column_info.metadata.name)
+                    raise Exception("Failed basic checks for infotype - %s and column - %s" % \
+                          (infotype, column_info.metadata.name))
             except Exception as e:
                 # traceback.print_exc()
                 logger.warning(f"Failed to extract info type due to {e}", exc_info=e)
