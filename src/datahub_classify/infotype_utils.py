@@ -1,7 +1,7 @@
 import re
-import traceback
-
+import logging
 from datahub_classify.constants import *
+logger = logging.getLogger(__name__)
 
 
 # TODO: Exception handling
@@ -57,7 +57,7 @@ def match_regex_for_values(values, regex_list):
                 break
         except Exception as e:
             # TODO: print the exception for debugging purpose
-            traceback.print_exc()
+            logger.error(f"Failed due to {e}", exc_info=e)
     values_score = sum(values_score_list) / length_values
     return values_score
 
