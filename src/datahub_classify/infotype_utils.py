@@ -27,7 +27,7 @@ def match_regex(text_to_match, regex_list):
             else:
                 pass
         except Exception as e:
-            pass
+            logger.error(f"Column Name matching failed due to: {e}")
     return match_score
 
 
@@ -57,7 +57,7 @@ def match_regex_for_values(values, regex_list):
                 break
         except Exception as e:
             # TODO: print the exception for debugging purpose
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Regex match for values failed due to: {e}", exc_info=e)
     values_score = sum(values_score_list) / length_values
     return values_score
 
