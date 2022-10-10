@@ -1,9 +1,15 @@
+import os
+
 import pandas as pd
 from datetime import datetime
 
 from datahub_classify.helper_classes import Metadata, ColumnInfo
 from datahub_classify.infotype_predictor import predict_infotypes
+import logging
+logger = logging.getLogger(__name__)
 
+current_dir = os.getcwd()
+logging_directory = current_dir + "/logs/logs.log"
 
 def get_public_data(input_data_path):
     # TODO: Iterate over the directory and load all datasets
@@ -61,24 +67,19 @@ def populate_column_info_list(data_list):
 
 
 def check_predict_infotype(column_info_list, confidence_threshold, input_dict):
-    start_time = datetime.now()
     column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict)
-    end_time = datetime.now()
-    print(len(column_info_pred_list))
-    print("total time :", end_time - start_time)
-
     for col_info in column_info_pred_list:
-        print('Column Name: ', col_info.metadata.name)
-        print('Sample Values: ', col_info.values[:5])
+        logger.debug('Column Name: ', col_info.metadata.name)
+        logger.debug('Sample Values: ', col_info.values[:5])
         if col_info.infotype_proposals is None:
-            print(col_info.infotype_proposals)
+            logger.debug(col_info.infotype_proposals)
         else:
             for i in range(len(col_info.infotype_proposals)):
-                print(f'Proposed InfoType {i + 1} :', col_info.infotype_proposals[i].infotype)
-                print('Overall Confidence: ', col_info.infotype_proposals[i].confidence_level)
-                print('Debug Info: ', col_info.infotype_proposals[i].debug_info)
-                print('--------------------')
-        print("\n================================\n")
+                logger.debug(f'Proposed InfoType {i + 1} :', col_info.infotype_proposals[i].infotype)
+                logger.debug('Overall Confidence: ', col_info.infotype_proposals[i].confidence_level)
+                logger.debug('Debug Info: ', col_info.infotype_proposals[i].debug_info)
+                logger.debug('--------------------')
+        logger.debug("\n================================\n")
     return column_info_pred_list
 
 
@@ -91,6 +92,12 @@ def run_test(input_data_path):
 
 
 if __name__ == '__main__':
+    # import logging.config
+    logging.basicConfig(filename=logging_directory, filemode='a',format='%(asctime)s %(levelname)-8s %(message)s',
+                        encoding='utf-8', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+    logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    logger.info(f"--------------------STARTING RUN--------------------  ")
+    logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
     # input_data_dir = "C:\\Glossary_Terms\\datasets\\"
     # input_data_dir = '../../../../../../jupyter/office_project/acryl_glossary_term/dataset/'
     input_data_dir = './'
