@@ -4,10 +4,12 @@ import spacy
 import traceback
 import phonenumbers
 import re
+import logging
 
 from datahub_classify.infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
 from datahub_classify.constants import *
 
+logger = logging.getLogger(__name__)
 nlp_english = spacy.load('en_core_web_sm')
 spacy_models_list = [nlp_english]
 
@@ -23,13 +25,11 @@ def inspect_for_email_address(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise "Currently prediction type 'library' is not supported for infotype Email Address"
+                raise Exception("Currently prediction type 'library' is not supported for infotype Email Address")
             else:
-                raise "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -82,11 +82,9 @@ def inspect_for_street_address(metadata, values, config):
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -132,13 +130,11 @@ def inspect_for_gender(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise "Currently prediction type 'library' is not supported for infotype Gender"
+                raise Exception("Currently prediction type 'library' is not supported for infotype Gender")
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -196,12 +192,11 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 values_score = match_regex_for_values(values_cleaned, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise "Currently prediction type 'library' is not supported for infotype Credit Card Number"
+                raise Exception("Currently prediction type 'library' is not supported for infotype Credit Card Number")
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -283,10 +278,10 @@ def inspect_for_phone_number(metadata, values, config):
                         pass
                 values_score = valid_phone_numbers_count / len(values)
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
 
         except Exception as e:
-            print(e)
+            logger.error(f"Failed due to {e}", exc_info=e)
 
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
@@ -343,11 +338,9 @@ def inspect_for_full_name(metadata, values, config):
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -378,7 +371,7 @@ def inspect_for_full_name(metadata, values, config):
                 and VALUES in debug_info.keys() and 0.5 > debug_info[VALUES] > 0.1:
             debug_info[VALUES] = 0.8
     except Exception as e:
-        pass
+        logger.error(f"Failed due to {e}", exc_info=e)
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -419,11 +412,9 @@ def inspect_for_age(metadata, values, config):
                 else:
                     values_score = 0
             else:
-                raise "Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE]
+                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            # traceback.print_exc()
-            # values_score = 0
-            pass
+            logger.error(f"Failed due to {e}", exc_info=e)
         debug_info[VALUES] = values_score
 
     # Name Logic
