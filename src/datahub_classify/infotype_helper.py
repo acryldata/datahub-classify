@@ -9,6 +9,7 @@ import logging
 from datahub_classify.infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
 from datahub_classify.constants import *
 
+# logging.basicConfig(filename='logs.log', encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 nlp_english = spacy.load('en_core_web_sm')
 spacy_models_list = [nlp_english]
@@ -29,7 +30,7 @@ def inspect_for_email_address(metadata, values, config):
             else:
                 raise Exception("Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -84,7 +85,7 @@ def inspect_for_street_address(metadata, values, config):
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -134,7 +135,7 @@ def inspect_for_gender(metadata, values, config):
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -196,7 +197,7 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -281,7 +282,7 @@ def inspect_for_phone_number(metadata, values, config):
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
 
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
 
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
@@ -329,7 +330,6 @@ def inspect_for_full_name(metadata, values, config):
             elif config[VALUES][PREDICTION_TYPE] == 'library':
                 entity_count = 0
                 entities_of_interest = ["PERSON"]
-                # TODO: if len(str) > 50 , assign 0 score to that value
                 weight = 1
                 for value in values:
                     if len(value) <= 50:
@@ -340,7 +340,7 @@ def inspect_for_full_name(metadata, values, config):
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -364,14 +364,12 @@ def inspect_for_full_name(metadata, values, config):
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
             debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
-
-    # TODO: If name_score==1 and val_score< 0.5 make val_score = 0.8
     try:
         if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
                 and VALUES in debug_info.keys() and 0.5 > debug_info[VALUES] > 0.1:
             debug_info[VALUES] = 0.8
     except Exception as e:
-        logger.error(f"Failed due to {e}", exc_info=e)
+        logger.error(f"Column {metadata.name} failed due to {e}")
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -414,7 +412,7 @@ def inspect_for_age(metadata, values, config):
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
-            logger.error(f"Failed due to {e}", exc_info=e)
+            logger.error(f"Column {metadata.name} failed due to {e}")
         debug_info[VALUES] = values_score
 
     # Name Logic
