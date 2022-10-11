@@ -6,6 +6,9 @@ import pandas as pd
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
 import json
 import pytest
+import logging
+from datetime import datetime
+logger = logging.getLogger(__name__)
 
 # TODO: Figure out a way to import from outer directories without using the 3 lines below
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -22,6 +25,9 @@ input_data_dir = current_wdr + "\\datasets\\"
 input_jsons_dir = current_wdr + "\\expected_output\\"
 confidence_threshold = 0.6
 
+logging_directory = current_wdr + "/logs/logs.log"
+
+
 
 def get_public_data(input_data_path):
     data1 = pd.read_csv(input_data_path + "UCI_Credit_Card.csv")
@@ -31,37 +37,22 @@ def get_public_data(input_data_path):
     data5 = pd.read_csv(input_data_path + "Credit_Card2.csv")
     data6 = pd.read_csv(input_data_path + "catalog.csv")
     data7 = pd.read_csv(input_data_path + "iban.csv")
-    data8 = pd.read_csv(input_data_path + "USA_cars_datasets.csv")
-    data9 = pd.read_csv(input_data_path + "email_1.csv")
-    data10 = pd.read_csv(input_data_path + "email_2.csv")
-    data11 = pd.read_csv(input_data_path + "email_3.csv")
     data12 = pd.read_csv(input_data_path + "2018-seattle-business-districts.csv")
     data13 = pd.read_csv(input_data_path + "Customer Segmentation.csv")
     data14 = pd.read_csv(input_data_path + "application_record.csv")
     data15 = pd.read_csv(input_data_path + "Airbnb_Open_Data.csv")
     data16 = pd.read_csv(input_data_path + "Book1.xlsx-credit-card-number.csv")
     data17 = pd.read_csv(input_data_path + "Aliases.csv")
-    data18 = pd.read_csv(input_data_path + "athletes.csv")
-    data19 = pd.read_csv(input_data_path + "coaches.csv")
-    data20 = pd.read_csv(input_data_path + "curling_results.csv")
     data21 = pd.read_csv(input_data_path + "Emails.csv")
-    data22 = pd.read_csv(input_data_path + "hockey_players_stats.csv")
-    data23 = pd.read_csv(input_data_path + "hockey_results.csv")
-    data24 = pd.read_csv(input_data_path + "medals.csv")
     data25 = pd.read_csv(input_data_path + "Persons.csv")
-    data26 = pd.read_csv(input_data_path + "technical_officials.csv")
     data27 = pd.read_csv(input_data_path + "Bachelor_Degree_Majors.csv")
     data28 = pd.read_csv(input_data_path + "CrabAgePrediction.csv")
     data29 = pd.read_csv(input_data_path + "Salary_Data.csv")
     data30 = pd.read_csv(input_data_path + "drug-use-by-age.csv")
-    data31 = pd.read_csv(input_data_path + "AgeDataset-V1.csv")
     return {'data1': data1, 'data2': data2, 'data3': data3, 'data4': data4, 'data5': data5,
-            'data6': data6, 'data7': data7, 'data8': data8, 'data9': data9, 'data10': data10,
-            'data11': data11, 'data12': data12, 'data13': data13, 'data14': data14, 'data15': data15,
-            'data16': data16, 'data17': data17, 'data18': data18, 'data19': data19, 'data20': data20,
-            'data21': data21, 'data22': data22, 'data23': data23, 'data24': data24, 'data25': data25,
-            'data26': data26, 'data27': data27, 'data28': data28, 'data29': data29, 'data30': data30,
-            'data31': data31}
+            'data6': data6, 'data7': data7, 'data12': data12, 'data13': data13, 'data14': data14,
+            'data15': data15,'data16': data16, 'data17': data17, 'data21': data21, 'data25': data25,
+            'data27': data27, 'data28': data28, 'data29': data29, 'data30': data30}
 
 
 def populate_column_info_list(public_data_list):
@@ -100,7 +91,7 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
                                                                       infotypes_to_use):
                 expected_output_ideal[dataset][col] = "no_infotype"
 
-            if (col not in expected_infotypes_confidence_slabs[dataset].keys()) or (expected_infotypes_confidence_slabs[dataset][col]
+            if (col not in expected_infotypes_confidence_slabs[dataset].keys()) or (expected_output_ideal[dataset][col]
                                                                                     not in infotypes_to_use):
                 expected_infotypes_confidence_slabs[dataset][col] = 0.0
 
@@ -168,21 +159,26 @@ def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
     y_pred = [s[2] for s in mapping]
     prediction_stats = pd.DataFrame()
     prediction_stats["Infotype"] = all_infotypes
-    prediction_stats["Precision"] = precision_score(y_true, y_pred, average=None, labels=all_infotypes)
-    prediction_stats["Recall"] = recall_score(y_true, y_pred, average=None, labels=all_infotypes)
+    prediction_stats["Precision"] = np.round(precision_score(y_true, y_pred, average=None, labels=all_infotypes),2)
+    prediction_stats["Recall"] = np.round(recall_score(y_true, y_pred, average=None, labels=all_infotypes), 2)
     df_confusion_matrix = pd.DataFrame(confusion_matrix(y_true, y_pred, labels=all_infotypes),
                                        columns=[info + "_predicted" for info in all_infotypes],
                                        index=[info + "_actual" for info in all_infotypes])
-    print("*************Prediction Statistics***************************")
-    print(prediction_stats)
-    print("********************")
-    print(df_confusion_matrix)
+    logger.info("*************Prediction Statistics***************************")
+    logger.info(prediction_stats)
+    logger.info("********************")
+    logger.info(df_confusion_matrix)
     prediction_stats.to_csv(f"Prediction_statistics_{confidence_threshold}.csv", index=False)
     df_confusion_matrix.to_csv(f"confusion_matrix_{confidence_threshold}.csv")
 
 
 # TODO: think of adding 'if __name__ == “main”' block for following executable code
 # if __name__ == '__main__':
+logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+logger.info(f"--------------------STARTING RUN--------------------  ")
+logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+logger.info(f"Start Time --->  {datetime.now()}", )
+
 public_data_list = get_public_data(input_data_dir)
 expected_output_ideal, expected_output_unit_testing, expected_infotypes_confidence_slabs = \
                                 get_public_data_expected_output(public_data_list, infotypes_to_use)
@@ -200,7 +196,6 @@ infotype_mapping_unit_testing = get_pred_exp_infotype_mapping(public_data_predic
                                                               public_data_predicted_infotype_confidence)
 
 get_prediction_statistics(infotype_mapping_ideal, infotypes_to_use, confidence_threshold)
-
 
 @pytest.mark.parametrize("dataset_name,column_name, predicted_output, expected_output,"
                          "predicted_output_confidence, expected_confidence_slab",
