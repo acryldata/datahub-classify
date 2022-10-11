@@ -21,36 +21,8 @@
     },
     "data6": {},
     "data7": {},
-    "data8": {},
-    "data9": {
-        "TEL": "Phone_Number",
-        "FAX": "Phone_Number",
-        "E_MAIL": "Email_Address",
-        "ADD1": "Street_Address",
-        "ADD2": "Street_Address",
-        "CEO_MD": "Full_Name",
-        "G_MANAGER": "Full_Name"
-    },
-    "data10": {
-        "ADD1": "Street_Address",
-        "ADD2": "Street_Address",
-        "TEL": "Phone_Number",
-        "FAX": "Phone_Number",
-        "E_MAIL": "Email_Address",
-        "CEO_MD": "Full_Name",
-        "G_MANAGER": "Full_Name"
-    },
-    "data11": {
-        "ADD1": "Street_Address",
-        "ADD2": "Street_Address",
-        "Telephone": "Phone_Number",
-        "Fax": "Phone_Number",
-        "E-Mail Address": "Email_Address",
-        "CEO & Managing Director": "Full_Name",
-        "General Manager": "Full_Name"
-    },
     "data12": {
-        "Address": "Full_Address",
+        "Address": "Street_Address",
         "E-mail": "Email_Address"
     },
     "data13": {
@@ -62,42 +34,17 @@
     "data14": {
         "CODE_GENDER": "Gender"
     },
-    "data15": {},
+    "data15": {"NAME": "Full_Name"},
     "data16": {
         "credit card": "Credit_Debit_Card_Number"
     },
     "data17": {},
-    "data18": {
-        "name": "no_infotype",
-        "gender": "Gender"
-    },
-    "data19": {
-        "name": "no_infotype",
-        "gender": "Gender"
-    },
-    "data20": {
-        "sex": "Gender"
-    },
     "data21": {
         "MetadataFrom": "no_infotype",
-        "RawText": "Full_Name"
-    },
-    "data22": {
-        "Name": "no_infotype"
-    },
-    "data23": {
-        "sex": "Gender"
-    },
-    "data24": {
-        "athlete_name": "no_infotype",
-        "athlete_sex": "Gender"
+        "RawText": "no_infotype"
     },
     "data25": {
-        "Name": "no_infotype"
-    },
-    "data26": {
-        "name": "no_infotype",
-        "gender": "Gender"
+        "Name": "Full_Name"
     },
     "data27": {
         "Sex": "Gender",
@@ -112,10 +59,5 @@
     },
     "data30": {
         "age": "Age"
-    },
-    "data31": {
-        "Name": "Full_Name",
-        "Gender": "Gender",
-        "Age of death": "Age"
     }
 }
