@@ -13,8 +13,8 @@ def get_long_description():
     return pathlib.Path(os.path.join(root, "README.md")).read_text()
 
 base_requirements = {
-    "spacy",
-    "phonenumbers",
+    "spacy==3.4.1",
+    "phonenumbers==8.12.56",
     "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz"
 }
 
