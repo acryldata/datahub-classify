@@ -78,14 +78,18 @@ def inspect_for_street_address(metadata, values, config):
                 entities_of_interest = ["FAC", "LOC", "ORG"]
                 weight = 1.5
                 for value in values:
-                    if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
-                        entity_count += weight
+                    try:
+                        if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                            entity_count += weight
+                    except:
+                        pass
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
+            pass
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
@@ -332,9 +336,12 @@ def inspect_for_full_name(metadata, values, config):
                 entities_of_interest = ["PERSON"]
                 weight = 1
                 for value in values:
-                    if len(value) <= 50:
-                        if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
-                            entity_count += weight
+                    try:
+                        if len(value) <= 50:
+                            if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                                entity_count += weight
+                    except:
+                        pass
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
@@ -391,24 +398,27 @@ def inspect_for_age(metadata, values, config):
             if config[VALUES][PREDICTION_TYPE] == 'regex':
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
             elif config[VALUES][PREDICTION_TYPE] == 'library':
-                values_series = pd.Series(values)
-                # Check if column is convertible to int dtype
-                int_col = values_series.astype(int)
-                max_val = np.percentile(int_col, 95)
-                min_val = np.percentile(int_col, 5)
-                num_unique = int_col.nunique()
-                if max_val <= 120 and min_val > 0:
-                    # Add 0.5 score if all values are within [0, 120]
-                    values_score += 0.5
-                    # TODO: think about why we included age_range comparison in earlier discussion
-                    # Add 0.1 score if range is more than np.minimum(len(df)/50, 60)
-                    # if age_range > np.minimum(len(values) / 50, 60):
-                    #     values_score += 0.1
-                    # Add 0.2 score if num unique values is more than np.minimum(len(df)/10, 40)
-                    if num_unique >= np.minimum(len(values) / 10, 40):
-                        values_score += 0.2
-                else:
-                    values_score = 0
+                try:
+                    values_series = pd.Series(values)
+                    # Check if column is convertible to int dtype
+                    int_col = values_series.astype(int)
+                    max_val = np.percentile(int_col, 95)
+                    min_val = np.percentile(int_col, 5)
+                    num_unique = int_col.nunique()
+                    if max_val <= 120 and min_val > 0:
+                        # Add 0.5 score if all values are within [0, 120]
+                        values_score += 0.5
+                        # TODO: think about why we included age_range comparison in earlier discussion
+                        # Add 0.1 score if range is more than np.minimum(len(df)/50, 60)
+                        # if age_range > np.minimum(len(values) / 50, 60):
+                        #     values_score += 0.1
+                        # Add 0.2 score if num unique values is more than np.minimum(len(df)/10, 40)
+                        if num_unique >= np.minimum(len(values) / 10, 40):
+                            values_score += 0.2
+                    else:
+                        values_score = 0
+                except:
+                    pass
             else:
                 raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
         except Exception as e:
