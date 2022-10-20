@@ -1,25 +1,30 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
 class InfotypeProposal:
-
-    def __init__(self, infotype, confidence_level, debug_info):
-        self.infotype = infotype
-        self.confidence_level = confidence_level
-        self.debug_info = debug_info
+    infotype: str
+    confidence_level: float
+    debug_info: dict[str:float]
 
 
-class ColumnInfo:
-
-    def __init__(self, metadata, values, infotype_proposals=None):
-        if infotype_proposals is None:
-            infotype_proposals = []
-        self.metadata = metadata
-        self.values = values
-        self.infotype_proposals = infotype_proposals
-
-
+@dataclass
 class Metadata:
+    meta_info: dict
+    name: str = field(init=False)
+    description: str = field(init=False)
+    datatype: str = field(init=False)
+    dataset_name: str = field(init=False)
 
-    def __init__(self, meta_info):
-        self.name = meta_info.get('Name', None)
-        self.description = meta_info.get('Description', None)
-        self.datatype = meta_info.get('Datatype', None)
-        self.dataset_name = meta_info.get('Dataset_Name', None)
+    def __post_init__(self):
+        self.name = self.meta_info.get('Name', None)
+        self.description = self.meta_info.get('Description', None)
+        self.datatype = self.meta_info.get('Datatype', None)
+        self.dataset_name = self.meta_info.get('Dataset_Name', None)
+
+
+@dataclass
+class ColumnInfo:
+    metadata: Metadata
+    values: list
+    infotype_proposals: list[InfotypeProposal] = None
