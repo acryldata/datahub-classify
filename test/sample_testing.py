@@ -48,11 +48,10 @@ def get_public_data(input_data_path):
     data27 = pd.read_csv(input_data_path + "Bachelor_Degree_Majors.csv")
     data28 = pd.read_csv(input_data_path + "CrabAgePrediction.csv")
     data29 = pd.read_csv(input_data_path + "Salary_Data.csv")
-    data30 = pd.read_csv(input_data_path + "drug-use-by-age.csv")
     return {'data1': data1, 'data2': data2, 'data3': data3, 'data4': data4, 'data5': data5,
             'data6': data6, 'data7': data7, 'data12': data12, 'data13': data13, 'data14': data14,
             'data15': data15,'data16': data16, 'data17': data17, 'data21': data21, 'data25': data25,
-            'data27': data27, 'data28': data28, 'data29': data29, 'data30': data30}
+            'data27': data27, 'data28': data28, 'data29': data29}
 
 
 def populate_column_info_list(public_data_list):
