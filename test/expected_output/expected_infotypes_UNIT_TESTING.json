@@ -1,0 +1,63 @@
+{
+    "data1": {
+        "SEX": "Gender",
+        "AGE": "Age"
+    },
+    "data2": {
+        "Person": "Full_Name",
+        "Current Age": "Age",
+        "Retirement Age": "Age",
+        "Gender": "Gender",
+        "Address": "Street_Address"
+    },
+    "data3": {
+        "address": "Street_Address"
+    },
+    "data4": {
+        "Card_Number": "Credit_Debit_Card_Number"
+    },
+    "data5": {
+        "Card Number": "Credit_Debit_Card_Number"
+    },
+    "data6": {},
+    "data7": {},
+    "data12": {
+        "Address": "Street_Address",
+        "E-mail": "Email_Address"
+    },
+    "data13": {
+        "gender": "Gender",
+        "email": "Email_Address",
+        "phone": "Phone_Number",
+        "street_address": "Street_Address"
+    },
+    "data14": {
+        "CODE_GENDER": "Gender"
+    },
+    "data15": {"NAME": "Full_Name"},
+    "data16": {
+        "credit card": "Credit_Debit_Card_Number"
+    },
+    "data17": {},
+    "data21": {
+        "MetadataFrom": "no_infotype",
+        "RawText": "no_infotype"
+    },
+    "data25": {
+        "Name": "Full_Name"
+    },
+    "data27": {
+        "Sex": "Gender",
+        "Age Group": "Age"
+    },
+    "data28": {
+        "Sex": "Gender",
+        "Age": "Age"
+    },
+    "data29": {
+        "Age": "Age"
+    },
+    "data30": {
+        "age": "Age"
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "data1": {
+        "SEX": 0.9,
+        "AGE": 0.9
+    },
+    "data2": {
+        "Person": 0.8,
+        "Current Age": 0.9,
+        "Retirement Age": 0.8,
+        "Gender": 1.0,
+        "Address": 0.8
+    },
+    "data3": {
+        "address": 0.6
+    },
+    "data4": {
+        "Card_Number": 0.6
+    },
+    "data5": {
+        "Card Number": 0.8
+    },
+    "data6": {},
+    "data7": {},
+    "data12": {
+        "Address": 0.6,
+        "E-mail": 1.0
+    },
+    "data13": {
+        "gender": 0.9,
+        "email": 1.0,
+        "phone": 1.0,
+        "street_address": 0.7
+    },
+    "data14": {
+        "CODE_GENDER": 1.0
+    },
+    "data15": {
+        "NAME": 0.8
+    },
+    "data16": {
+        "credit card": 0.6
+    },
+    "data17": {},
+    "data21": {},
+    "data25": {
+        "Name": 0.8
+    },
+    "data27": {
+        "Sex": 0.8,
+        "Age Group": 0.6
+    },
+    "data28": {
+        "Sex": 0.7,
+        "Age": 0.8
+    },
+    "data29": {
+        "Age": 0.9
+    },
+    "data30": {
+        "age": 0.6
+    }
+}
