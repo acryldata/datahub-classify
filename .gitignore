@@ -1,3 +1,5 @@
-__pycache__/
-/venv*/
-*.egg-info/
+.gradle/
+
+#VS Code
+.vscode
+.devcontainer

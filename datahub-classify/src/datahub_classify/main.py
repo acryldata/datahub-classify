@@ -1,15 +1,17 @@
+import logging
 import os
-
-import pandas as pd
 from datetime import datetime
 
-from datahub_classify.helper_classes import Metadata, ColumnInfo
+import pandas as pd
+
+from datahub_classify.helper_classes import ColumnInfo, Metadata
 from datahub_classify.infotype_predictor import predict_infotypes
-import logging
+
 logger = logging.getLogger(__name__)
 
 current_dir = os.getcwd()
 logging_directory = current_dir + "/logs/logs.log"
+
 
 def get_public_data(input_data_path):
     data1 = pd.read_csv(input_data_path + "UCI_Credit_Card.csv")
@@ -31,10 +33,27 @@ def get_public_data(input_data_path):
     data28 = pd.read_csv(input_data_path + "CrabAgePrediction.csv")
     data29 = pd.read_csv(input_data_path + "Salary_Data.csv")
     data30 = pd.read_csv(input_data_path + "drug-use-by-age.csv")
-    return {'data1': data1, 'data2': data2, 'data3': data3, 'data4': data4, 'data5': data5,
-            'data6': data6, 'data7': data7, 'data12': data12, 'data13': data13, 'data14': data14,
-            'data15': data15,'data16': data16, 'data17': data17, 'data21': data21, 'data25': data25,
-            'data27': data27, 'data28': data28, 'data29': data29, 'data30': data30}
+    return {
+        "data1": data1,
+        "data2": data2,
+        "data3": data3,
+        "data4": data4,
+        "data5": data5,
+        "data6": data6,
+        "data7": data7,
+        "data12": data12,
+        "data13": data13,
+        "data14": data14,
+        "data15": data15,
+        "data16": data16,
+        "data17": data17,
+        "data21": data21,
+        "data25": data25,
+        "data27": data27,
+        "data28": data28,
+        "data29": data29,
+        "data30": data30,
+    }
 
 
 def populate_column_info_list(public_data_list):
@@ -43,10 +62,10 @@ def populate_column_info_list(public_data_list):
     for i, (dataset_name, data) in enumerate(public_data_list.items()):
         for col in data.columns:
             fields = {
-                'Name': col,
-                'Description': f'This column contains name of the {col}',
-                'Datatype': 'str',
-                'Dataset_Name': dataset_name
+                "Name": col,
+                "Description": f"This column contains name of the {col}",
+                "Datatype": "str",
+                "Dataset_Name": dataset_name,
             }
             metadata = Metadata(fields)
             if len(data[col].dropna()) > 1000:
@@ -60,39 +79,52 @@ def populate_column_info_list(public_data_list):
 
 
 def check_predict_infotype(column_info_list, confidence_threshold, input_dict):
-    column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict)
+    column_info_pred_list = predict_infotypes(
+        column_info_list, confidence_threshold, input_dict
+    )
     for col_info in column_info_pred_list:
-        logger.debug('Column Name: ', col_info.metadata.name)
-        logger.debug('Sample Values: ', col_info.values[:5])
+        logger.debug("Column Name: ", col_info.metadata.name)
+        logger.debug("Sample Values: ", col_info.values[:5])
         if col_info.infotype_proposals is None:
             logger.debug(col_info.infotype_proposals)
         else:
             for i in range(len(col_info.infotype_proposals)):
-                logger.debug(f'Proposed InfoType {i + 1} :', col_info.infotype_proposals[i].infotype)
-                logger.debug('Overall Confidence: ', col_info.infotype_proposals[i].confidence_level)
-                logger.debug('Debug Info: ', col_info.infotype_proposals[i].debug_info)
-                logger.debug('--------------------')
+                logger.debug(
+                    f"Proposed InfoType {i + 1} :",
+                    col_info.infotype_proposals[i].infotype,
+                )
+                logger.debug(
+                    "Overall Confidence: ",
+                    col_info.infotype_proposals[i].confidence_level,
+                )
+                logger.debug("Debug Info: ", col_info.infotype_proposals[i].debug_info)
+                logger.debug("--------------------")
         logger.debug("\n================================\n")
     return column_info_pred_list
 
 
 def run_test(input_data_path):
     from sample_input import input1 as input_dict
+
     data_list = get_public_data(input_data_path)
     column_info_list = populate_column_info_list(data_list)
     confidence_threshold = 0.6
     check_predict_infotype(column_info_list, confidence_threshold, input_dict)
 
 
-if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
-                        encoding='utf-8', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+if __name__ == "__main__":
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)-8s %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        level=logging.INFO,
+    )
     logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    logger.info(f"--------------------STARTING RUN--------------------  ")
+    logger.info("--------------------STARTING RUN--------------------  ")
     logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-    logger.info(f"Start Time --->  {datetime.now()}", )
+    logger.info(
+        f"Start Time --->  {datetime.now()}",
+    )
     # input_data_dir = "C:\\Glossary_Terms_Git\\datahub-classify\\test\\datasets\\"
     # input_data_dir = '../../../../../../jupyter/office_project/acryl_glossary_term/dataset/'
-    input_data_dir = './'
+    input_data_dir = "./"
     run_test(input_data_dir)
-

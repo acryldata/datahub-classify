@@ -1,17 +1,32 @@
-import pandas as pd
-import numpy as np
-import spacy
-import traceback
-import phonenumbers
-import re
 import logging
+import re
+from typing import Any, Dict
 
-from datahub_classify.infotype_utils import match_regex, match_datatype, match_regex_for_values, detect_named_entity_spacy
-from datahub_classify.constants import *
+import numpy as np
+import pandas as pd
+import phonenumbers
+import spacy
+
+from datahub_classify.constants import (
+    DATATYPE,
+    DESCRIPTION,
+    NAME,
+    PREDICTION_FACTORS_AND_WEIGHTS,
+    PREDICTION_TYPE,
+    REGEX,
+    TYPE,
+    VALUES,
+)
+from datahub_classify.infotype_utils import (
+    detect_named_entity_spacy,
+    match_datatype,
+    match_regex,
+    match_regex_for_values,
+)
 
 # logging.basicConfig(filename='logs.log', encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-nlp_english = spacy.load('en_core_web_sm')
+nlp_english = spacy.load("en_core_web_sm")
 spacy_models_list = [nlp_english]
 
 
@@ -23,12 +38,16 @@ def inspect_for_email_address(metadata, values, config):
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise Exception("Currently prediction type 'library' is not supported for infotype Email Address")
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                raise Exception(
+                    "Currently prediction type 'library' is not supported for infotype Email Address"
+                )
             else:
-                raise Exception("Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
@@ -46,14 +65,18 @@ def inspect_for_email_address(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -63,7 +86,7 @@ def inspect_for_email_address(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_street_address(metadata, values, config):
+def inspect_for_street_address(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
@@ -71,22 +94,27 @@ def inspect_for_street_address(metadata, values, config):
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                entity_count = 0
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                entity_count: float = 0
                 entities_of_interest = ["FAC", "LOC", "ORG"]
                 weight = 1.5
                 for value in values:
                     try:
-                        if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                        if detect_named_entity_spacy(
+                            spacy_models_list, entities_of_interest, value
+                        ):
                             entity_count += weight
-                    except:
+                    except Exception:
                         pass
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
             pass
@@ -105,14 +133,18 @@ def inspect_for_street_address(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -123,7 +155,7 @@ def inspect_for_street_address(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_gender(metadata, values, config):
+def inspect_for_gender(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
@@ -132,12 +164,17 @@ def inspect_for_gender(metadata, values, config):
         values_score = 0
         try:
             values = pd.Series(values).astype(str)
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise Exception("Currently prediction type 'library' is not supported for infotype Gender")
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                raise Exception(
+                    "Currently prediction type 'library' is not supported for infotype Gender"
+                )
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
@@ -155,21 +192,29 @@ def inspect_for_gender(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
     try:
-        if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
-                and VALUES in debug_info.keys() and debug_info[VALUES] == 0:
+        if (
+            debug_info.get(NAME, None)
+            and int(debug_info[NAME]) == 1
+            and VALUES in debug_info.keys()
+            and debug_info[VALUES] == 0
+        ):
             num_unique_values = len(values.unique())
             if num_unique_values < 5:
                 debug_info[VALUES] = 0.9
-    except Exception as e:
+    except Exception:
         pass
 
     confidence_level = 0
@@ -194,12 +239,19 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
             for value in values:
                 string_cleaned = re.sub(r"[ _-]+", "", value)
                 values_cleaned.append(string_cleaned)
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
-                values_score = match_regex_for_values(values_cleaned, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
-                raise Exception("Currently prediction type 'library' is not supported for infotype Credit Card Number")
+            if config[VALUES][PREDICTION_TYPE] == "regex":
+                values_score = match_regex_for_values(
+                    values_cleaned, config[VALUES][REGEX]
+                )
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                raise Exception(
+                    "Currently prediction type 'library' is not supported for infotype Credit Card Number"
+                )
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
@@ -217,14 +269,18 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -235,10 +291,11 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_phone_number(metadata, values, config):
+def inspect_for_phone_number(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
+    # fmt: off
     # TODO: shall we have these country codes in config?
     iso_codes = ["AF", "AX", "AL", "DZ", "AS", "AD", "AO", "AI", "AQ", "AG", "AR",
                  "AM", "AW", "AU", "AT", "AZ", "BS", "BH", "BD", "BB", "BY", "BE",
@@ -263,14 +320,14 @@ def inspect_for_phone_number(metadata, values, config):
                  "TH", "TL", "TG", "TK", "TO", "TT", "TN", "TR", "TM", "TC", "TV",
                  "UG", "UA", "AE", "GB", "US", "UM", "UY", "UZ", "VU", "VE", "VN",
                  "VG", "VI", "WF", "EH", "YE", "ZM", "ZW"]
-
+    # fmt: on
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score: float = 0
         try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
+            elif config[VALUES][PREDICTION_TYPE] == "library":
                 valid_phone_numbers_count = 0
                 for value in values:
                     try:
@@ -279,11 +336,14 @@ def inspect_for_phone_number(metadata, values, config):
                             if phonenumbers.is_possible_number(parsed_number):
                                 valid_phone_numbers_count += 1
                                 break
-                    except:
+                    except Exception:
                         pass
                 values_score = valid_phone_numbers_count / len(values)
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
 
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -303,14 +363,18 @@ def inspect_for_phone_number(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
 
     confidence_level = 0
     for key in debug_info.keys():
@@ -321,7 +385,7 @@ def inspect_for_phone_number(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_full_name(metadata, values, config):
+def inspect_for_full_name(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = {}
 
@@ -329,23 +393,28 @@ def inspect_for_full_name(metadata, values, config):
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0
         try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
+            elif config[VALUES][PREDICTION_TYPE] == "library":
                 entity_count = 0
                 entities_of_interest = ["PERSON"]
                 weight = 1
                 for value in values:
                     try:
                         if len(value) <= 50:
-                            if detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
+                            if detect_named_entity_spacy(
+                                spacy_models_list, entities_of_interest, value
+                            ):
                                 entity_count += weight
-                    except:
+                    except Exception:
                         pass
                 entities_score = entity_count / len(values)
                 values_score = np.minimum(entities_score, 1)
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
         values_score = np.round(values_score, 2)
@@ -363,17 +432,25 @@ def inspect_for_full_name(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
     try:
-        if debug_info.get(NAME, None) and int(debug_info[NAME]) == 1 \
-                and VALUES in debug_info.keys() and 0.5 > debug_info[VALUES] > 0.1:
+        if (
+            debug_info.get(NAME, None)
+            and int(debug_info[NAME]) == 1
+            and VALUES in debug_info.keys()
+            and 0.5 > debug_info[VALUES] > 0.1
+        ):
             debug_info[VALUES] = 0.8
     except Exception as e:
         logger.error(f"Column {metadata.name} failed due to {e}")
@@ -387,17 +464,17 @@ def inspect_for_full_name(metadata, values, config):
     return confidence_level, debug_info
 
 
-def inspect_for_age(metadata, values, config):
+def inspect_for_age(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score: float = 0
         try:
-            if config[VALUES][PREDICTION_TYPE] == 'regex':
+            if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == 'library':
+            elif config[VALUES][PREDICTION_TYPE] == "library":
                 try:
                     values_series = pd.Series(values)
                     # Check if column is convertible to int dtype
@@ -417,10 +494,13 @@ def inspect_for_age(metadata, values, config):
                             values_score += 0.2
                     else:
                         values_score = 0
-                except:
+                except Exception:
                     pass
             else:
-                raise Exception("Inappropriate values_prediction_type %s" % config[VALUES][PREDICTION_TYPE])
+                raise Exception(
+                    "Inappropriate values_prediction_type %s"
+                    % config[VALUES][PREDICTION_TYPE]
+                )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
         debug_info[VALUES] = values_score
@@ -437,14 +517,18 @@ def inspect_for_age(metadata, values, config):
         if not metadata.description or not metadata.description.strip():
             debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
         else:
-            debug_info[DESCRIPTION] = match_regex(metadata.description, config[DESCRIPTION][REGEX])
+            debug_info[DESCRIPTION] = match_regex(
+                metadata.description, config[DESCRIPTION][REGEX]
+            )
 
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
             debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
         else:
-            debug_info[DATATYPE] = match_datatype(metadata.datatype, config[DATATYPE][TYPE])
+            debug_info[DATATYPE] = match_datatype(
+                metadata.datatype, config[DATATYPE][TYPE]
+            )
 
     confidence_level = 0
     for key in debug_info.keys():

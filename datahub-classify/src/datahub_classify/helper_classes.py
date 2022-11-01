@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
+from typing import Dict, List, Optional
 
 
 @dataclass
 class InfotypeProposal:
     infotype: str
     confidence_level: float
-    debug_info: dict[str:float]
+    debug_info: Dict[str, float]
 
 
 @dataclass
@@ -17,14 +18,14 @@ class Metadata:
     dataset_name: str = field(init=False)
 
     def __post_init__(self):
-        self.name = self.meta_info.get('Name', None)
-        self.description = self.meta_info.get('Description', None)
-        self.datatype = self.meta_info.get('Datatype', None)
-        self.dataset_name = self.meta_info.get('Dataset_Name', None)
+        self.name = self.meta_info.get("Name", None)
+        self.description = self.meta_info.get("Description", None)
+        self.datatype = self.meta_info.get("Datatype", None)
+        self.dataset_name = self.meta_info.get("Dataset_Name", None)
 
 
 @dataclass
 class ColumnInfo:
     metadata: Metadata
     values: list
-    infotype_proposals: list[InfotypeProposal] = None
+    infotype_proposals: Optional[List[InfotypeProposal]] = None

@@ -10,14 +10,28 @@ with open("./src/datahub_classify/__init__.py") as fp:
 
 def get_long_description():
     root = os.path.dirname(__file__)
-    return pathlib.Path(os.path.join(root, "README.md")).read_text(encoding='utf-8')
+    return pathlib.Path(os.path.join(root, "README.md")).read_text(encoding="utf-8")
+
 
 base_requirements = {
     "spacy==3.4.1",
     "phonenumbers==8.12.56",
     "pandas==1.5.0",
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz"
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1.tar.gz",
 }
+
+dev_requirements = {
+    *base_requirements,
+    "black>=22.1.0",
+    "coverage>=5.1",
+    "flake8>=3.8.3",
+    "flake8-tidy-imports>=4.3.0",
+    "isort>=5.7.0",
+    "mypy>=0.901,<0.920",
+    "pytest-cov>=2.8.1",
+    "sklearn",
+}
+
 
 setuptools.setup(
     # Package metadata.
@@ -58,4 +72,5 @@ setuptools.setup(
     packages=setuptools.find_namespace_packages(where="./src"),
     # Dependencies.
     install_requires=list(base_requirements),
+    extras_require={"dev": dev_requirements},
 )

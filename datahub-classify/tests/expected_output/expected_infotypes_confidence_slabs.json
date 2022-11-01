@@ -8,7 +8,7 @@
         "Current Age": 0.9,
         "Retirement Age": 0.8,
         "Gender": 1.0,
-        "Address": 0.8
+        "Address": 0.76
     },
     "data3": {
         "address": 0.6
