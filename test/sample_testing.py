@@ -20,6 +20,7 @@ from datahub_classify.helper_classes import Metadata, ColumnInfo
 from datahub_classify.sample_input import input1 as input_dict
 from datahub_classify.supported_infotypes import infotypes_to_use
 
+
 current_wdr = os.getcwd()
 input_data_dir = current_wdr + "\\datasets\\"
 input_jsons_dir = current_wdr + "\\expected_output\\"
@@ -102,7 +103,7 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
 
 def get_best_infotype_pred(public_data_list, confidence_threshold, expected_output_unit_testing):
     column_info_list = populate_column_info_list(public_data_list)
-    column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict)
+    column_info_pred_list = predict_infotypes(column_info_list, confidence_threshold, input_dict, infotypes_to_use)
     public_data_predicted_infotype = dict()
     # get_thresholds_for_unit_test = dict()
     public_data_predicted_infotype_confidence = dict()
