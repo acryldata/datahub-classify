@@ -49,31 +49,31 @@ Infotype configuration is a dictionary with all infotypes at root level key. Eac
 
 ### Sample Infotype Configuration Dictionary
 
-    ```python
-    {
-        '<Infotype1>': {
-            'Prediction_Factors_and_Weights': {
-                'Name': 0.4,
-                'Description': 0,
-                'Datatype': 0,
-                'Values': 0.6
-            },
-            'Name': { 'regex': [<regex patterns>] },
-            'Description': { 'regex': [<regex patterns>] },
-            'Datatype': { 'type': [<list of datatypes>] },
-            'Values': {
-                'prediction_type': 'regex/library',
-                'regex': [<regex patterns>],
-                'library': [<library name>]
-            }
+```python
+{
+    '<Infotype1>': {
+        'Prediction_Factors_and_Weights': {
+            'Name': 0.4,
+            'Description': 0,
+            'Datatype': 0,
+            'Values': 0.6
         },
-        '<Infotype2>': {
-        ..
-        ..
-        ..
+        'Name': { 'regex': [<regex patterns>] },
+        'Description': { 'regex': [<regex patterns>] },
+        'Datatype': { 'type': [<list of datatypes>] },
+        'Values': {
+            'prediction_type': 'regex/library',
+            'regex': [<regex patterns>],
+            'library': [<library name>]
         }
+    },
+    '<Infotype2>': {
+    ..
+    ..
+    ..
     }
-    ```
+}
+```
 
 ## Debug Information
 
@@ -84,14 +84,14 @@ A debug information is associated with each infotype proposal, it provides detai
 - Datatype
 - Values
 
-        ```python
-        {
-            'Name': 0.4,
-            'Description': 0.2,
-            'Values': 0.6,
-            'Datatype': 0.3
-        }
-        ```
+```python
+{
+    'Name': 0.4,
+    'Description': 0.2,
+    'Values': 0.6,
+    'Datatype': 0.3
+}
+```
 
 ## Supported Infotypes
 
@@ -122,24 +122,24 @@ Following libraries are required
 
 ### Set up your Python environment
 
-    ```sh
-    cd datahub-classify
-    ../gradlew :datahub-classify:installDev
-    source venv/bin/activate
+```sh
+cd datahub-classify
+../gradlew :datahub-classify:installDev
+source venv/bin/activate
 
-    pytest tests/ --capture=no --log-cli-level=DEBUG #Optional
-    ```
+pytest tests/ --capture=no --log-cli-level=DEBUG #Optional
+```
 
 ### Build and Test
 
-    ```sh
-    ../gradlew :datahub-classify:build
-    ```
+```sh
+../gradlew :datahub-classify:build
+```
 
 You can also run these steps via the gradle build:
 
-    ```sh
-    ../gradlew :datahub-classify:lint
-    ../gradlew :datahub-classify:lintFix
-    ../gradlew :datahub-classify:testQuick
-    ```
+```sh
+../gradlew :datahub-classify:lint
+../gradlew :datahub-classify:lintFix
+../gradlew :datahub-classify:testQuick
+```
