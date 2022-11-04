@@ -124,10 +124,24 @@ Following libraries are required
 
 ```sh
 cd datahub-classify
-../gradlew :datahub-classify:installDev
+../gradlew :datahub-classify:installDev # OR pip install -e '.[dev]'
 source venv/bin/activate
+```
 
-pytest tests/ --capture=no --log-cli-level=DEBUG #Optional
+### Runnning tests
+
+```sh
+pytest tests/ --capture=no --log-cli-level=DEBUG
+```
+
+### Sanity check code before committing
+
+```sh
+# Assumes: pip install -e '.[dev]' and venv is activated
+black src/ tests/
+isort src/ tests/
+flake8 src/ tests/
+mypy src/ tests/
 ```
 
 ### Build and Test
