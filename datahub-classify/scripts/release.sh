@@ -23,9 +23,9 @@ fi
 python -c 'import setuptools; where="./src"; assert setuptools.find_packages(where) == setuptools.find_namespace_packages(where), "you seem to be missing or have extra __init__.py files"'
 if [[ ${RELEASE_VERSION:-} ]]; then
     # Replace version with RELEASE_VERSION env variable
-    sed -i.bak "s/__version__ = \"0.0.0.dev0\"/__version__ = \"$RELEASE_VERSION\"/" src/datahub_actions/__init__.py
+    sed -i.bak "s/__version__ = \"0.0.0.dev0\"/__version__ = \"$RELEASE_VERSION\"/" src/datahub_classify/__init__.py
 else
-    vim src/datahub_actions/__init__.py
+    vim src/datahub_classify/__init__.py
 fi
 
 rm -rf build dist || true
@@ -33,4 +33,4 @@ python -m build
 if [[ ! ${RELEASE_SKIP_UPLOAD:-} ]]; then
     python -m twine upload 'dist/*' --verbose
 fi
-git restore src/datahub_actions/__init__.py
+git restore src/datahub_classify/__init__.py
