@@ -32,7 +32,7 @@ spacy_models_list = [nlp_english]
 
 def inspect_for_email_address(metadata, values, config):
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -88,7 +88,7 @@ def inspect_for_email_address(metadata, values, config):
 
 def inspect_for_street_address(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -157,7 +157,7 @@ def inspect_for_street_address(metadata, values, config):  # noqa: C901
 
 def inspect_for_gender(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -228,7 +228,7 @@ def inspect_for_gender(metadata, values, config):  # noqa: C901
 
 def inspect_for_credit_debit_card_number(metadata, values, config):
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -293,7 +293,7 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
 
 def inspect_for_phone_number(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # fmt: off
     # TODO: shall we have these country codes in config?
@@ -387,7 +387,7 @@ def inspect_for_phone_number(metadata, values, config):  # noqa: C901
 
 def inspect_for_full_name(metadata, values, config):  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info = {}
+    debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:

@@ -1,12 +1,12 @@
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
 class InfotypeProposal:
     infotype: str
     confidence_level: float
-    debug_info: Dict[str, float]
+    debug_info: Dict[str, Any]
 
 
 @dataclass
