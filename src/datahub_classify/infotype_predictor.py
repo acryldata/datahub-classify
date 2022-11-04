@@ -9,21 +9,24 @@ from datetime import datetime
 logger = logging.getLogger(__name__)
 
 
-def get_infotype_function_mapping():
+def get_infotype_function_mapping(infotypes):
     from inspect import getmembers, isfunction
     module_name = "datahub_classify.infotype_helper"
     module = importlib.import_module(module_name)
     module_fn_dict = dict(getmembers(module, isfunction))
     infotype_function_map = {}
-    for infotype in infotypes_to_use:
+    if not infotypes:
+        infotypes = infotypes_to_use
+    for infotype in infotypes:
         fn_name = 'inspect_for_%s' % infotype.lower()
         infotype_function_map[infotype] = module_fn_dict[fn_name]
     return infotype_function_map
 
 
-def predict_infotypes(column_infos: list[ColumnInfo], confidence_level_threshold: float, global_config: dict):
+def predict_infotypes(column_infos: list[ColumnInfo], confidence_level_threshold: float, global_config: dict,
+                      infotypes: list[str] = None):
     # assert type(column_infos) == list, "type of column_infos should be list"
-    infotype_function_map = get_infotype_function_mapping()
+    infotype_function_map = get_infotype_function_mapping(infotypes)
     logger.info(f"Total columns to be processed --> {len(column_infos)}")
     logger.info(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
     logger.info("===========================================================")
@@ -44,7 +47,7 @@ def predict_infotypes(column_infos: list[ColumnInfo], confidence_level_threshold
                         infotype_proposal = InfotypeProposal(infotype, confidence_level, debug_info)
                         proposal_list.append(infotype_proposal)
                 else:
-                    raise Exception("Failed basic checks for infotype - %s and column - %s" % \
+                    raise Exception("Failed basic checks for infotype - %s and column - %s" %
                                     (infotype, column_info.metadata.name))
             except Exception as e:
                 # traceback.print_exc()
