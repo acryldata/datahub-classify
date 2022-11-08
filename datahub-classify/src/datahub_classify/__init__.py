@@ -1,4 +1,4 @@
-__package_name__ = "datahub-classify"
+__package_name__ = "acryl-datahub-classify"
 __version__ = "0.0.0.dev0"
 
 
