@@ -12,5 +12,5 @@ infotypes_to_use = [
     "IP_Address_v4",
     "IP_Address_v6",
     "Swift_Code",
-    "US_Driving_License_Number"
+    "US_Driving_License_Number",
 ]

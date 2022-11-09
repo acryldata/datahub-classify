@@ -258,248 +258,331 @@ input1 = {
             "library": ["rule_based_logic"],
         },
     },
-    'IBAN': {
-        'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+    "IBAN": {
+        "Prediction_Factors_and_Weights": {
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["iban[^a-z]+.*", ".*[^a-z]+iban", ".*[^a-z]+iban[^a-z]+.*",
-                      '.*int.*bank.*acc.*',
-                      "iban"]
+        "Name": {
+            "regex": [
+                "iban[^a-z]+.*",
+                ".*[^a-z]+iban",
+                ".*[^a-z]+iban[^a-z]+.*",
+                ".*int.*bank.*acc.*",
+                "iban",
+            ]
         },
-        'Description': {
-            'regex': ["iban[^a-z]+.*", ".*[^a-z]+iban", ".*[^a-z]+iban[^a-z]+.*",
-                      '.*int.*bank.*acc.*',
-                      "iban"]
+        "Description": {
+            "regex": [
+                "iban[^a-z]+.*",
+                ".*[^a-z]+iban",
+                ".*[^a-z]+iban[^a-z]+.*",
+                ".*int.*bank.*acc.*",
+                "iban",
+            ]
         },
-        'Datatype': {
-            'type': ['int']
-        },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [],
-            'library': ['scwifty']
-        }
+        "Datatype": {"type": ["int"]},
+        "Values": {"prediction_type": "library", "regex": [], "library": ["scwifty"]},
     },
-
-    'US_Social_Security_Number': {
-        'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+    "US_Social_Security_Number": {
+        "Prediction_Factors_and_Weights": {
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
+        "Name": {
             # TODO: can we have patterns with "us" in it? Only SSN will be generic, not specific to US
             # TODO: can we have patterns with "Identification Number" text?
-            'regex': ["ssn[^a-z]+.*", ".*[^a-z]+ssn", ".*[^a-z]+ssn[^a-z]+.*",
-                      '.*social.*security.*',
-                      "social", "security",
-                      "ssn"]
+            "regex": [
+                "ssn[^a-z]+.*",
+                ".*[^a-z]+ssn",
+                ".*[^a-z]+ssn[^a-z]+.*",
+                ".*social.*security.*",
+                "social",
+                "security",
+                "ssn",
+            ]
         },
-        'Description': {
-            'regex': ["ssn[^a-z]+.*", ".*[^a-z]+ssn", ".*[^a-z]+ssn[^a-z]+.*",
-                      '.*social.*security.*',
-                      "social", "security",
-                      "ssn"]
+        "Description": {
+            "regex": [
+                "ssn[^a-z]+.*",
+                ".*[^a-z]+ssn",
+                ".*[^a-z]+ssn[^a-z]+.*",
+                ".*social.*security.*",
+                "social",
+                "security",
+                "ssn",
+            ]
         },
-        'Datatype': {
-            'type': ['int', 'str']
-        },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [],
-            'library': ['stdnum']
-        }
+        "Datatype": {"type": ["int", "str"]},
+        "Values": {"prediction_type": "library", "regex": [], "library": ["stdnum"]},
     },
-
-    'Vehicle_Identification_Number': {
-        'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+    "Vehicle_Identification_Number": {
+        "Prediction_Factors_and_Weights": {
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["vin[^a-z]+.*", ".*[^a-z]+vin", ".*[^a-z]+vin[^a-z]+.*",
-                      '.*vehicle.*identification.*', '.*chassis.*(num|no).*',
-                      '.*frame.*(num|no).*',
-                      'vin']
+        "Name": {
+            "regex": [
+                "vin[^a-z]+.*",
+                ".*[^a-z]+vin",
+                ".*[^a-z]+vin[^a-z]+.*",
+                ".*vehicle.*identification.*",
+                ".*chassis.*(num|no).*",
+                ".*frame.*(num|no).*",
+                "vin",
+            ]
         },
-        'Description': {
-            'regex': ["vin[^a-z]+.*", ".*[^a-z]+vin", ".*[^a-z]+vin[^a-z]+.*",
-                      '.*vehicle.*identification.*', '.*chassis.*(num|no).*',
-                      '.*frame.*(num|no).*']
+        "Description": {
+            "regex": [
+                "vin[^a-z]+.*",
+                ".*[^a-z]+vin",
+                ".*[^a-z]+vin[^a-z]+.*",
+                ".*vehicle.*identification.*",
+                ".*chassis.*(num|no).*",
+                ".*frame.*(num|no).*",
+            ]
         },
-        'Datatype': {
-            'type': ['str']
-        },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [],
-            'library': ['vininfo']
-        }
+        "Datatype": {"type": ["str"]},
+        "Values": {"prediction_type": "library", "regex": [], "library": ["vininfo"]},
     },
-
-    'IP_Address_v4': {
-        'Prediction_Factors_and_Weights': {
+    "IP_Address_v4": {
+        "Prediction_Factors_and_Weights": {
             # TODO: can we have more confidence on values?
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["ip[^a-z]+.*", ".*[^a-z]+ip", ".*[^a-z]+ip[^a-z]+.*",
-                      "ip[^a-z]{0,1}v4.*", ".*[^a-z]+ip[^a-z]{0,1}v4.*",
-                      '.*ip.*address.*',
-                      '.*source.*add.*', '.*add.*source.*',
-                      '.*destination.*add.*', '.*add.*destination.*',
-                      '.*src.*add.*', '.*add.*src.*',
-                      '.*d[e]{0,1}st.*add.*', '.*add.*d[e]{0,1}st.*',
-                      "ip"]
+        "Name": {
+            "regex": [
+                "ip[^a-z]+.*",
+                ".*[^a-z]+ip",
+                ".*[^a-z]+ip[^a-z]+.*",
+                "ip[^a-z]{0,1}v4.*",
+                ".*[^a-z]+ip[^a-z]{0,1}v4.*",
+                ".*ip.*address.*",
+                ".*source.*add.*",
+                ".*add.*source.*",
+                ".*destination.*add.*",
+                ".*add.*destination.*",
+                ".*src.*add.*",
+                ".*add.*src.*",
+                ".*d[e]{0,1}st.*add.*",
+                ".*add.*d[e]{0,1}st.*",
+                "ip",
+            ]
         },
-        'Description': {
-            'regex': ["ip[^a-z]+.*", ".*[^a-z]+ip", ".*[^a-z]+ip[^a-z]+.*",
-                      "ip[^a-z]{0,1}v4.*", ".*[^a-z]+ip[^a-z]{0,1}v4.*",
-                      '.*ip.*address.*',
-                      '.*source.*add.*', '.*add.*source.*',
-                      '.*destination.*add.*', '.*add.*destination.*',
-                      '.*src.*add.*', '.*add.*src.*',
-                      '.*d[e]{0,1}st.*add.*', '.*add.*d[e]{0,1}st.*',
-                      "ip"]
+        "Description": {
+            "regex": [
+                "ip[^a-z]+.*",
+                ".*[^a-z]+ip",
+                ".*[^a-z]+ip[^a-z]+.*",
+                "ip[^a-z]{0,1}v4.*",
+                ".*[^a-z]+ip[^a-z]{0,1}v4.*",
+                ".*ip.*address.*",
+                ".*source.*add.*",
+                ".*add.*source.*",
+                ".*destination.*add.*",
+                ".*add.*destination.*",
+                ".*src.*add.*",
+                ".*add.*src.*",
+                ".*d[e]{0,1}st.*add.*",
+                ".*add.*d[e]{0,1}st.*",
+                "ip",
+            ]
         },
-        'Datatype': {
-            'type': ['str']
+        "Datatype": {"type": ["str"]},
+        "Values": {
+            "prediction_type": "library",
+            "regex": [
+                r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"
+            ],
+            "library": ["ipaddress"],
         },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [
-                r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$"],
-            'library': ['ipaddress']
-        }
     },
-
-    'IP_Address_v6': {
-        'Prediction_Factors_and_Weights': {
+    "IP_Address_v6": {
+        "Prediction_Factors_and_Weights": {
             # TODO: can we have more confidence on values?
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["ip[^a-z]+.*", ".*[^a-z]+ip", ".*[^a-z]+ip[^a-z]+.*",
-                      "ip[^a-z]{0,1}v6.*", ".*[^a-z]+ip[^a-z]{0,1}v6.*",
-                      '.*ip.*address.*',
-                      '.*source.*add.*', '.*add.*source.*',
-                      '.*destination.*add.*', '.*add.*destination.*',
-                      '.*src.*add.*', '.*add.*src.*',
-                      '.*d[e]{0,1}st.*add.*', '.*add.*d[e]{0,1}st.*',
-                      "ip"]
+        "Name": {
+            "regex": [
+                "ip[^a-z]+.*",
+                ".*[^a-z]+ip",
+                ".*[^a-z]+ip[^a-z]+.*",
+                "ip[^a-z]{0,1}v6.*",
+                ".*[^a-z]+ip[^a-z]{0,1}v6.*",
+                ".*ip.*address.*",
+                ".*source.*add.*",
+                ".*add.*source.*",
+                ".*destination.*add.*",
+                ".*add.*destination.*",
+                ".*src.*add.*",
+                ".*add.*src.*",
+                ".*d[e]{0,1}st.*add.*",
+                ".*add.*d[e]{0,1}st.*",
+                "ip",
+            ]
         },
-        'Description': {
-            'regex': ["ip[^a-z]+.*", ".*[^a-z]+ip", ".*[^a-z]+ip[^a-z]+.*",
-                      "ip[^a-z]{0,1}v6.*", ".*[^a-z]+ip[^a-z]{0,1}v6.*",
-                      '.*ip.*address.*',
-                      '.*source.*add.*', '.*add.*source.*',
-                      '.*destination.*add.*', '.*add.*destination.*',
-                      '.*src.*add.*', '.*add.*src.*',
-                      '.*d[e]{0,1}st.*add.*', '.*add.*d[e]{0,1}st.*',
-                      "ip"]
+        "Description": {
+            "regex": [
+                "ip[^a-z]+.*",
+                ".*[^a-z]+ip",
+                ".*[^a-z]+ip[^a-z]+.*",
+                "ip[^a-z]{0,1}v6.*",
+                ".*[^a-z]+ip[^a-z]{0,1}v6.*",
+                ".*ip.*address.*",
+                ".*source.*add.*",
+                ".*add.*source.*",
+                ".*destination.*add.*",
+                ".*add.*destination.*",
+                ".*src.*add.*",
+                ".*add.*src.*",
+                ".*d[e]{0,1}st.*add.*",
+                ".*add.*d[e]{0,1}st.*",
+                "ip",
+            ]
         },
-        'Datatype': {
-            'type': ['str']
+        "Datatype": {"type": ["str"]},
+        "Values": {
+            "prediction_type": "library",
+            "regex": [
+                r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"
+            ],
+            "library": ["ipaddress"],
         },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [
-                r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))"],
-            'library': ['ipaddress']
-        }
     },
-
-    'US_Driving_License_Number': {
-        'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+    "US_Driving_License_Number": {
+        "Prediction_Factors_and_Weights": {
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["dl[^a-z]+.*", ".*[^a-z]+dl", ".*[^a-z]+dl[^a-z]+.*",
-                      # TODO: do we require following two patterns? isn't it generic?
-                      '.*license.*(num|no).*', '.*(num|no).*license.*',
-                      '.*driv.*license.*', '.*license.*driv.*',
-                      'driv', 'lic',
-                      ]
+        "Name": {
+            "regex": [
+                "dl[^a-z]+.*",
+                ".*[^a-z]+dl",
+                ".*[^a-z]+dl[^a-z]+.*",
+                # TODO: do we require following two patterns? isn't it generic?
+                ".*license.*(num|no).*",
+                ".*(num|no).*license.*",
+                ".*driv.*license.*",
+                ".*license.*driv.*",
+                "driv",
+                "lic",
+            ]
         },
-        'Description': {
-            'regex': ["dl[^a-z]+.*", ".*[^a-z]+dl", ".*[^a-z]+dl[^a-z]+.*",
-                      '.*license.*(num|no).*', '.*(num|no).*license.*',
-                      '.*driv.*license.*', '.*license.*driv.*',
-                      'driv', 'lic',
-                      ]
+        "Description": {
+            "regex": [
+                "dl[^a-z]+.*",
+                ".*[^a-z]+dl",
+                ".*[^a-z]+dl[^a-z]+.*",
+                ".*license.*(num|no).*",
+                ".*(num|no).*license.*",
+                ".*driv.*license.*",
+                ".*license.*driv.*",
+                "driv",
+                "lic",
+            ]
         },
-        'Datatype': {
-            'type': ['str']
+        "Datatype": {"type": ["str"]},
+        "Values": {
+            "prediction_type": "regex",
+            "regex": [
+                r"\d{7}",
+                r"[a-zA-Z]\d{8}",
+                r"\d{9}",
+                r"9\d{8}",
+                r"[a-zA-Z]\d{7}",
+                r"\d{2}-\d{3}-\d{4}",
+                r"[a-zA-Z] \d{3} \d{3} \d{3} \d{3}",
+                r"[a-zA-Z]\d{12}",
+                r"[a-zA-Z]\d{3}-\d{3}-\d{2}-\d{3}-\d",
+                r"[a-zA-Z]-\d{3}-\d{3}-\d{3}-\d{3}",
+                r"[a-zA-Z]\s\d{3}\s\d{3}\s\d{3}\s\d{3}",
+                r"[a-zA-Z]\d{12}",
+                r"[a-zA-Z]{2}\d{6}[a-zA-Z]",
+                r"[a-zA-Z]\d{3}-\d{4}-\d{4}",
+                r"[a-zA-Z]\d{11}",
+                r"\d{4}-\d{2}-\d{4}",
+                r"\d{3}[a-zA-Z]{2}\d{4}",
+                r"[a-zA-Z]\d{2}-\d{2}-\d{4}",
+                r"[a-zA-Z]\d{2}-\d{3}-\d{3}",
+                r"[a-zA-Z]\d{9}",
+                r"\d{3}-\d{2}-\d{4}",
+                r"[a-zA-Z]\d{9}",
+                r"(([0][1-9]|[1][0-2])\d{3}([1-9][0-9]{3})41([0][1-9]|[1][0-9]|[3][0-1]))"
+                r"\d{10}",
+                r"([0][1-9]|[1][0-2])[a-zA-Z]{3}\d{2}(0[1-9]|[1-2][0-9]|3[0-1])\d",
+                r"[a-zA-Z]\d{4}-\d{5}-\d{5}",
+                r"[a-zA-Z]\d{14}",
+                r"\d{3} \d{3} \d{3}",
+                r"\d{12}",
+                r"[a-zA-Z]{3}-\d{2}-\d{4}",
+                r"[a-zA-Z]{1}[0-9]{4,8}",
+                r"[a-zA-Z]{2}[0-9]{3,7}",
+                r"\d{2}\s\d{3}\s\d{3}",
+                r"[1-9]{2}\d{5}",
+                r"\d{8}",
+                r"\d{7,9}",
+                r"\d{7}[a-zA-Z]",
+                r"[a-zA-Z]\d{8}",
+                r"[a-zA-Z*]{1,6}[a-zA-Z]{2}\d[a-zA-Z0-9]{4,6}",
+                r"[a-zA-Z]\d{6}",
+                r"[a-zA-Z]\d{3}-\d{4}-\d{4}-\d{2}",
+                r"\d{6}-\d{3}",
+                r"\d{2}[a-zA-Z]{3}\d{5}",
+                r"\d{13}",
+            ],
+            "library": [],
         },
-        'Values': {
-            'prediction_type': 'regex',
-            'regex': ['\d{7}', '[a-zA-Z]\d{8}', '\d{9}', '9\d{8}', '[a-zA-Z]\d{7}',
-                      '\d{2}-\d{3}-\d{4}', "[a-zA-Z] \d{3} \d{3} \d{3} \d{3}",
-                      "[a-zA-Z]\d{12}", "[a-zA-Z]\d{3}-\d{3}-\d{2}-\d{3}-\d",
-                      "[a-zA-Z]-\d{3}-\d{3}-\d{3}-\d{3}", "[a-zA-Z]\s\d{3}\s\d{3}\s\d{3}\s\d{3}",
-                      "[a-zA-Z]\d{12}", "[a-zA-Z]{2}\d{6}[a-zA-Z]", "[a-zA-Z]\d{3}-\d{4}-\d{4}",
-                      "[a-zA-Z]\d{11}", "\d{4}-\d{2}-\d{4}", "\d{3}[a-zA-Z]{2}\d{4}",
-                      "[a-zA-Z]\d{2}-\d{2}-\d{4}", "[a-zA-Z]\d{2}-\d{3}-\d{3}",
-                      '[a-zA-Z]\d{9}', "\d{3}-\d{2}-\d{4}", "[a-zA-Z]\d{9}",
-                      "(([0][1-9]|[1][0-2])\d{3}([1-9][0-9]{3})41([0][1-9]|[1][0-9]|[3][0-1]))"
-                      "\d{10}", "([0][1-9]|[1][0-2])[a-zA-Z]{3}\d{2}(0[1-9]|[1-2][0-9]|3[0-1])\d",
-                      "[a-zA-Z]\d{4}-\d{5}-\d{5}", "[a-zA-Z]\d{14}", "\d{3} \d{3} \d{3}",
-                      "\d{12}", "[a-zA-Z]{3}-\d{2}-\d{4}", "[a-zA-Z]{1}[0-9]{4,8}",
-                      "[a-zA-Z]{2}[0-9]{3,7}", "\d{2}\s\d{3}\s\d{3}", "[1-9]{2}\d{5}",
-                      "\d{8}", "\d{7,9}", "\d{7}[a-zA-Z]", "[a-zA-Z]\d{8}",
-                      "[a-zA-Z*]{1,6}[a-zA-Z]{2}\d[a-zA-Z0-9]{4,6}", "[a-zA-Z]\d{6}",
-                      "[a-zA-Z]\d{3}-\d{4}-\d{4}-\d{2}", "\d{6}-\d{3}",
-                      "\d{2}[a-zA-Z]{3}\d{5}", "\d{13}"],
-            'library': []
-        }
     },
-
-    'Swift_Code': {
-        'Prediction_Factors_and_Weights': {
-            'Name': 0.4,
-            'Description': 0,
-            'Datatype': 0,
-            'Values': 0.6
+    "Swift_Code": {
+        "Prediction_Factors_and_Weights": {
+            "Name": 0.4,
+            "Description": 0,
+            "Datatype": 0,
+            "Values": 0.6,
         },
-        'Name': {
-            'regex': ["bic[^a-z]+.*", ".*[^a-z]+bic", ".*[^a-z]+bic[^a-z]+.*",
-                      '.*swift.*(num|no).*', '.*(num|no).*swift.*',
-                      '.*swift.*code.*', '.*code.*swift.*',
-                      '.*swift.*',
-                      '.*business.*identifier.*code.*',
-                      'bic']
+        "Name": {
+            "regex": [
+                "bic[^a-z]+.*",
+                ".*[^a-z]+bic",
+                ".*[^a-z]+bic[^a-z]+.*",
+                ".*swift.*(num|no).*",
+                ".*(num|no).*swift.*",
+                ".*swift.*code.*",
+                ".*code.*swift.*",
+                ".*swift.*",
+                ".*business.*identifier.*code.*",
+                "bic",
+            ]
         },
-        'Description': {
-            'regex': ["bic[^a-z]+.*", ".*[^a-z]+bic", ".*[^a-z]+bic[^a-z]+.*",
-                      '.*swift.*(num|no).*', '.*(num|no).*swift.*',
-                      '.*swift.*code.*', '.*code.*swift.*',
-                      '.*swift.*',
-                      '.*business.*identifier.*code.*',
-                      'bic']
+        "Description": {
+            "regex": [
+                "bic[^a-z]+.*",
+                ".*[^a-z]+bic",
+                ".*[^a-z]+bic[^a-z]+.*",
+                ".*swift.*(num|no).*",
+                ".*(num|no).*swift.*",
+                ".*swift.*code.*",
+                ".*code.*swift.*",
+                ".*swift.*",
+                ".*business.*identifier.*code.*",
+                "bic",
+            ]
         },
-        'Datatype': {
-            'type': ['int', 'str']
-        },
-        'Values': {
-            'prediction_type': 'library',
-            'regex': [],
-            'library': ['schwifty']
-        }
+        "Datatype": {"type": ["int", "str"]},
+        "Values": {"prediction_type": "library", "regex": [], "library": ["schwifty"]},
     },
 }
