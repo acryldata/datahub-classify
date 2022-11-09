@@ -1,235 +1,1001 @@
-"address","city","state","zip"
-"777 Brockton Avenue","Abington","MA","2351"
-"30 Memorial Drive","Avon","MA","2322"
-"250 Hartford Avenue","Bellingham","MA","2019"
-"700 Oak Street","Brockton","MA","2301"
-"66-4 Parkhurst Rd","Chelmsford","MA","1824"
-"591 Memorial Dr","Chicopee","MA","1020"
-"55 Brooksby Village Way","Danvers","MA","1923"
-"137 Teaticket Hwy","East Falmouth","MA","2536"
-"42 Fairhaven Commons Way","Fairhaven","MA","2719"
-"374 William S Canning Blvd","Fall River","MA","2721"
-"121 Worcester Rd","Framingham","MA","1701"
-"677 Timpany Blvd","Gardner","MA","1440"
-"337 Russell St","Hadley","MA","1035"
-"295 Plymouth Street","Halifax","MA","2338"
-"1775 Washington St","Hanover","MA","2339"
-"280 Washington Street","Hudson","MA","1749"
-"20 Soojian Dr","Leicester","MA","1524"
-"11 Jungle Road","Leominster","MA","1453"
-"301 Massachusetts Ave","Lunenburg","MA","1462"
-"780 Lynnway","Lynn","MA","1905"
-"70 Pleasant Valley Street","Methuen","MA","1844"
-"830 Curran Memorial Hwy","North Adams","MA","1247"
-"1470 S Washington St","North Attleboro","MA","2760"
-"506 State Road","North Dartmouth","MA","2747"
-"742 Main Street","North Oxford","MA","1537"
-"72 Main St","North Reading","MA","1864"
-"200 Otis Street","Northborough","MA","1532"
-"180 North King Street","Northhampton","MA","1060"
-"555 East Main St","Orange","MA","1364"
-"555 Hubbard Ave-Suite 12","Pittsfield","MA","1201"
-"300 Colony Place","Plymouth","MA","2360"
-"301 Falls Blvd","Quincy","MA","2169"
-"36 Paramount Drive","Raynham","MA","2767"
-"450 Highland Ave","Salem","MA","1970"
-"1180 Fall River Avenue","Seekonk","MA","2771"
-"1105 Boston Road","Springfield","MA","1119"
-"100 Charlton Road","Sturbridge","MA","1566"
-"262 Swansea Mall Dr","Swansea","MA","2777"
-"333 Main Street","Tewksbury","MA","1876"
-"550 Providence Hwy","Walpole","MA","2081"
-"352 Palmer Road","Ware","MA","1082"
-"3005 Cranberry Hwy Rt 6 28","Wareham","MA","2538"
-"250 Rt 59","Airmont","NY","10901"
-"141 Washington Ave Extension","Albany","NY","12205"
-"13858 Rt 31 W","Albion","NY","14411"
-"2055 Niagara Falls Blvd","Amherst","NY","14228"
-"101 Sanford Farm Shpg Center","Amsterdam","NY","12010"
-"297 Grant Avenue","Auburn","NY","13021"
-"4133 Veterans Memorial Drive","Batavia","NY","14020"
-"6265 Brockport Spencerport Rd","Brockport","NY","14420"
-"5399 W Genesse St","Camillus","NY","13031"
-"3191 County rd 10","Canandaigua","NY","14424"
-"30 Catskill","Catskill","NY","12414"
-"161 Centereach Mall","Centereach","NY","11720"
-"3018 East Ave","Central Square","NY","13036"
-"100 Thruway Plaza","Cheektowaga","NY","14225"
-"8064 Brewerton Rd","Cicero","NY","13039"
-"5033 Transit Road","Clarence","NY","14031"
-"3949 Route 31","Clay","NY","13041"
-"139 Merchant Place","Cobleskill","NY","12043"
-"85 Crooked Hill Road","Commack","NY","11725"
-"872 Route 13","Cortlandville","NY","13045"
-"279 Troy Road","East Greenbush","NY","12061"
-"2465 Hempstead Turnpike","East Meadow","NY","11554"
-"6438 Basile Rowe","East Syracuse","NY","13057"
-"25737 US Rt 11","Evans Mills","NY","13637"
-"901 Route 110","Farmingdale","NY","11735"
-"2400 Route 9","Fishkill","NY","12524"
-"10401 Bennett Road","Fredonia","NY","14063"
-"1818 State Route 3","Fulton","NY","13069"
-"4300 Lakeville Road","Geneseo","NY","14454"
-"990 Route 5 20","Geneva","NY","14456"
-"311 RT 9W","Glenmont","NY","12077"
-"200 Dutch Meadows Ln","Glenville","NY","12302"
-"100 Elm Ridge Center Dr","Greece","NY","14626"
-"1549 Rt 9","Halfmoon","NY","12065"
-"5360 Southwestern Blvd","Hamburg","NY","14075"
-"103 North Caroline St","Herkimer","NY","13350"
-"1000 State Route 36","Hornell","NY","14843"
-"1400 County Rd 64","Horseheads","NY","14845"
-"135 Fairgrounds Memorial Pkwy","Ithaca","NY","14850"
-"2 Gannett Dr","Johnson City","NY","13790"
-"233 5th Ave Ext","Johnstown","NY","12095"
-"601 Frank Stottile Blvd","Kingston","NY","12401"
-"350 E Fairmount Ave","Lakewood","NY","14750"
-"4975 Transit Rd","Lancaster","NY","14086"
-"579 Troy-Schenectady Road","Latham","NY","12110"
-"5783 So Transit Road","Lockport","NY","14094"
-"7155 State Rt 12 S","Lowville","NY","13367"
-"425 Route 31","Macedon","NY","14502"
-"3222 State Rt 11","Malone","NY","12953"
-"200 Sunrise Mall","Massapequa","NY","11758"
-"43 Stephenville St","Massena","NY","13662"
-"750 Middle Country Road","Middle Island","NY","11953"
-"470 Route 211 East","Middletown","NY","10940"
-"3133 E Main St","Mohegan Lake","NY","10547"
-"288 Larkin","Monroe","NY","10950"
-"41 Anawana Lake Road","Monticello","NY","12701"
-"4765 Commercial Drive","New Hartford","NY","13413"
-"1201 Rt 300","Newburgh","NY","12550"
-"255 W Main St","Avon","CT","6001"
-"120 Commercial Parkway","Branford","CT","6405"
-"1400 Farmington Ave","Bristol","CT","6010"
-"161 Berlin Road","Cromwell","CT","6416"
-"67 Newton Rd","Danbury","CT","6810"
-"656 New Haven Ave","Derby","CT","6418"
-"69 Prospect Hill Road","East Windsor","CT","6088"
-"150 Gold Star Hwy","Groton","CT","6340"
-"900 Boston Post Road","Guilford","CT","6437"
-"2300 Dixwell Ave","Hamden","CT","6514"
-"495 Flatbush Ave","Hartford","CT","6106"
-"180 River Rd","Lisbon","CT","6351"
-"420 Buckland Hills Dr","Manchester","CT","6040"
-"1365 Boston Post Road","Milford","CT","6460"
-"1100 New Haven Road","Naugatuck","CT","6770"
-"315 Foxon Blvd","New Haven","CT","6513"
-"164 Danbury Rd","New Milford","CT","6776"
-"3164 Berlin Turnpike","Newington","CT","6111"
-"474 Boston Post Road","North Windham","CT","6256"
-"650 Main Ave","Norwalk","CT","6851"
-"680 Connecticut Avenue","Norwalk","CT","6854"
-"220 Salem Turnpike","Norwich","CT","6360"
-"655 Boston Post Rd","Old Saybrook","CT","6475"
-"625 School Street","Putnam","CT","6260"
-"80 Town Line Rd","Rocky Hill","CT","6067"
-"465 Bridgeport Avenue","Shelton","CT","6484"
-"235 Queen St","Southington","CT","6489"
-"150 Barnum Avenue Cutoff","Stratford","CT","6614"
-"970 Torringford Street","Torrington","CT","6790"
-"844 No Colony Road","Wallingford","CT","6492"
-"910 Wolcott St","Waterbury","CT","6705"
-"155 Waterford Parkway No","Waterford","CT","6385"
-"515 Sawmill Road","West Haven","CT","6516"
-"2473 Hackworth Road","Adamsville","AL","35005"
-"630 Coonial Promenade Pkwy","Alabaster","AL","35007"
-"2643 Hwy 280 West","Alexander City","AL","35010"
-"540 West Bypass","Andalusia","AL","36420"
-"5560 Mcclellan Blvd","Anniston","AL","36206"
-"1450 No Brindlee Mtn Pkwy","Arab","AL","35016"
-"1011 US Hwy 72 East","Athens","AL","35611"
-"973 Gilbert Ferry Road Se","Attalla","AL","35954"
-"1717 South College Street","Auburn","AL","36830"
-"701 Mcmeans Ave","Bay Minette","AL","36507"
-"750 Academy Drive","Bessemer","AL","35022"
-"312 Palisades Blvd","Birmingham","AL","35209"
-"1600 Montclair Rd","Birmingham","AL","35210"
-"5919 Trussville Crossings Pkwy","Birmingham","AL","35235"
-"9248 Parkway East","Birmingham","AL","35206"
-"1972 Hwy 431","Boaz","AL","35957"
-"10675 Hwy 5","Brent","AL","35034"
-"2041 Douglas Avenue","Brewton","AL","36426"
-"5100 Hwy 31","Calera","AL","35040"
-"1916 Center Point Rd","Center Point","AL","35215"
-"1950 W Main St","Centre","AL","35960"
-"16077 Highway 280","Chelsea","AL","35043"
-"1415 7Th Street South","Clanton","AL","35045"
-"626 Olive Street Sw","Cullman","AL","35055"
-"27520 Hwy 98","Daphne","AL","36526"
-"2800 Spring Avn SW","Decatur","AL","35603"
-"969 Us Hwy 80 West","Demopolis","AL","36732"
-"3300 South Oates Street","Dothan","AL","36301"
-"4310 Montgomery Hwy","Dothan","AL","36303"
-"600 Boll Weevil Circle","Enterprise","AL","36330"
-"3176 South Eufaula Avenue","Eufaula","AL","36027"
-"7100 Aaron Aronov Drive","Fairfield","AL","35064"
-"10040 County Road 48","Fairhope","AL","36533"
-"3186 Hwy 171 North","Fayette","AL","35555"
-"3100 Hough Rd","Florence","AL","35630"
-"2200 South Mckenzie St","Foley","AL","36535"
-"2001 Glenn Bldv Sw","Fort Payne","AL","35968"
-"340 East Meighan Blvd","Gadsden","AL","35903"
-"890 Odum Road","Gardendale","AL","35071"
-"1608 W Magnolia Ave","Geneva","AL","36340"
-"501 Willow Lane","Greenville","AL","36037"
-"170 Fort Morgan Road","Gulf Shores","AL","36542"
-"11697 US Hwy 431","Guntersville","AL","35976"
-"42417 Hwy 195","Haleyville","AL","35565"
-"1706 Military Street South","Hamilton","AL","35570"
-"1201 Hwy 31 NW","Hartselle","AL","35640"
-"209 Lakeshore Parkway","Homewood","AL","35209"
-"2780 John Hawkins Pkwy","Hoover","AL","35244"
-"5335 Hwy 280 South","Hoover","AL","35242"
-"1007 Red Farmer Drive","Hueytown","AL","35023"
-"2900 S Mem PkwyDrake Ave","Huntsville","AL","35801"
-"11610 Memorial Pkwy South","Huntsville","AL","35803"
-"2200 Sparkman Drive","Huntsville","AL","35810"
-"330 Sutton Rd","Huntsville","AL","35763"
-"6140A Univ Drive","Huntsville","AL","35806"
-"4206 N College Ave","Jackson","AL","36545"
-"1625 Pelham South","Jacksonville","AL","36265"
-"1801 Hwy 78 East","Jasper","AL","35501"
-"8551 Whitfield Ave","Leeds","AL","35094"
-"8650 Madison Blvd","Madison","AL","35758"
-"145 Kelley Blvd","Millbrook","AL","36054"
-"1970 S University Blvd","Mobile","AL","36609"
-"6350 Cottage Hill Road","Mobile","AL","36609"
-"101 South Beltline Highway","Mobile","AL","36606"
-"2500 Dawes Road","Mobile","AL","36695"
-"5245 Rangeline Service Rd","Mobile","AL","36619"
-"685 Schillinger Rd","Mobile","AL","36695"
-"3371 S Alabama Ave","Monroeville","AL","36460"
-"10710 Chantilly Pkwy","Montgomery","AL","36117"
-"3801 Eastern Blvd","Montgomery","AL","36116"
-"6495 Atlanta Hwy","Montgomery","AL","36117"
-"851 Ann St","Montgomery","AL","36107"
-"15445 Highway 24","Moulton","AL","35650"
-"517 West Avalon Ave","Muscle Shoals","AL","35661"
-"5710 Mcfarland Blvd","Northport","AL","35476"
-"2453 2Nd Avenue East","Oneonta","AL","35121"
-"2900 Pepperrell Pkwy","Opelika","AL","36801"
-"92 Plaza Lane","Oxford","AL","36203"
-"1537 Hwy 231 South","Ozark","AL","36360"
-"2181 Pelham Pkwy","Pelham","AL","35124"
-"165 Vaughan Ln","Pell City","AL","35125"
-"3700 Hwy 280-431 N","Phenix City","AL","36867"
-"1903 Cobbs Ford Rd","Prattville","AL","36066"
-"4180 Us Hwy 431","Roanoke","AL","36274"
-"13675 Hwy 43","Russellville","AL","35653"
-"1095 Industrial Pkwy","Saraland","AL","36571"
-"24833 Johnt Reidprkw","Scottsboro","AL","35768"
-"1501 Hwy 14 East","Selma","AL","36703"
-"7855 Moffett Rd","Semmes","AL","36575"
-"150 Springville Station Blvd","Springville","AL","35146"
-"690 Hwy 78","Sumiton","AL","35148"
-"41301 US Hwy 280","Sylacauga","AL","35150"
-"214 Haynes Street","Talladega","AL","35160"
-"1300 Gilmer Ave","Tallassee","AL","36078"
-"34301 Hwy 43","Thomasville","AL","36784"
-"1420 Us 231 South","Troy","AL","36081"
-"1501 Skyland Blvd E","Tuscaloosa","AL","35405"
-"3501 20th Av","Valley","AL","36854"
-"1300 Montgomery Highway","Vestavia Hills","AL","35216"
-"4538 Us Hwy 231","Wetumpka","AL","36092"
-"2575 Us Hwy 43","Winfield","AL","35594"
+Unnamed: 0,address,city,state,zip
+0,777 Brockton Avenue,Abington,MA,2351.0
+1,30 Memorial Drive,Avon,MA,2322.0
+2,250 Hartford Avenue,Bellingham,MA,2019.0
+3,700 Oak Street,Brockton,MA,2301.0
+4,66-4 Parkhurst Rd,Chelmsford,MA,1824.0
+5,591 Memorial Dr,Chicopee,MA,1020.0
+6,55 Brooksby Village Way,Danvers,MA,1923.0
+7,137 Teaticket Hwy,East Falmouth,MA,2536.0
+8,42 Fairhaven Commons Way,Fairhaven,MA,2719.0
+9,374 William S Canning Blvd,Fall River,MA,2721.0
+10,121 Worcester Rd,Framingham,MA,1701.0
+11,677 Timpany Blvd,Gardner,MA,1440.0
+12,337 Russell St,Hadley,MA,1035.0
+13,295 Plymouth Street,Halifax,MA,2338.0
+14,1775 Washington St,Hanover,MA,2339.0
+15,280 Washington Street,Hudson,MA,1749.0
+16,20 Soojian Dr,Leicester,MA,1524.0
+17,11 Jungle Road,Leominster,MA,1453.0
+18,301 Massachusetts Ave,Lunenburg,MA,1462.0
+19,780 Lynnway,Lynn,MA,1905.0
+20,70 Pleasant Valley Street,Methuen,MA,1844.0
+21,830 Curran Memorial Hwy,North Adams,MA,1247.0
+22,1470 S Washington St,North Attleboro,MA,2760.0
+23,506 State Road,North Dartmouth,MA,2747.0
+24,742 Main Street,North Oxford,MA,1537.0
+25,72 Main St,North Reading,MA,1864.0
+26,200 Otis Street,Northborough,MA,1532.0
+27,180 North King Street,Northhampton,MA,1060.0
+28,555 East Main St,Orange,MA,1364.0
+29,555 Hubbard Ave-Suite 12,Pittsfield,MA,1201.0
+30,300 Colony Place,Plymouth,MA,2360.0
+31,301 Falls Blvd,Quincy,MA,2169.0
+32,36 Paramount Drive,Raynham,MA,2767.0
+33,450 Highland Ave,Salem,MA,1970.0
+34,1180 Fall River Avenue,Seekonk,MA,2771.0
+35,1105 Boston Road,Springfield,MA,1119.0
+36,100 Charlton Road,Sturbridge,MA,1566.0
+37,262 Swansea Mall Dr,Swansea,MA,2777.0
+38,333 Main Street,Tewksbury,MA,1876.0
+39,550 Providence Hwy,Walpole,MA,2081.0
+40,352 Palmer Road,Ware,MA,1082.0
+41,3005 Cranberry Hwy Rt 6 28,Wareham,MA,2538.0
+42,250 Rt 59,Airmont,NY,10901.0
+43,141 Washington Ave Extension,Albany,NY,12205.0
+44,13858 Rt 31 W,Albion,NY,14411.0
+45,2055 Niagara Falls Blvd,Amherst,NY,14228.0
+46,101 Sanford Farm Shpg Center,Amsterdam,NY,12010.0
+47,297 Grant Avenue,Auburn,NY,13021.0
+48,4133 Veterans Memorial Drive,Batavia,NY,14020.0
+49,6265 Brockport Spencerport Rd,Brockport,NY,14420.0
+50,5399 W Genesse St,Camillus,NY,13031.0
+51,3191 County rd 10,Canandaigua,NY,14424.0
+52,30 Catskill,Catskill,NY,12414.0
+53,161 Centereach Mall,Centereach,NY,11720.0
+54,3018 East Ave,Central Square,NY,13036.0
+55,100 Thruway Plaza,Cheektowaga,NY,14225.0
+56,8064 Brewerton Rd,Cicero,NY,13039.0
+57,5033 Transit Road,Clarence,NY,14031.0
+58,3949 Route 31,Clay,NY,13041.0
+59,139 Merchant Place,Cobleskill,NY,12043.0
+60,85 Crooked Hill Road,Commack,NY,11725.0
+61,872 Route 13,Cortlandville,NY,13045.0
+62,279 Troy Road,East Greenbush,NY,12061.0
+63,2465 Hempstead Turnpike,East Meadow,NY,11554.0
+64,6438 Basile Rowe,East Syracuse,NY,13057.0
+65,25737 US Rt 11,Evans Mills,NY,13637.0
+66,901 Route 110,Farmingdale,NY,11735.0
+67,2400 Route 9,Fishkill,NY,12524.0
+68,10401 Bennett Road,Fredonia,NY,14063.0
+69,1818 State Route 3,Fulton,NY,13069.0
+70,4300 Lakeville Road,Geneseo,NY,14454.0
+71,990 Route 5 20,Geneva,NY,14456.0
+72,311 RT 9W,Glenmont,NY,12077.0
+73,200 Dutch Meadows Ln,Glenville,NY,12302.0
+74,100 Elm Ridge Center Dr,Greece,NY,14626.0
+75,1549 Rt 9,Halfmoon,NY,12065.0
+76,5360 Southwestern Blvd,Hamburg,NY,14075.0
+77,103 North Caroline St,Herkimer,NY,13350.0
+78,1000 State Route 36,Hornell,NY,14843.0
+79,1400 County Rd 64,Horseheads,NY,14845.0
+80,135 Fairgrounds Memorial Pkwy,Ithaca,NY,14850.0
+81,2 Gannett Dr,Johnson City,NY,13790.0
+82,233 5th Ave Ext,Johnstown,NY,12095.0
+83,601 Frank Stottile Blvd,Kingston,NY,12401.0
+84,350 E Fairmount Ave,Lakewood,NY,14750.0
+85,4975 Transit Rd,Lancaster,NY,14086.0
+86,579 Troy-Schenectady Road,Latham,NY,12110.0
+87,5783 So Transit Road,Lockport,NY,14094.0
+88,7155 State Rt 12 S,Lowville,NY,13367.0
+89,425 Route 31,Macedon,NY,14502.0
+90,3222 State Rt 11,Malone,NY,12953.0
+91,200 Sunrise Mall,Massapequa,NY,11758.0
+92,43 Stephenville St,Massena,NY,13662.0
+93,750 Middle Country Road,Middle Island,NY,11953.0
+94,470 Route 211 East,Middletown,NY,10940.0
+95,3133 E Main St,Mohegan Lake,NY,10547.0
+96,288 Larkin,Monroe,NY,10950.0
+97,41 Anawana Lake Road,Monticello,NY,12701.0
+98,4765 Commercial Drive,New Hartford,NY,13413.0
+99,1201 Rt 300,Newburgh,NY,12550.0
+100,255 W Main St,Avon,CT,6001.0
+101,120 Commercial Parkway,Branford,CT,6405.0
+102,1400 Farmington Ave,Bristol,CT,6010.0
+103,161 Berlin Road,Cromwell,CT,6416.0
+104,67 Newton Rd,Danbury,CT,6810.0
+105,656 New Haven Ave,Derby,CT,6418.0
+106,69 Prospect Hill Road,East Windsor,CT,6088.0
+107,150 Gold Star Hwy,Groton,CT,6340.0
+108,900 Boston Post Road,Guilford,CT,6437.0
+109,2300 Dixwell Ave,Hamden,CT,6514.0
+110,495 Flatbush Ave,Hartford,CT,6106.0
+111,180 River Rd,Lisbon,CT,6351.0
+112,420 Buckland Hills Dr,Manchester,CT,6040.0
+113,1365 Boston Post Road,Milford,CT,6460.0
+114,1100 New Haven Road,Naugatuck,CT,6770.0
+115,315 Foxon Blvd,New Haven,CT,6513.0
+116,164 Danbury Rd,New Milford,CT,6776.0
+117,3164 Berlin Turnpike,Newington,CT,6111.0
+118,474 Boston Post Road,North Windham,CT,6256.0
+119,650 Main Ave,Norwalk,CT,6851.0
+120,680 Connecticut Avenue,Norwalk,CT,6854.0
+121,220 Salem Turnpike,Norwich,CT,6360.0
+122,655 Boston Post Rd,Old Saybrook,CT,6475.0
+123,625 School Street,Putnam,CT,6260.0
+124,80 Town Line Rd,Rocky Hill,CT,6067.0
+125,465 Bridgeport Avenue,Shelton,CT,6484.0
+126,235 Queen St,Southington,CT,6489.0
+127,150 Barnum Avenue Cutoff,Stratford,CT,6614.0
+128,970 Torringford Street,Torrington,CT,6790.0
+129,844 No Colony Road,Wallingford,CT,6492.0
+130,910 Wolcott St,Waterbury,CT,6705.0
+131,155 Waterford Parkway No,Waterford,CT,6385.0
+132,515 Sawmill Road,West Haven,CT,6516.0
+133,2473 Hackworth Road,Adamsville,AL,35005.0
+134,630 Coonial Promenade Pkwy,Alabaster,AL,35007.0
+135,2643 Hwy 280 West,Alexander City,AL,35010.0
+136,540 West Bypass,Andalusia,AL,36420.0
+137,5560 Mcclellan Blvd,Anniston,AL,36206.0
+138,1450 No Brindlee Mtn Pkwy,Arab,AL,35016.0
+139,1011 US Hwy 72 East,Athens,AL,35611.0
+140,973 Gilbert Ferry Road Se,Attalla,AL,35954.0
+141,1717 South College Street,Auburn,AL,36830.0
+142,701 Mcmeans Ave,Bay Minette,AL,36507.0
+143,750 Academy Drive,Bessemer,AL,35022.0
+144,312 Palisades Blvd,Birmingham,AL,35209.0
+145,1600 Montclair Rd,Birmingham,AL,35210.0
+146,5919 Trussville Crossings Pkwy,Birmingham,AL,35235.0
+147,9248 Parkway East,Birmingham,AL,35206.0
+148,1972 Hwy 431,Boaz,AL,35957.0
+149,10675 Hwy 5,Brent,AL,35034.0
+150,2041 Douglas Avenue,Brewton,AL,36426.0
+151,5100 Hwy 31,Calera,AL,35040.0
+152,1916 Center Point Rd,Center Point,AL,35215.0
+153,1950 W Main St,Centre,AL,35960.0
+154,16077 Highway 280,Chelsea,AL,35043.0
+155,1415 7Th Street South,Clanton,AL,35045.0
+156,626 Olive Street Sw,Cullman,AL,35055.0
+157,27520 Hwy 98,Daphne,AL,36526.0
+158,2800 Spring Avn SW,Decatur,AL,35603.0
+159,969 Us Hwy 80 West,Demopolis,AL,36732.0
+160,3300 South Oates Street,Dothan,AL,36301.0
+161,4310 Montgomery Hwy,Dothan,AL,36303.0
+162,600 Boll Weevil Circle,Enterprise,AL,36330.0
+163,3176 South Eufaula Avenue,Eufaula,AL,36027.0
+164,7100 Aaron Aronov Drive,Fairfield,AL,35064.0
+165,10040 County Road 48,Fairhope,AL,36533.0
+166,3186 Hwy 171 North,Fayette,AL,35555.0
+167,3100 Hough Rd,Florence,AL,35630.0
+168,2200 South Mckenzie St,Foley,AL,36535.0
+169,2001 Glenn Bldv Sw,Fort Payne,AL,35968.0
+170,340 East Meighan Blvd,Gadsden,AL,35903.0
+171,890 Odum Road,Gardendale,AL,35071.0
+172,1608 W Magnolia Ave,Geneva,AL,36340.0
+173,501 Willow Lane,Greenville,AL,36037.0
+174,170 Fort Morgan Road,Gulf Shores,AL,36542.0
+175,11697 US Hwy 431,Guntersville,AL,35976.0
+176,42417 Hwy 195,Haleyville,AL,35565.0
+177,1706 Military Street South,Hamilton,AL,35570.0
+178,1201 Hwy 31 NW,Hartselle,AL,35640.0
+179,209 Lakeshore Parkway,Homewood,AL,35209.0
+180,2780 John Hawkins Pkwy,Hoover,AL,35244.0
+181,5335 Hwy 280 South,Hoover,AL,35242.0
+182,1007 Red Farmer Drive,Hueytown,AL,35023.0
+183,2900 S Mem PkwyDrake Ave,Huntsville,AL,35801.0
+184,11610 Memorial Pkwy South,Huntsville,AL,35803.0
+185,2200 Sparkman Drive,Huntsville,AL,35810.0
+186,330 Sutton Rd,Huntsville,AL,35763.0
+187,6140A Univ Drive,Huntsville,AL,35806.0
+188,4206 N College Ave,Jackson,AL,36545.0
+189,1625 Pelham South,Jacksonville,AL,36265.0
+190,1801 Hwy 78 East,Jasper,AL,35501.0
+191,8551 Whitfield Ave,Leeds,AL,35094.0
+192,8650 Madison Blvd,Madison,AL,35758.0
+193,145 Kelley Blvd,Millbrook,AL,36054.0
+194,1970 S University Blvd,Mobile,AL,36609.0
+195,6350 Cottage Hill Road,Mobile,AL,36609.0
+196,101 South Beltline Highway,Mobile,AL,36606.0
+197,2500 Dawes Road,Mobile,AL,36695.0
+198,5245 Rangeline Service Rd,Mobile,AL,36619.0
+199,685 Schillinger Rd,Mobile,AL,36695.0
+200,3371 S Alabama Ave,Monroeville,AL,36460.0
+201,10710 Chantilly Pkwy,Montgomery,AL,36117.0
+202,3801 Eastern Blvd,Montgomery,AL,36116.0
+203,6495 Atlanta Hwy,Montgomery,AL,36117.0
+204,851 Ann St,Montgomery,AL,36107.0
+205,15445 Highway 24,Moulton,AL,35650.0
+206,517 West Avalon Ave,Muscle Shoals,AL,35661.0
+207,5710 Mcfarland Blvd,Northport,AL,35476.0
+208,2453 2Nd Avenue East,Oneonta,AL,35121.0
+209,2900 Pepperrell Pkwy,Opelika,AL,36801.0
+210,92 Plaza Lane,Oxford,AL,36203.0
+211,1537 Hwy 231 South,Ozark,AL,36360.0
+212,2181 Pelham Pkwy,Pelham,AL,35124.0
+213,165 Vaughan Ln,Pell City,AL,35125.0
+214,3700 Hwy 280-431 N,Phenix City,AL,36867.0
+215,1903 Cobbs Ford Rd,Prattville,AL,36066.0
+216,4180 Us Hwy 431,Roanoke,AL,36274.0
+217,13675 Hwy 43,Russellville,AL,35653.0
+218,1095 Industrial Pkwy,Saraland,AL,36571.0
+219,24833 Johnt Reidprkw,Scottsboro,AL,35768.0
+220,1501 Hwy 14 East,Selma,AL,36703.0
+221,7855 Moffett Rd,Semmes,AL,36575.0
+222,150 Springville Station Blvd,Springville,AL,35146.0
+223,690 Hwy 78,Sumiton,AL,35148.0
+224,41301 US Hwy 280,Sylacauga,AL,35150.0
+225,214 Haynes Street,Talladega,AL,35160.0
+226,1300 Gilmer Ave,Tallassee,AL,36078.0
+227,34301 Hwy 43,Thomasville,AL,36784.0
+228,1420 Us 231 South,Troy,AL,36081.0
+229,1501 Skyland Blvd E,Tuscaloosa,AL,35405.0
+230,3501 20th Av,Valley,AL,36854.0
+231,1300 Montgomery Highway,Vestavia Hills,AL,35216.0
+232,4538 Us Hwy 231,Wetumpka,AL,36092.0
+233,2575 Us Hwy 43,Winfield,AL,35594.0
+234,,,,
+235,,,,
+236,,,,
+237,,,,
+238,,,,
+239,,,,
+240,,,,
+241,,,,
+242,,,,
+243,,,,
+244,,,,
+245,,,,
+246,,,,
+247,,,,
+248,,,,
+249,,,,
+250,,,,
+251,,,,
+252,,,,
+253,,,,
+254,,,,
+255,,,,
+256,,,,
+257,,,,
+258,,,,
+259,,,,
+260,,,,
+261,,,,
+262,,,,
+263,,,,
+264,,,,
+265,,,,
+266,,,,
+267,,,,
+268,,,,
+269,,,,
+270,,,,
+271,,,,
+272,,,,
+273,,,,
+274,,,,
+275,,,,
+276,,,,
+277,,,,
+278,,,,
+279,,,,
+280,,,,
+281,,,,
+282,,,,
+283,,,,
+284,,,,
+285,,,,
+286,,,,
+287,,,,
+288,,,,
+289,,,,
+290,,,,
+291,,,,
+292,,,,
+293,,,,
+294,,,,
+295,,,,
+296,,,,
+297,,,,
+298,,,,
+299,,,,
+300,,,,
+301,,,,
+302,,,,
+303,,,,
+304,,,,
+305,,,,
+306,,,,
+307,,,,
+308,,,,
+309,,,,
+310,,,,
+311,,,,
+312,,,,
+313,,,,
+314,,,,
+315,,,,
+316,,,,
+317,,,,
+318,,,,
+319,,,,
+320,,,,
+321,,,,
+322,,,,
+323,,,,
+324,,,,
+325,,,,
+326,,,,
+327,,,,
+328,,,,
+329,,,,
+330,,,,
+331,,,,
+332,,,,
+333,,,,
+334,,,,
+335,,,,
+336,,,,
+337,,,,
+338,,,,
+339,,,,
+340,,,,
+341,,,,
+342,,,,
+343,,,,
+344,,,,
+345,,,,
+346,,,,
+347,,,,
+348,,,,
+349,,,,
+350,,,,
+351,,,,
+352,,,,
+353,,,,
+354,,,,
+355,,,,
+356,,,,
+357,,,,
+358,,,,
+359,,,,
+360,,,,
+361,,,,
+362,,,,
+363,,,,
+364,,,,
+365,,,,
+366,,,,
+367,,,,
+368,,,,
+369,,,,
+370,,,,
+371,,,,
+372,,,,
+373,,,,
+374,,,,
+375,,,,
+376,,,,
+377,,,,
+378,,,,
+379,,,,
+380,,,,
+381,,,,
+382,,,,
+383,,,,
+384,,,,
+385,,,,
+386,,,,
+387,,,,
+388,,,,
+389,,,,
+390,,,,
+391,,,,
+392,,,,
+393,,,,
+394,,,,
+395,,,,
+396,,,,
+397,,,,
+398,,,,
+399,,,,
+400,,,,
+401,,,,
+402,,,,
+403,,,,
+404,,,,
+405,,,,
+406,,,,
+407,,,,
+408,,,,
+409,,,,
+410,,,,
+411,,,,
+412,,,,
+413,,,,
+414,,,,
+415,,,,
+416,,,,
+417,,,,
+418,,,,
+419,,,,
+420,,,,
+421,,,,
+422,,,,
+423,,,,
+424,,,,
+425,,,,
+426,,,,
+427,,,,
+428,,,,
+429,,,,
+430,,,,
+431,,,,
+432,,,,
+433,,,,
+434,,,,
+435,,,,
+436,,,,
+437,,,,
+438,,,,
+439,,,,
+440,,,,
+441,,,,
+442,,,,
+443,,,,
+444,,,,
+445,,,,
+446,,,,
+447,,,,
+448,,,,
+449,,,,
+450,,,,
+451,,,,
+452,,,,
+453,,,,
+454,,,,
+455,,,,
+456,,,,
+457,,,,
+458,,,,
+459,,,,
+460,,,,
+461,,,,
+462,,,,
+463,,,,
+464,,,,
+465,,,,
+466,,,,
+467,,,,
+468,,,,
+469,,,,
+470,,,,
+471,,,,
+472,,,,
+473,,,,
+474,,,,
+475,,,,
+476,,,,
+477,,,,
+478,,,,
+479,,,,
+480,,,,
+481,,,,
+482,,,,
+483,,,,
+484,,,,
+485,,,,
+486,,,,
+487,,,,
+488,,,,
+489,,,,
+490,,,,
+491,,,,
+492,,,,
+493,,,,
+494,,,,
+495,,,,
+496,,,,
+497,,,,
+498,,,,
+499,,,,
+500,,,,
+501,,,,
+502,,,,
+503,,,,
+504,,,,
+505,,,,
+506,,,,
+507,,,,
+508,,,,
+509,,,,
+510,,,,
+511,,,,
+512,,,,
+513,,,,
+514,,,,
+515,,,,
+516,,,,
+517,,,,
+518,,,,
+519,,,,
+520,,,,
+521,,,,
+522,,,,
+523,,,,
+524,,,,
+525,,,,
+526,,,,
+527,,,,
+528,,,,
+529,,,,
+530,,,,
+531,,,,
+532,,,,
+533,,,,
+534,,,,
+535,,,,
+536,,,,
+537,,,,
+538,,,,
+539,,,,
+540,,,,
+541,,,,
+542,,,,
+543,,,,
+544,,,,
+545,,,,
+546,,,,
+547,,,,
+548,,,,
+549,,,,
+550,,,,
+551,,,,
+552,,,,
+553,,,,
+554,,,,
+555,,,,
+556,,,,
+557,,,,
+558,,,,
+559,,,,
+560,,,,
+561,,,,
+562,,,,
+563,,,,
+564,,,,
+565,,,,
+566,,,,
+567,,,,
+568,,,,
+569,,,,
+570,,,,
+571,,,,
+572,,,,
+573,,,,
+574,,,,
+575,,,,
+576,,,,
+577,,,,
+578,,,,
+579,,,,
+580,,,,
+581,,,,
+582,,,,
+583,,,,
+584,,,,
+585,,,,
+586,,,,
+587,,,,
+588,,,,
+589,,,,
+590,,,,
+591,,,,
+592,,,,
+593,,,,
+594,,,,
+595,,,,
+596,,,,
+597,,,,
+598,,,,
+599,,,,
+600,,,,
+601,,,,
+602,,,,
+603,,,,
+604,,,,
+605,,,,
+606,,,,
+607,,,,
+608,,,,
+609,,,,
+610,,,,
+611,,,,
+612,,,,
+613,,,,
+614,,,,
+615,,,,
+616,,,,
+617,,,,
+618,,,,
+619,,,,
+620,,,,
+621,,,,
+622,,,,
+623,,,,
+624,,,,
+625,,,,
+626,,,,
+627,,,,
+628,,,,
+629,,,,
+630,,,,
+631,,,,
+632,,,,
+633,,,,
+634,,,,
+635,,,,
+636,,,,
+637,,,,
+638,,,,
+639,,,,
+640,,,,
+641,,,,
+642,,,,
+643,,,,
+644,,,,
+645,,,,
+646,,,,
+647,,,,
+648,,,,
+649,,,,
+650,,,,
+651,,,,
+652,,,,
+653,,,,
+654,,,,
+655,,,,
+656,,,,
+657,,,,
+658,,,,
+659,,,,
+660,,,,
+661,,,,
+662,,,,
+663,,,,
+664,,,,
+665,,,,
+666,,,,
+667,,,,
+668,,,,
+669,,,,
+670,,,,
+671,,,,
+672,,,,
+673,,,,
+674,,,,
+675,,,,
+676,,,,
+677,,,,
+678,,,,
+679,,,,
+680,,,,
+681,,,,
+682,,,,
+683,,,,
+684,,,,
+685,,,,
+686,,,,
+687,,,,
+688,,,,
+689,,,,
+690,,,,
+691,,,,
+692,,,,
+693,,,,
+694,,,,
+695,,,,
+696,,,,
+697,,,,
+698,,,,
+699,,,,
+700,,,,
+701,,,,
+702,,,,
+703,,,,
+704,,,,
+705,,,,
+706,,,,
+707,,,,
+708,,,,
+709,,,,
+710,,,,
+711,,,,
+712,,,,
+713,,,,
+714,,,,
+715,,,,
+716,,,,
+717,,,,
+718,,,,
+719,,,,
+720,,,,
+721,,,,
+722,,,,
+723,,,,
+724,,,,
+725,,,,
+726,,,,
+727,,,,
+728,,,,
+729,,,,
+730,,,,
+731,,,,
+732,,,,
+733,,,,
+734,,,,
+735,,,,
+736,,,,
+737,,,,
+738,,,,
+739,,,,
+740,,,,
+741,,,,
+742,,,,
+743,,,,
+744,,,,
+745,,,,
+746,,,,
+747,,,,
+748,,,,
+749,,,,
+750,,,,
+751,,,,
+752,,,,
+753,,,,
+754,,,,
+755,,,,
+756,,,,
+757,,,,
+758,,,,
+759,,,,
+760,,,,
+761,,,,
+762,,,,
+763,,,,
+764,,,,
+765,,,,
+766,,,,
+767,,,,
+768,,,,
+769,,,,
+770,,,,
+771,,,,
+772,,,,
+773,,,,
+774,,,,
+775,,,,
+776,,,,
+777,,,,
+778,,,,
+779,,,,
+780,,,,
+781,,,,
+782,,,,
+783,,,,
+784,,,,
+785,,,,
+786,,,,
+787,,,,
+788,,,,
+789,,,,
+790,,,,
+791,,,,
+792,,,,
+793,,,,
+794,,,,
+795,,,,
+796,,,,
+797,,,,
+798,,,,
+799,,,,
+800,,,,
+801,,,,
+802,,,,
+803,,,,
+804,,,,
+805,,,,
+806,,,,
+807,,,,
+808,,,,
+809,,,,
+810,,,,
+811,,,,
+812,,,,
+813,,,,
+814,,,,
+815,,,,
+816,,,,
+817,,,,
+818,,,,
+819,,,,
+820,,,,
+821,,,,
+822,,,,
+823,,,,
+824,,,,
+825,,,,
+826,,,,
+827,,,,
+828,,,,
+829,,,,
+830,,,,
+831,,,,
+832,,,,
+833,,,,
+834,,,,
+835,,,,
+836,,,,
+837,,,,
+838,,,,
+839,,,,
+840,,,,
+841,,,,
+842,,,,
+843,,,,
+844,,,,
+845,,,,
+846,,,,
+847,,,,
+848,,,,
+849,,,,
+850,,,,
+851,,,,
+852,,,,
+853,,,,
+854,,,,
+855,,,,
+856,,,,
+857,,,,
+858,,,,
+859,,,,
+860,,,,
+861,,,,
+862,,,,
+863,,,,
+864,,,,
+865,,,,
+866,,,,
+867,,,,
+868,,,,
+869,,,,
+870,,,,
+871,,,,
+872,,,,
+873,,,,
+874,,,,
+875,,,,
+876,,,,
+877,,,,
+878,,,,
+879,,,,
+880,,,,
+881,,,,
+882,,,,
+883,,,,
+884,,,,
+885,,,,
+886,,,,
+887,,,,
+888,,,,
+889,,,,
+890,,,,
+891,,,,
+892,,,,
+893,,,,
+894,,,,
+895,,,,
+896,,,,
+897,,,,
+898,,,,
+899,,,,
+900,,,,
+901,,,,
+902,,,,
+903,,,,
+904,,,,
+905,,,,
+906,,,,
+907,,,,
+908,,,,
+909,,,,
+910,,,,
+911,,,,
+912,,,,
+913,,,,
+914,,,,
+915,,,,
+916,,,,
+917,,,,
+918,,,,
+919,,,,
+920,,,,
+921,,,,
+922,,,,
+923,,,,
+924,,,,
+925,,,,
+926,,,,
+927,,,,
+928,,,,
+929,,,,
+930,,,,
+931,,,,
+932,,,,
+933,,,,
+934,,,,
+935,,,,
+936,,,,
+937,,,,
+938,,,,
+939,,,,
+940,,,,
+941,,,,
+942,,,,
+943,,,,
+944,,,,
+945,,,,
+946,,,,
+947,,,,
+948,,,,
+949,,,,
+950,,,,
+951,,,,
+952,,,,
+953,,,,
+954,,,,
+955,,,,
+956,,,,
+957,,,,
+958,,,,
+959,,,,
+960,,,,
+961,,,,
+962,,,,
+963,,,,
+964,,,,
+965,,,,
+966,,,,
+967,,,,
+968,,,,
+969,,,,
+970,,,,
+971,,,,
+972,,,,
+973,,,,
+974,,,,
+975,,,,
+976,,,,
+977,,,,
+978,,,,
+979,,,,
+980,,,,
+981,,,,
+982,,,,
+983,,,,
+984,,,,
+985,,,,
+986,,,,
+987,,,,
+988,,,,
+989,,,,
+990,,,,
+991,,,,
+992,,,,
+993,,,,
+994,,,,
+995,,,,
+996,,,,
+997,,,,
+998,,,,
+999,,,,

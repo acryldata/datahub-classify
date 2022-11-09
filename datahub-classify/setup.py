@@ -16,8 +16,11 @@ def get_long_description():
 base_requirements = {
     "spacy==3.4.1",
     "phonenumbers==8.12.56",
-    "pandas==1.5.0",
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1.tar.gz",
+    "vininfo==1.7.0",
+    "schwifty==2022.9.0",
+    "python-stdnum==1.17",
+    "ipaddress==1.0.23",
+    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz",
 }
 
 dev_requirements = {
@@ -29,7 +32,9 @@ dev_requirements = {
     "isort>=5.7.0",
     "mypy>=0.901,<0.920",
     "pytest-cov>=2.8.1",
-    "sklearn",
+    "scikit-learn==1.1.2",
+    "pandas==1.5.0",
+    "openpyxl"
 }
 
 

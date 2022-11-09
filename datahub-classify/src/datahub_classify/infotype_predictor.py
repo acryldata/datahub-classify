@@ -2,7 +2,6 @@ import importlib
 import logging
 from typing import List
 
-import pandas as pd
 
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
 from datahub_classify.infotype_utils import perform_basic_checks
@@ -38,7 +37,7 @@ def predict_infotypes(
     logger.info(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
     logger.info("===========================================================")
     for column_info in column_infos:
-        logger.debug(f"processing column: {column_info.metadata.name}")
+        logger.debug(f"processing column: {column_info.metadata.name} -- dataset: {column_info.metadata.dataset_name}")
         # iterate over all infotype functions
         proposal_list = []
         for infotype, infotype_fn in infotype_function_map.items():
@@ -46,7 +45,7 @@ def predict_infotypes(
             config_dict = global_config[infotype]
 
             # call the infotype prediction function
-            column_info.values = pd.Series(column_info.values).dropna()
+            column_info.values = [val for val in column_info.values if str(val).strip() not in ['nan', '', 'None']]
             try:
                 if perform_basic_checks(
                     column_info.metadata, column_info.values, config_dict, infotype
@@ -60,10 +59,8 @@ def predict_infotypes(
                         )
                         proposal_list.append(infotype_proposal)
                 else:
-                    raise Exception(
-                        "Failed basic checks for infotype - %s and column - %s"
-                        % (infotype, column_info.metadata.name)
-                    )
+                    raise Exception("Failed basic checks for infotype - %s, column - %s and dataset -%s" %
+                                    (infotype, column_info.metadata.name, column_info.metadata.dataset_name))
             except Exception as e:
                 # traceback.print_exc()
                 logger.warning(f"Failed to extract info type due to {e}")

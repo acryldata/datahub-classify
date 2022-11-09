@@ -7,7 +7,7 @@
         "Person": "Full_Name",
         "Current Age": "Age",
         "Retirement Age": "Age",
-        "Gender": "Gender",
+        "gender": "Gender",
         "Address": "Street_Address"
     },
     "data3": {
@@ -20,7 +20,37 @@
         "Card Number": "Credit_Debit_Card_Number"
     },
     "data6": {},
-    "data7": {},
+    "data7": {
+        "IBAN_Number": "IBAN"
+    },
+    "data8": {"vin": "Vehicle_Identification_Number"},
+    "data9": {
+        "TEL": "Phone_Number",
+        "FAX": "Phone_Number",
+        "E_MAIL": "Email_Address",
+        "ADD1": "Street_Address",
+        "ADD2": "Street_Address",
+        "CEO_MD": "Full_Name",
+        "G_MANAGER": "Full_Name"
+    },
+    "data10": {
+        "ADD1": "Street_Address",
+        "ADD2": "Street_Address",
+        "TEL": "Phone_Number",
+        "FAX": "Phone_Number",
+        "E_MAIL": "Email_Address",
+        "CEO_MD": "Full_Name",
+        "G_MANAGER": "Full_Name"
+    },
+    "data11": {
+        "ADD1": "Street_Address",
+        "ADD2": "Street_Address",
+        "Telephone": "Phone_Number",
+        "Fax": "Phone_Number",
+        "E-Mail Address": "Email_Address",
+        "CEO & Managing Director": "Full_Name",
+        "General Manager": "Full_Name"
+    },
     "data12": {
         "Address": "Street_Address",
         "E-mail": "Email_Address"
@@ -29,7 +59,8 @@
         "gender": "Gender",
         "email": "Email_Address",
         "phone": "Phone_Number",
-        "street_address": "Street_Address"
+        "street_address": "Street_Address",
+        "ip_address": "IP_Address_v4"
     },
     "data14": {
         "CODE_GENDER": "Gender"
@@ -39,11 +70,36 @@
         "credit card": "Credit_Debit_Card_Number"
     },
     "data17": {},
+    "data18": {
+        "name": "Full_Name",
+        "gender": "Gender"
+    },
+    "data19": {
+        "name": "Full_Name",
+        "gender": "Gender"
+    },
+    "data20": {
+        "sex": "Gender"
+    },
     "data21": {
         "MetadataFrom": "Full_Name"
     },
+    "data22": {
+        "Name": "Full_Name"
+    },
+    "data23": {
+        "sex": "Gender"
+    },
+    "data24": {
+        "athlete_name": "Full_Name",
+        "athlete_sex": "Gender"
+    },
     "data25": {
         "Name": "Full_Name"
+    },
+    "data26": {
+        "name": "Full_Name",
+        "gender": "Gender"
     },
     "data27": {
         "Sex": "Gender",
@@ -58,5 +114,117 @@
     },
     "data30": {
         "age": "Age"
+    },
+    "data31": {
+        "SSN": "US_Social_Security_Number"
+    },
+    "data32": {
+        "SSN": "US_Social_Security_Number",
+        "gender": "Gender",
+        "address": "Street_Address",
+        "phone": "Phone_Number",
+        "email": "Email_Address",
+        "CCN": "Credit_Debit_Card_Number",
+        "Full_Name": "Full_Name"
+    },
+    "data33": {
+        "First and Last Name": "Full_Name",
+        "SSN" :"US_Social_Security_Number",
+        "Credit Card Number" : "Credit_Debit_Card_Number"
+    },
+    "data34": {
+        "Random_IBAN": "IBAN"
+    },
+    "data35": {
+        "VIN": "Vehicle_Identification_Number"
+    },
+    "data36": {
+        "Name": "Full_Name",
+        "Age": "Age",
+        "SSN": "US_Social_Security_Number"
+    },
+    "data37": {
+        "Name": "Full_Name",
+        "Age": "Age",
+        "SSN": "US_Social_Security_Number"
+    },
+    "data38": {
+        "VIN": "Vehicle_Identification_Number"
+    },
+    "data39": {
+        "VIN": "Vehicle_Identification_Number"
+    },
+    "data40": {
+        "VIN": "Vehicle_Identification_Number"
+    },
+    "data41": {
+        "Source.IP": "IP_Address_v4",
+        "Destination.IP": "IP_Address_v4"
+    },
+    "data42": {
+        "Source.IP": "IP_Address_v4",
+        "Destination.IP": "IP_Address_v4"
+    },
+    "data43": {
+        "Source.IP": "IP_Address_v4",
+        "Destination.IP": "IP_Address_v4"
+    },
+    "data44": {
+        "Source.IP": "IP_Address_v4",
+        "Destination.IP": "IP_Address_v4"
+    },
+    "data45": {
+        "Source.IP": "IP_Address_v4",
+        "Destination.IP": "IP_Address_v4"
+    },
+    "data46": {
+        "IP": "IP_Address_v4"
+    },
+    "data47": {
+        "Src IP": "IP_Address_v4",
+        "Dst IP": "IP_Address_v4"
+    },
+    "data48": {
+        "VIN": "Vehicle_Identification_Number"
+    },
+    "data49": {
+        "VIN": "Vehicle_Identification_Number"
+    }, 
+    "data50": {
+        "IPv4": "IP_Address_v4",
+        "IPv6": "IP_Address_v6"
+    }, 
+    "data51": {
+        "SrcAddr": "IP_Address_v4",
+        "DstAddr": "IP_Address_v4"
+    },
+    "data52": {
+        "ipv6": "IP_Address_v6",
+        "srcaddr": "IP_Address_v6"
+    },
+    "data53": {
+        "BRANCH BIC (BIC8)": "Swift_Code",
+        "PARENT BIC": "Swift_Code"
+    }, 
+    "data54": {
+        "BIC": "Swift_Code"
+    },
+    "data55": {
+        "Service Advisor": "Full_Name",
+        "VIN": "Vehicle_Identification_Number",
+        "Name": "Full_Name"
+    },
+    "data56": {
+        "License Number Alabama": "US_Driving_License_Number",
+        "Driver License Georgia": "US_Driving_License_Number",
+        "DL No Michigan": "US_Driving_License_Number", 
+        "Driving lic Washington": "US_Driving_License_Number",
+        "DL num Illinois": "US_Driving_License_Number",
+        "DL_lic_Florida": "US_Driving_License_Number",
+        "Driver_lic_Montana": "US_Driving_License_Number",
+        "lic_num_New Hampshire": "US_Driving_License_Number",
+        "dl_number_Ohio": "US_Driving_License_Number"    
     }
+    
+
 }

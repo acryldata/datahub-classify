@@ -4,6 +4,12 @@ Gender,1.0,1.0
 Credit_Debit_Card_Number,1.0,1.0
 Email_Address,1.0,1.0
 Phone_Number,1.0,1.0
-Full_Name,0.6666666666666666,0.6666666666666666
-Age,1.0,1.0
-no_infotype,0.9954128440366973,0.9954128440366973
+Full_Name,0.86,0.86
+Age,0.82,1.0
+IBAN,1.0,1.0
+Vehicle_Identification_Number,1.0,1.0
+US_Social_Security_Number,1.0,1.0
+IP_Address_v4,1.0,1.0
+IP_Address_v6,1.0,1.0
+Swift_Code,1.0,1.0
+no_infotype,1.0,1.0
