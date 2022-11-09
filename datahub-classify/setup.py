@@ -29,7 +29,7 @@ dev_requirements = {
     "isort>=5.7.0",
     "mypy>=0.901,<0.920",
     "pytest-cov>=2.8.1",
-    "sklearn",
+    "scikit-learn",
 }
 
 
