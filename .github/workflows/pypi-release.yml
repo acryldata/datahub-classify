@@ -38,5 +38,5 @@ jobs:
         TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
       run: |
-        cd datahub-actions
+        cd datahub-classify
         RELEASE_VERSION=${{ needs.setup.outputs.tag }} ./scripts/release.sh
