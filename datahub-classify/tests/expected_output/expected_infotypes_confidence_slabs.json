@@ -1,1 +1,202 @@
-{"data1": {"SEX": 0.9, "AGE": 0.9, "MARRIAGE": 0.6}, "data2": {"Person": 0.8, "Current Age": 0.9, "Retirement Age": 0.7, "Address": 0.8, "gender": 1.0, "Zipcode": 0.8}, "data3": {"address": 0.6, "zip": 0.8}, "data4": {"Card_Number": 0.6}, "data5": {"Card Number": 0.8, "Expires": 0.6, "Acct Open Date": 0.6}, "data6": {}, "data7": {"IBAN_Number": 1.0}, "data12": {"Address": 0.6, "E-mail": 1.0}, "data13": {"gender": 0.9, "email": 1.0, "phone": 1.0, "street_address": 0.7, "ip_address": 1.0}, "data14": {"CODE_GENDER": 1.0}, "data15": {"NAME": 0.8, "host_identity_verified": 0.6, "last review": 0.6}, "data16": {"credit card": 0.6}, "data17": {}, "data21": {"DocNumber": 0.6, "MetadataCaseNumber": 0.6, "ExtractedCaseNumber": 0.6, "ExtractedDocNumber": 0.6, "ExtractedDateReleased": 0.6}, "data25": {"Name": 0.8}, "data27": {"Sex": 0.8, "Age Group": 0.6}, "data28": {"Sex": 0.7, "Age": 0.7}, "data29": {"Age": 0.9}, "data30": {"age": 0.6}, "data31": {"SSN": 0.8}, "data32": {"SSN": 1.0, "gender": 1.0, "birthdate": 0.6, "address": 0.7, "phone": 1.0, "email": 1.0, "cc_expiredate": 0.6, "Full_Name": 0.9, "zip": 0.8, "CCN": 0.9}, "data33": {"First and Last Name": 0.6, "SSN": 1.0, "Credit Card Number": 1.0}, "data34": {"Random_IBAN": 0.9}, "data35": {"VIN": 0.9}, "data36": {"Name": 0.8, "Age": 0.6, "SSN": 0.9, "Annual_Income": 0.6, "Credit_History_Age": 0.6}, "data37": {"Name": 0.8, "Age": 0.6, "SSN": 0.8, "Credit_History_Age": 0.6}, "data38": {"VIN": 0.9, "state": 0.6}, "data39": {"VIN": 0.9}, "data40": {"VIN": 0.9}, "data41": {"Source.IP": 1.0, "Destination.IP": 1.0, "Label": 0.7}, "data42": {"Source.IP": 1.0, "Destination.IP": 1.0, "Label": 0.7}, "data43": {"Source.IP": 1.0, "Destination.IP": 1.0, "Label": 0.7}, "data44": {"Source.IP": 1.0, "Destination.IP": 1.0, "Label": 0.7}, "data45": {"Source.IP": 1.0, "Destination.IP": 1.0, "Label": 0.7}, "data46": {"IP": 1.0}, "data47": {"Src IP": 1.0, "Dst IP": 1.0}, "data48": {"VIN": 0.9}, "data49": {"VIN": 0.9}, "data50": {"IPv4": 1.0, "IPv6": 1.0}, "data51": {"SrcAddr": 1.0, "DstAddr": 1.0}, "data52": {"IPv4": 1.0, "ipv6": 1.0, "srcaddr": 1.0}, "data53": {"BRANCH BIC (BIC8)": 1.0, "PARENT BIC": 1.0}, "data54": {"BIC": 1.0}, "data55": {"VIN": 1.0}, "data56": {"License Number": 0.8, "Driver License": 1.0, "DL No": 1.0, "DL No Michigan": 1.0, "DL num Illinois": 0.9, "DL_lic_Florida": 0.9, "dl_number_Ohio": 0.8, "License Number Alabama": 0.8, "Driver License Georgia": 1.0, "lic_num_New Hampshire": 0.7, "Driving lic Washington": 0.8, "Driver_lic_Montana": 0.6}}
+{
+    "data1": {
+        "SEX": 0.9,
+        "AGE": 0.9,
+        "MARRIAGE": 0.6
+    },
+    "data2": {
+        "Person": 0.8,
+        "Current Age": 0.9,
+        "Retirement Age": 0.7,
+        "Address": 0.8,
+        "gender": 1.0,
+        "Zipcode": 0.8
+    },
+    "data3": {
+        "address": 0.6,
+        "zip": 0.8
+    },
+    "data4": {
+        "Card_Number": 0.6
+    },
+    "data5": {
+        "Card Number": 0.8,
+        "Expires": 0.6,
+        "Acct Open Date": 0.6
+    },
+    "data6": {},
+    "data7": {
+        "IBAN_Number": 1.0
+    },
+    "data12": {
+        "Address": 0.6,
+        "E-mail": 1.0
+    },
+    "data13": {
+        "gender": 0.9,
+        "email": 1.0,
+        "phone": 1.0,
+        "street_address": 0.7,
+        "ip_address": 1.0
+    },
+    "data14": {
+        "CODE_GENDER": 1.0
+    },
+    "data15": {
+        "NAME": 0.8,
+        "host_identity_verified": 0.6,
+        "last review": 0.6
+    },
+    "data16": {
+        "credit card": 0.6
+    },
+    "data17": {},
+    "data21": {
+        "DocNumber": 0.6,
+        "MetadataCaseNumber": 0.6,
+        "ExtractedCaseNumber": 0.6,
+        "ExtractedDocNumber": 0.6,
+        "ExtractedDateReleased": 0.6
+    },
+    "data25": {
+        "Name": 0.8
+    },
+    "data27": {
+        "Sex": 0.8,
+        "Age Group": 0.6
+    },
+    "data28": {
+        "Sex": 0.7,
+        "Age": 0.7
+    },
+    "data29": {
+        "Age": 0.9
+    },
+    "data30": {
+        "age": 0.6
+    },
+    "data31": {
+        "SSN": 0.8
+    },
+    "data32": {
+        "SSN": 1.0,
+        "gender": 1.0,
+        "birthdate": 0.6,
+        "address": 0.7,
+        "phone": 1.0,
+        "email": 1.0,
+        "cc_expiredate": 0.6,
+        "Full_Name": 0.9,
+        "zip": 0.8,
+        "CCN": 0.9
+    },
+    "data33": {
+        "First and Last Name": 0.6,
+        "SSN": 1.0,
+        "Credit Card Number": 1.0
+    },
+    "data34": {
+        "Random_IBAN": 0.9
+    },
+    "data35": {
+        "VIN": 0.9
+    },
+    "data36": {
+        "Name": 0.8,
+        "Age": 0.6,
+        "SSN": 0.9,
+        "Annual_Income": 0.6,
+        "Credit_History_Age": 0.6
+    },
+    "data37": {
+        "Name": 0.8,
+        "Age": 0.6,
+        "SSN": 0.8,
+        "Credit_History_Age": 0.6
+    },
+    "data38": {
+        "VIN": 0.9,
+        "state": 0.6
+    },
+    "data39": {
+        "VIN": 0.9
+    },
+    "data40": {
+        "VIN": 0.9
+    },
+    "data41": {
+        "Source.IP": 1.0,
+        "Destination.IP": 1.0,
+        "Label": 0.7
+    },
+    "data42": {
+        "Source.IP": 1.0,
+        "Destination.IP": 1.0,
+        "Label": 0.7
+    },
+    "data43": {
+        "Source.IP": 1.0,
+        "Destination.IP": 1.0,
+        "Label": 0.7
+    },
+    "data44": {
+        "Source.IP": 1.0,
+        "Destination.IP": 1.0,
+        "Label": 0.7
+    },
+    "data45": {
+        "Source.IP": 1.0,
+        "Destination.IP": 1.0,
+        "Label": 0.7
+    },
+    "data46": {
+        "IP": 1.0
+    },
+    "data47": {
+        "Src IP": 1.0,
+        "Dst IP": 1.0
+    },
+    "data48": {
+        "VIN": 0.9
+    },
+    "data49": {
+        "VIN": 0.9
+    },
+    "data50": {
+        "IPv4": 1.0,
+        "IPv6": 1.0
+    },
+    "data51": {
+        "SrcAddr": 1.0,
+        "DstAddr": 1.0
+    },
+    "data52": {
+        "IPv4": 1.0,
+        "ipv6": 1.0,
+        "srcaddr": 1.0
+    },
+    "data53": {
+        "BRANCH BIC (BIC8)": 1.0,
+        "PARENT BIC": 1.0
+    },
+    "data54": {
+        "BIC": 1.0
+    },
+    "data55": {
+        "VIN": 1.0
+    },
+    "data56": {
+        "License Number": 0.8,
+        "Driver License": 1.0,
+        "DL No": 1.0,
+        "DL No Michigan": 1.0,
+        "DL num Illinois": 0.9,
+        "DL_lic_Florida": 0.9,
+        "dl_number_Ohio": 0.8,
+        "License Number Alabama": 0.8,
+        "Driver License Georgia": 1.0,
+        "lic_num_New Hampshire": 0.7,
+        "Driving lic Washington": 0.8,
+        "Driver_lic_Montana": 0.6
+    }
+}

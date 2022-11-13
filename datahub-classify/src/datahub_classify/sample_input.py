@@ -294,13 +294,15 @@ input1 = {
             "Values": 0.6,
         },
         "Name": {
-            # TODO: can we have patterns with "us" in it? Only SSN will be generic, not specific to US
-            # TODO: can we have patterns with "Identification Number" text?
             "regex": [
                 "ssn[^a-z]+.*",
                 ".*[^a-z]+ssn",
                 ".*[^a-z]+ssn[^a-z]+.*",
                 ".*social.*security.*",
+                ".*us.*identification.*(num|no).*",
+                ".*identification.*(num|no).*us.*",
+                ".*united.*states.*identification.*(num|no).*",
+                ".*identification.*(num|no).*united.*states.*",
                 "social",
                 "security",
                 "ssn",
@@ -312,6 +314,10 @@ input1 = {
                 ".*[^a-z]+ssn",
                 ".*[^a-z]+ssn[^a-z]+.*",
                 ".*social.*security.*",
+                ".*us.*identification.*(num|no).*",
+                ".*identification.*(num|no).*us.*",
+                ".*united.*states.*identification.*(num|no).*",
+                ".*identification.*(num|no).*united.*states.*",
                 "social",
                 "security",
                 "ssn",
@@ -353,7 +359,6 @@ input1 = {
     },
     "IP_Address_v4": {
         "Prediction_Factors_and_Weights": {
-            # TODO: can we have more confidence on values?
             "Name": 0.4,
             "Description": 0,
             "Datatype": 0,
@@ -408,7 +413,6 @@ input1 = {
     },
     "IP_Address_v6": {
         "Prediction_Factors_and_Weights": {
-            # TODO: can we have more confidence on values?
             "Name": 0.4,
             "Description": 0,
             "Datatype": 0,
@@ -463,7 +467,7 @@ input1 = {
     },
     "US_Driving_License_Number": {
         "Prediction_Factors_and_Weights": {
-            "Name": 0.4,
+            "Name": 0.2,
             "Description": 0,
             "Datatype": 0,
             "Values": 0.6,
@@ -473,13 +477,12 @@ input1 = {
                 "dl[^a-z]+.*",
                 ".*[^a-z]+dl",
                 ".*[^a-z]+dl[^a-z]+.*",
-                # TODO: do we require following two patterns? isn't it generic?
                 ".*license.*(num|no).*",
                 ".*(num|no).*license.*",
-                ".*driv.*license.*",
-                ".*license.*driv.*",
+                ".*driv.*lic.*",
+                ".*lic.*driv.*",
                 "driv",
-                "lic",
+                "lic"
             ]
         },
         "Description": {
@@ -489,10 +492,10 @@ input1 = {
                 ".*[^a-z]+dl[^a-z]+.*",
                 ".*license.*(num|no).*",
                 ".*(num|no).*license.*",
-                ".*driv.*license.*",
-                ".*license.*driv.*",
+                ".*driv.*lic.*",
+                ".*lic.*driv.*",
                 "driv",
-                "lic",
+                "lic"
             ]
         },
         "Datatype": {"type": ["str"]},

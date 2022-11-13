@@ -487,11 +487,6 @@ def inspect_for_age(metadata, values, config):  # noqa: C901
                     num_unique = len(np.unique(int_col))
                     if max_val <= 120 and min_val > 0:
                         values_score += 0.4
-                        # TODO: think about why we included age_range comparison in earlier discussion
-                        # Add 0.1 score if range is more than np.minimum(len(df)/50, 60)
-                        # if age_range > np.minimum(len(values) / 50, 60):
-                        #     values_score += 0.1
-                        # Add 0.2 score if num unique values is more than np.minimum(len(df)/10, 40)
                         if num_unique >= np.minimum(len(values) / 10, 40):
                             values_score += 0.3
                     else:
@@ -866,7 +861,6 @@ def inspect_for_us_social_security_number(metadata, values, config):  # noqa: C9
             elif config[VALUES][PREDICTION_TYPE] == "library":
                 us_ssn_score = 0
                 for val in values:
-                    # TODO: we don't require this try-catch block as is_valid() gives boolean response
                     try:
                         if us_ssn.is_valid(val):
                             us_ssn_score += 1
@@ -931,8 +925,7 @@ def inspect_for_swift_code(metadata, values, config):  # noqa: C901
                 swift_score = 0
                 for val in values:
                     try:
-                        # TODO: we can have same implementation for IBAN and BAC?
-                        if BIC(val):
+                        if BIC(val, allow_invalid=True).is_valid:
                             swift_score += 1
                     except Exception:
                         pass
