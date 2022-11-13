@@ -482,7 +482,7 @@ input1 = {
                 ".*driv.*lic.*",
                 ".*lic.*driv.*",
                 "driv",
-                "lic"
+                "lic",
             ]
         },
         "Description": {
@@ -495,7 +495,7 @@ input1 = {
                 ".*driv.*lic.*",
                 ".*lic.*driv.*",
                 "driv",
-                "lic"
+                "lic",
             ]
         },
         "Datatype": {"type": ["str"]},
