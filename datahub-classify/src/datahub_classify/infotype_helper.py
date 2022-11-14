@@ -405,7 +405,10 @@ def inspect_for_full_name(metadata, values, config):  # noqa: C901
                 weight = 1
                 for value in values:
                     try:
-                        if len(value) <= 50:
+                        if (
+                            len(value) <= 50
+                            and len(re.split(r"[^a-zA-Z0-9]", value)) >= 2
+                        ):
                             if detect_named_entity_spacy(
                                 spacy_models_list, entities_of_interest, value
                             ):

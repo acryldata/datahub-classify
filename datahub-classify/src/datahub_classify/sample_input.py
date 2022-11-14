@@ -57,6 +57,10 @@ input1 = {
                 "^.*number.*card.*$",
                 "^.*credit.*card.*$",
                 "^.*debit.*card.*$",
+                "ccn[^a-z]+.*",
+                ".*[^a-z]+ccn",
+                ".*[^a-z]+ccn[^a-z]+.*",
+                "ccn",
             ]
         },
         "Description": {
@@ -65,6 +69,10 @@ input1 = {
                 "^.*number.*card.*$",
                 "^.*credit.*card.*$",
                 "^.*debit.*card.*$",
+                "ccn[^a-z]+.*",
+                ".*[^a-z]+ccn",
+                ".*[^a-z]+ccn[^a-z]+.*",
+                "ccn",
             ]
         },
         "Datatype": {"type": ["str", "int"]},
@@ -467,7 +475,7 @@ input1 = {
     },
     "US_Driving_License_Number": {
         "Prediction_Factors_and_Weights": {
-            "Name": 0.2,
+            "Name": 0.4,
             "Description": 0,
             "Datatype": 0,
             "Values": 0.6,

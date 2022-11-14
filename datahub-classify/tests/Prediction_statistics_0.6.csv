@@ -11,5 +11,6 @@ Vehicle_Identification_Number,1.0,1.0
 US_Social_Security_Number,1.0,1.0
 IP_Address_v4,1.0,1.0
 IP_Address_v6,1.0,1.0
-Swift_Code,1.0,1.0
-no_infotype,1.0,1.0
+Swift_Code,0.0,0.0
+US_Driving_License_Number,1.0,1.0
+no_infotype,1.0,0.99
