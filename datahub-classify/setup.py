@@ -17,7 +17,7 @@ base_requirements = {
     "spacy==3.4.1",
     "phonenumbers==8.12.56",
     "pandas==1.5.0",
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.1/en_core_web_sm-3.4.1.tar.gz",
+    "spacy-download==1.0.0"
 }
 
 dev_requirements = {

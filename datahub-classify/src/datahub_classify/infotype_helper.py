@@ -5,7 +5,7 @@ from typing import Any, Dict
 import numpy as np
 import pandas as pd
 import phonenumbers
-import spacy
+from spacy_download import load_spacy
 
 from datahub_classify.constants import (
     DATATYPE,
@@ -24,9 +24,8 @@ from datahub_classify.infotype_utils import (
     match_regex_for_values,
 )
 
-# logging.basicConfig(filename='logs.log', encoding='utf-8', level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-nlp_english = spacy.load("en_core_web_sm")
+nlp_english = load_spacy("en_core_web_sm")
 spacy_models_list = [nlp_english]
 
 
