@@ -12,7 +12,6 @@ from sklearn.metrics import confusion_matrix, precision_score, recall_score
 from datahub_classify.helper_classes import ColumnInfo, Metadata
 from datahub_classify.infotype_predictor import predict_infotypes
 from datahub_classify.sample_input import input1 as input_dict
-from datahub_classify.supported_infotypes import infotypes_to_use
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +22,24 @@ confidence_threshold = 0.6
 update_confidence_slabs_json = False
 
 logging_directory = os.path.join(current_wdr, "logs", "logs.log")
+
+
+infotypes_to_use = [
+    "Street_Address",
+    "Gender",
+    "Credit_Debit_Card_Number",
+    "Email_Address",
+    "Phone_Number",
+    "Full_Name",
+    "Age",
+    "IBAN",
+    "Vehicle_Identification_Number",
+    "US_Social_Security_Number",
+    "IP_Address_v4",
+    "IP_Address_v6",
+    "Swift_Code",
+    "US_Driving_License_Number",
+]
 
 
 def get_public_data(input_data_path):
@@ -67,29 +84,57 @@ def get_public_data(input_data_path):
     data32 = pd.read_csv(os.path.join(input_data_path, "sample-data.csv"))
     data33 = pd.read_excel(os.path.join(input_data_path, "1-MB-Test.xlsx"))
     data34 = pd.read_csv(os.path.join(input_data_path, "random_ibans.csv"))
-    # data35 = pd.read_csv(os.path.join(input_data_path, "used_cars_data.csv"), nrows=1000)
+    # data35 = pd.read_csv(
+    #     os.path.join(input_data_path, "used_cars_data.csv"), nrows=1000
+    # )
     data36 = pd.read_csv(os.path.join(input_data_path, "train.csv"), nrows=1000)
     data37 = pd.read_csv(os.path.join(input_data_path, "test.csv"), nrows=1000)
     data38 = pd.read_csv(os.path.join(input_data_path, "vehicles_1.csv"), nrows=1000)
     data39 = pd.read_csv(os.path.join(input_data_path, "vehicles_2.csv"), nrows=1000)
     data40 = pd.read_csv(os.path.join(input_data_path, "vehicles_3.csv"), nrows=1000)
-    # data41 = pd.read_csv(os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_1.csv"))
-    # data42 = pd.read_csv(os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_2.csv"))
-    # data43 = pd.read_csv(os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_3.csv"))
-    # data44 = pd.read_csv(os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_4.csv"))
-    # data45 = pd.read_csv(os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_5.csv"))
-    # data46 = pd.read_csv(os.path.join(input_data_path, "visitor-interests.csv"), nrows=1000)
-    # data47 = pd.read_csv(os.path.join(input_data_path, "Darknet_.csv"), nrows=1000, on_bad_lines='skip')
+    # data41 = pd.read_csv(
+    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_1.csv")
+    # )
+    # data42 = pd.read_csv(
+    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_2.csv")
+    # )
+    # data43 = pd.read_csv(
+    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_3.csv")
+    # )
+    # data44 = pd.read_csv(
+    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_4.csv")
+    # )
+    # data45 = pd.read_csv(
+    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_5.csv")
+    # )
+    # data46 = pd.read_csv(
+    #     os.path.join(input_data_path, "visitor-interests.csv"), nrows=1000
+    # )
+    # data47 = pd.read_csv(
+    #     os.path.join(input_data_path, "Darknet_.csv"), nrows=1000, on_bad_lines="skip"
+    # )
     data48 = pd.read_csv(os.path.join(input_data_path, "vehicles_4.csv"))
     data49 = pd.read_csv(os.path.join(input_data_path, "vehicles_5.csv"))
-    # data50 = pd.read_csv(os.path.join(input_data_path, "Device Report - BU175-VPC2021-03-21_11-00-03.csv"))
+    # data50 = pd.read_csv(
+    #     os.path.join(
+    #         input_data_path, "Device Report - BU175-VPC2021-03-21_11-00-03.csv"
+    #     )
+    # )
     # data51 = pd.read_csv(
-    # os.path.join(input_data_path, "2021-04-23_honeypot-cloud-digitalocean-geo-1_netflow-extended.csv"), nrows=1000)
+    #     os.path.join(
+    #         input_data_path,
+    #         "2021-04-23_honeypot-cloud-digitalocean-geo-1_netflow-extended.csv",
+    #     ),
+    #     nrows=1000,
+    # )
     data52 = pd.read_csv(os.path.join(input_data_path, "ipv6_random_generated.csv"))
-    # data53 = pd.read_csv(os.path.join(input_data_path, "score-banks-updated-sep2022.csv"))
+    # data53 = pd.read_csv(
+    #     os.path.join(input_data_path, "score-banks-updated-sep2022.csv")
+    # )
     # data54 = pd.read_csv(os.path.join(input_data_path, "blz-aktuell-xlsx-data.csv"))
     # data55 = pd.read_csv(os.path.join(input_data_path, "automotive_service_data.csv"))
     data56 = pd.read_excel(os.path.join(input_data_path, "US_Driving_License.xlsx"))
+
     return {
         "data1": data1,
         "data2": data2,
@@ -125,27 +170,27 @@ def get_public_data(input_data_path):
         "data32": data32,
         "data33": data33,
         "data34": data34,
-        # 'data35': data35,
+        # "data35": data35,
         "data36": data36,
         "data37": data37,
         "data38": data38,
         "data39": data39,
         "data40": data40,
-        # 'data41': data41,
-        # 'data42': data42,
-        # 'data43': data43,
-        # 'data44': data44,
-        # 'data45': data45,
-        # 'data46': data46,
-        # 'data47': data47,
+        # "data41": data41,
+        # "data42": data42,
+        # "data43": data43,
+        # "data44": data44,
+        # "data45": data45,
+        # "data46": data46,
+        # "data47": data47,
         "data48": data48,
         "data49": data49,
-        # 'data50': data50,
-        # 'data51': data51,
+        # "data50": data50,
+        # "data51": data51,
         "data52": data52,
-        # 'data53': data53,
-        # 'data54': data54,
-        # 'data55': data55,
+        # "data53": data53,
+        # "data54": data54,
+        # "data55": data55,
         "data56": data56,
     }
 

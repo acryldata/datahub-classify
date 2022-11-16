@@ -129,7 +129,7 @@
         "Full_Name": "Full_Name"
     },
     "data33": {
-        "First and Last Name": "Full_Name",
+        "First and Last Name": "no_infotype",
         "SSN" :"US_Social_Security_Number",
         "Credit Card Number" : "Credit_Debit_Card_Number"
     },
