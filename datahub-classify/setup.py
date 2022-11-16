@@ -20,7 +20,7 @@ base_requirements = {
     "schwifty==2022.9.0",
     "python-stdnum==1.17",
     "ipaddress==1.0.23",
-    "en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.4.0/en_core_web_sm-3.4.0.tar.gz",
+    "spacy-download==1.0.0"
 }
 
 dev_requirements = {
@@ -46,8 +46,8 @@ setuptools.setup(
     url="https://datahubproject.io/",
     project_urls={
         "Documentation": "https://datahubproject.io/docs/",
-        "Source": "https://github.com/datahub-project/datahub",
-        "Changelog": "https://github.com/datahub-project/datahub/releases",
+        "Source": "https://github.com/acryldata/datahub-classify",
+        "Changelog": "https://github.com/acryldata/datahub-classify/releases",
     },
     license="Apache License 2.0",
     description="Library to predict info types for DataHub",

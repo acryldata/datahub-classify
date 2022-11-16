@@ -1,6 +1,6 @@
 # datahub-classify
 
-Predict InfoTypes for DataHub
+Predict InfoTypes for [DataHub](https://datahubproject.io/).
 
 ## Installation
 
