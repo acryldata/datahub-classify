@@ -19,8 +19,7 @@ base_requirements = {
     "vininfo==1.7.0",
     "schwifty==2022.9.0",
     "python-stdnum==1.17",
-    "ipaddress==1.0.23",
-    "spacy-download==1.0.0"
+    "ipaddress==1.0.23"
 }
 
 dev_requirements = {

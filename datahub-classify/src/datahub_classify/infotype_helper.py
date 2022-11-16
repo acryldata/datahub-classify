@@ -5,8 +5,8 @@ from typing import Any, Dict
 
 import numpy as np
 import phonenumbers
+import spacy
 from schwifty import BIC, IBAN
-from spacy_download import load_spacy
 from stdnum.us import ssn as us_ssn
 from vininfo import Vin
 
@@ -28,7 +28,15 @@ from datahub_classify.infotype_utils import (
 )
 
 logger = logging.getLogger(__name__)
-nlp_english = load_spacy("en_core_web_sm")
+spacy_model_name = "en_core_web_sm"
+try:
+    nlp_english = spacy.load(spacy_model_name)
+except OSError:
+    logger.info("Downloading language model for the spaCy")
+    from spacy.cli import download
+
+    download(spacy_model_name)
+    nlp_english = spacy.load(spacy_model_name)
 spacy_models_list = [nlp_english]
 
 
