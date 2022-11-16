@@ -34,6 +34,10 @@ def get_public_data(input_data_path):
     data5 = pd.read_csv(os.path.join(input_data_path, "Credit_Card2.csv"))
     data6 = pd.read_csv(os.path.join(input_data_path, "catalog.csv"))
     data7 = pd.read_csv(os.path.join(input_data_path, "iban.csv"))
+    # data8 = pd.read_csv(os.path.join(input_data_path, "USA_cars_datasets.csv"))
+    # data9 = pd.read_csv(os.path.join(input_data_path, "email_1.csv"))
+    # data10 = pd.read_csv(os.path.join(input_data_path, "email_2.csv"))
+    # data11 = pd.read_csv(os.path.join(input_data_path, "email_3.csv"))
     data12 = pd.read_csv(
         os.path.join(input_data_path, "2018-seattle-business-districts.csv")
     )
@@ -44,8 +48,15 @@ def get_public_data(input_data_path):
         os.path.join(input_data_path, "Book1.xlsx-credit-card-number.csv")
     )
     data17 = pd.read_csv(os.path.join(input_data_path, "Aliases.csv"))
+    # data18 = pd.read_csv(os.path.join(input_data_path, "athletes.csv"))
+    # data19 = pd.read_csv(os.path.join(input_data_path, "coaches.csv"))
+    # data20 = pd.read_csv(os.path.join(input_data_path, "curling_results.csv"))
     data21 = pd.read_csv(os.path.join(input_data_path, "Emails.csv"))
+    # data22 = pd.read_csv(os.path.join(input_data_path, "hockey_players_stats.csv"))
+    # data23 = pd.read_csv(os.path.join(input_data_path, "hockey_results.csv"))
+    # data24 = pd.read_csv(os.path.join(input_data_path, "medals.csv"))
     data25 = pd.read_csv(os.path.join(input_data_path, "Persons.csv"))
+    # data26 = pd.read_csv(os.path.join(input_data_path, "technical_officials.csv"))
     data27 = pd.read_csv(os.path.join(input_data_path, "Bachelor_Degree_Majors.csv"))
     data28 = pd.read_csv(os.path.join(input_data_path, "CrabAgePrediction.csv"))
     data29 = pd.read_csv(os.path.join(input_data_path, "Salary_Data.csv"))
@@ -87,14 +98,25 @@ def get_public_data(input_data_path):
         "data5": data5,
         "data6": data6,
         "data7": data7,
+        # "data8": data8,
+        # "data9": data9,
+        # "data10": data10,
+        # "data11": data11,
         "data12": data12,
         "data13": data13,
         "data14": data14,
         "data15": data15,
         "data16": data16,
         "data17": data17,
+        # "data18": data18,
+        # "data19": data19,
+        # "data20": data20,
         "data21": data21,
+        # "data22": data22,
+        # "data23": data23,
+        # "data24": data24,
         "data25": data25,
+        # "data26": data26,
         "data27": data27,
         "data28": data28,
         "data29": data29,
@@ -109,13 +131,21 @@ def get_public_data(input_data_path):
         "data38": data38,
         "data39": data39,
         "data40": data40,
-        # 'data41': data41, 'data42': data42, 'data43': data43,
-        # 'data44': data44, 'data45': data45, 'data46': data46, 'data47': data47,
+        # 'data41': data41,
+        # 'data42': data42,
+        # 'data43': data43,
+        # 'data44': data44,
+        # 'data45': data45,
+        # 'data46': data46,
+        # 'data47': data47,
         "data48": data48,
         "data49": data49,
-        # 'data50': data50, 'data51': data51,
+        # 'data50': data50,
+        # 'data51': data51,
         "data52": data52,
-        # 'data53': data53, 'data54': data54, 'data55': data55,
+        # 'data53': data53,
+        # 'data54': data54,
+        # 'data55': data55,
         "data56": data56,
     }
 
@@ -161,6 +191,8 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
             ):
                 expected_output_ideal[dataset][col] = "no_infotype"
 
+            if not expected_infotypes_confidence_slabs.get(dataset, None):
+                expected_infotypes_confidence_slabs[dataset] = dict()
             if (col not in expected_infotypes_confidence_slabs[dataset].keys()) or (
                 expected_output_ideal[dataset][col] not in infotypes_to_use
             ):
@@ -177,8 +209,15 @@ def get_public_data_expected_output(public_data_list, infotypes_to_use):
 
 
 def get_best_infotype_pred(
-    public_data_list, confidence_threshold, expected_output_unit_testing
+    public_data_list,
+    confidence_threshold,
+    expected_output_unit_testing,
+    update_confidence_slabs_json=False,
 ):
+    with open(
+        os.path.join(input_jsons_dir, "expected_infotypes_confidence_slabs.json")
+    ) as filename:
+        old_confidence_slabs = json.load(filename)
     column_info_list = populate_column_info_list(public_data_list)
     column_info_pred_list = predict_infotypes(
         column_info_list, confidence_threshold, input_dict, infotypes_to_use
@@ -188,7 +227,8 @@ def get_best_infotype_pred(
     public_data_predicted_infotype_confidence: Dict[str, dict] = dict()
     for dataset in public_data_list.keys():
         public_data_predicted_infotype[dataset] = dict()
-        # get_thresholds_for_unit_test[dataset] = dict()
+        if not old_confidence_slabs.get(dataset):
+            old_confidence_slabs[dataset] = dict()
         public_data_predicted_infotype_confidence[dataset] = dict()
         for col in public_data_list[dataset].columns:
             for col_info in column_info_pred_list:
@@ -215,6 +255,10 @@ def get_best_infotype_pred(
                                 infotype_assigned = col_info.infotype_proposals[
                                     i
                                 ].infotype
+                        if not old_confidence_slabs[dataset].get(col):
+                            old_confidence_slabs[dataset][col] = (
+                                np.floor(highest_confidence_level * 10) / 10
+                            )
                         public_data_predicted_infotype[dataset][col] = infotype_assigned
                         public_data_predicted_infotype_confidence[dataset][
                             col
@@ -233,8 +277,12 @@ def get_best_infotype_pred(
                         ):
                             expected_output_unit_testing[dataset][col] = "no_infotype"
                         public_data_predicted_infotype_confidence[dataset][col] = 0.0
-    # with open("infotype_thresholds.json", "w") as filename:
-    #     json.dump(get_thresholds_for_unit_test, filename)
+    if update_confidence_slabs_json:
+        with open(
+            os.path.join(input_jsons_dir, "expected_infotypes_confidence_slabs.json"),
+            "w",
+        ) as filename:
+            json.dump(old_confidence_slabs, filename, indent=4)
     return (
         public_data_predicted_infotype,
         expected_output_unit_testing,
@@ -312,7 +360,10 @@ public_data_list = get_public_data(input_data_dir)
     expected_output_unit_testing,
     public_data_predicted_infotype_confidence,
 ) = get_best_infotype_pred(
-    public_data_list, confidence_threshold, expected_output_unit_testing
+    public_data_list,
+    confidence_threshold,
+    expected_output_unit_testing,
+    update_confidence_slabs_json,
 )
 infotype_mapping_ideal = get_pred_exp_infotype_mapping(
     public_data_predicted_infotype,
