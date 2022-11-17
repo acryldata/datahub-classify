@@ -4,7 +4,7 @@ Gender,1.0,1.0
 Credit_Debit_Card_Number,1.0,1.0
 Email_Address,1.0,1.0
 Phone_Number,1.0,1.0
-Full_Name,0.86,0.86
+Full_Name,0.83,0.71
 Age,0.82,1.0
 IBAN,1.0,1.0
 Vehicle_Identification_Number,1.0,1.0
