@@ -14,12 +14,12 @@ def get_long_description():
 
 
 base_requirements = {
-    "spacy==3.4.1",
-    "phonenumbers==8.12.56",
     "vininfo==1.7.0",
     "schwifty==2022.9.0",
     "python-stdnum==1.17",
     "ipaddress==1.0.23"
+    "spacy>=3.4.1,<=3.4.3",
+    "phonenumbers>=8.12.56,<=8.13.0",
 }
 
 dev_requirements = {
@@ -33,7 +33,7 @@ dev_requirements = {
     "mypy>==0.981",
     "pytest-cov>=2.8.1",
     "scikit-learn==1.1.2",
-    "pandas==1.5.0",
+    "pandas>=1.5.0,<=1.5.1",
     "openpyxl"
 }
 
