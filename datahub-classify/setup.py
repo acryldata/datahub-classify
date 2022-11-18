@@ -16,7 +16,7 @@ def get_long_description():
 base_requirements = {
     "spacy>=3.4.1,<=3.4.3",
     "phonenumbers>=8.12.56,<=8.13.0",
-    "pandas>=1.5.0,<=1.5.1",
+    "pandas>=1.2.0,<=1.5.1",
     "spacy-download>=1.0.0"
 }
 
