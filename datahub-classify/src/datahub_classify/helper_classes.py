@@ -16,16 +16,40 @@ class Metadata:
     description: str = field(init=False)
     datatype: str = field(init=False)
     dataset_name: str = field(init=False)
+    column_id: str = field(init=False)
 
     def __post_init__(self):
         self.name = self.meta_info.get("Name", None)
         self.description = self.meta_info.get("Description", None)
         self.datatype = self.meta_info.get("Datatype", None)
         self.dataset_name = self.meta_info.get("Dataset_Name", None)
+        self.column_id = self.meta_info.get('Column_Id', None)
 
 
 @dataclass
 class ColumnInfo:
     metadata: Metadata
-    values: list
+    parent_columns: Optional[List] = None
+    values: Optional[List] = None
     infotype_proposals: Optional[List[InfotypeProposal]] = None
+
+
+@dataclass
+class Metadata_table:
+    meta_info: dict
+    name: str = field(init=False)
+    description: str = field(init=False)
+    platform: str = field(init=False)
+    table_id: str = field(init=False)
+
+    def __post_init__(self):
+        self.name = self.meta_info.get('Name', None)
+        self.description = self.meta_info.get('Description', None)
+        self.platform = self.meta_info.get('Platform', None)
+        self.table_id = self.meta_info.get('Table_Id', None)
+
+@dataclass      
+class TableInfo:
+    metadata: Metadata_table
+    parent_tables: list
+    column_infos: list
