@@ -8,12 +8,11 @@ import numpy as np
 from helper_classes import TableInfo, ColumnInfo
 import logging
 import re
-from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
+# from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 
 logger = logging.getLogger(__name__)
-
+glove_vec = "C:\\Users\\GS-3490\\Glossary_creation\\Glossary_stage_2\\glove.6B\\glove.6B.50d.txt"
 stop_words = set(stopwords.words('english'))
-glov_vec = "C:\\Glossary_stage_2\\glove.6B\\glove.6B.50d.txt"
 
 
 
@@ -117,27 +116,37 @@ def read_glove_vector(glove_vec: str):
             word_to_vec_map[curr_word] = np.array(w_line[1:], dtype=np.float64)
     return word_to_vec_map
 
+
+word_to_vec_map = read_glove_vector(glove_vec)
+
+
 def name_desc_similarity(text_1: str,
                          text_2: str):
-    fuzzy_match_score = fuzz.partial_ratio(text_1, text_2) / 100
-    text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower())
-    text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower())
-    text_1_words= [word for word in text_1_cleaned.split() if word not in (stopwords)]
-    text_2_words = [word for word in text_2_cleaned.split() if word not in (stopwords)]
-    word_to_vec_map = read_glove_vector(glove_vec)
-    text_1_avg_glove_emb = np.array(
-        [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
-    text_2_avg_glove_emb = np.array(
-        [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
+    text_1 = text_1.strip()
+    text_2 = text_2.strip()
 
-    emb_match_score = None
-    if len(text_1_avg_glove_emb) >0 and len(text_1_avg_glove_emb) >0:
-        emb_match_score = cosine_similarity_score(text_1_avg_glove_emb, text_2_avg_glove_emb)
+    if (text_1 not in ([None,""])) and (text_2 not in ([None,""])):
+        fuzzy_match_score = fuzz.partial_ratio(text_1, text_2) / 100
+        text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower())
+        text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower())
+        text_1_words= [word for word in text_1_cleaned.split() if word not in (stop_words)]
+        text_2_words = [word for word in text_2_cleaned.split() if word not in (stop_words)]
+        text_1_avg_glove_emb = np.array(
+            [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
+        text_2_avg_glove_emb = np.array(
+            [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
 
-    if emb_match_score:
-        score = np.maximum(fuzzy_match_score, emb_match_score)
+        # print(text_1_avg_glove_emb)
+        emb_match_score = None
+        if text_1_avg_glove_emb.shape[0] >0 and text_2_avg_glove_emb.shape[0] >0:
+            emb_match_score = cosine_similarity_score(text_1_avg_glove_emb, text_2_avg_glove_emb)
+
+        if emb_match_score:
+            score = np.maximum(fuzzy_match_score, emb_match_score)
+        else:
+            score = fuzzy_match_score
     else:
-        score = fuzzy_match_score
+        score=0
     return score
 
 
@@ -232,7 +241,7 @@ def compute_column_overall_similarity_score(name_score: float,
             weighted_score = 1.2* weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
-    return np.round(overall_column_similarity_score)
+    return np.round(overall_column_similarity_score, 2)
 
 
 def compute_table_similarity(table_info1: TableInfo,
@@ -259,8 +268,8 @@ def compute_table_similarity(table_info1: TableInfo,
     else:
         desc_present = False
 
-    table_name_score = name_desc_similarity((table1_name, table2_name))
-    table_desc_score = name_desc_similarity((table1_desc, table2_desc))
+    table_name_score = name_desc_similarity(table1_name, table2_name)
+    table_desc_score = name_desc_similarity(table1_desc, table2_desc)
     table_platform_score = table_platform_similarity (table1_platform, table2_platform )
     table_lineage_score = compute_lineage_score(table1_parents, table2_parents, table1_name, table2_name)
     table_schema_score = table_schema_similarity(table_1_cols_name_dtypes, table_2_cols_name_dtypes)
@@ -292,9 +301,9 @@ def compute_column_similarity(col_info1: ColumnInfo,
     else:
         desc_present = False
 
-    column_name_score = name_desc_similarity((column1_name, column2_name))
+    column_name_score = name_desc_similarity(column1_name, column2_name)
     if desc_present:
-        column_desc_score = name_desc_similarity((column1_desc, column2_desc))
+        column_desc_score = name_desc_similarity(column1_desc, column2_desc)
     else:
         column_desc_score = None
     column_dtype_score = column_dtype_similarity(column1_dtype, column2_dtype)
