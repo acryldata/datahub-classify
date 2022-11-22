@@ -56,7 +56,7 @@ def inspect_for_email_address(metadata, values, config):
                 )
             else:
                 raise Exception(
-                    "Inappropriate Prediction type %s" % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate Prediction type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -122,8 +122,7 @@ def inspect_for_street_address(metadata, values, config):  # noqa: C901
                 values_score = np.minimum(entities_score, 1)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -181,8 +180,7 @@ def inspect_for_gender(metadata, values, config):  # noqa: C901
                 )
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -260,8 +258,7 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
                 )
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -352,8 +349,7 @@ def inspect_for_phone_number(metadata, values, config):  # noqa: C901
                 values_score = valid_phone_numbers_count / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
 
         except Exception as e:
@@ -426,8 +422,7 @@ def inspect_for_full_name(metadata, values, config):  # noqa: C901
                 values_score = np.minimum(entities_score, 1)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -505,8 +500,7 @@ def inspect_for_age(metadata, values, config):  # noqa: C901
                     pass
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -567,8 +561,7 @@ def inspect_for_iban(metadata, values, config):  # noqa: C901
                 values_score = iban_score / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -631,8 +624,7 @@ def inspect_for_vehicle_identification_number(metadata, values, config):  # noqa
                 values_score = vin_score / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -694,8 +686,7 @@ def inspect_for_ip_address_v4(metadata, values, config):  # noqa: C901
                 values_score = count / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -757,8 +748,7 @@ def inspect_for_ip_address_v6(metadata, values, config):  # noqa: C901
                 values_score = count / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -816,8 +806,7 @@ def inspect_for_us_driving_license_number(metadata, values, config):
                 )
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -879,8 +868,7 @@ def inspect_for_us_social_security_number(metadata, values, config):  # noqa: C9
                 values_score = us_ssn_score / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")
@@ -942,8 +930,7 @@ def inspect_for_swift_code(metadata, values, config):  # noqa: C901
                 values_score = swift_score / len(values)
             else:
                 raise Exception(
-                    "Inappropriate values_prediction_type %s"
-                    % config[VALUES][PREDICTION_TYPE]
+                    f"Inappropriate values_prediction_type {config[VALUES][PREDICTION_TYPE]}"
                 )
         except Exception as e:
             logger.error(f"Column {metadata.name} failed due to {e}")

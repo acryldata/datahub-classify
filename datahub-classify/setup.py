@@ -30,10 +30,10 @@ dev_requirements = {
     "flake8-tidy-imports>=4.3.0",
     "isort>=5.7.0",
     # Because of https://github.com/python/mypy/issues/13627 issue, set the mypy version to 0.981, we can revisit this in future
-    "mypy>==0.981",
+    "mypy>=0.981",
     "pytest-cov>=2.8.1",
-    "scikit-learn==1.1.2",
-    "pandas>=1.5.0,<=1.5.1",
+    "scikit-learn",
+    "pandas>=1.2.0,<=1.5.1",
     "openpyxl"
 }
 

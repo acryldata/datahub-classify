@@ -19,11 +19,9 @@ def get_infotype_function_mapping(infotypes, global_config):
         infotypes = global_config.keys()
     for infotype in infotypes:
         if infotype not in global_config.keys():
-            logger.warning(
-                "Configuration is not available for infotype - %s" % infotype
-            )
+            logger.warning(f"Configuration is not available for infotype - {infotype}")
         else:
-            fn_name = "inspect_for_%s" % infotype.lower()
+            fn_name = f"inspect_for_{infotype.lower()}"
             infotype_function_map[infotype] = module_fn_dict[fn_name]
     return infotype_function_map
 
@@ -68,12 +66,7 @@ def predict_infotypes(
                         proposal_list.append(infotype_proposal)
                 else:
                     raise Exception(
-                        "Failed basic checks for infotype - %s, column - %s and dataset -%s"
-                        % (
-                            infotype,
-                            column_info.metadata.name,
-                            column_info.metadata.dataset_name,
-                        )
+                        f"Failed basic checks for infotype - {infotype}, column - {column_info.metadata.name} and dataset - {column_info.metadata.dataset_name}"
                     )
             except Exception as e:
                 # traceback.print_exc()
