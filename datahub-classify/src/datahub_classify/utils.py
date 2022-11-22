@@ -18,12 +18,12 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
-column_desc_threshold = 0.7
+column_desc_threshold = 0.65
 column_weighted_score_threshold = 0.7
 column_lineage_threshold = 0.7
 table_similarity_threshold = 0.7
 
-table_desc_threshold = 0.7
+table_desc_threshold = 0.65
 table_weighted_score_threshold = 0.7
 
 
@@ -175,11 +175,11 @@ word_to_vec_map = read_glove_vector(glove_vec)
 
 def name_desc_similarity(text_1: str,
                          text_2: str):
-    text_1 = text_1.strip()
-    text_2 = text_2.strip()
+    text_1 = text_1.lower().strip()
+    text_2 = text_2.lower().strip()
 
     if (text_1 not in ([None,""])) and (text_2 not in ([None,""])):
-        fuzzy_match_score = fuzz.partial_ratio(text_1, text_2) / 100
+        fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
         if fuzzy_match_score <= 0.5:
             fuzzy_match_score = 0.8 * fuzzy_match_score
 
@@ -304,11 +304,13 @@ def compute_column_overall_similarity_score(name_score: float,
 
     if weighted_score > column_weighted_score_threshold:
         if table_similarity_score > table_similarity_threshold:
-            weighted_score = 1.1 * weighted_score
+            weighted_score = 1.05 * weighted_score
         if lineage_score ==1:
             weighted_score = 1.1* weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
+    
+  
     return np.round(overall_column_similarity_score, 2)
 
 
@@ -348,6 +350,7 @@ def compute_table_similarity(table_info1: TableInfo,
     print("platform score: ", table_platform_score)
     print("lineae score: ", table_lineage_score)
     print("schema score: ", table_schema_score)
+    print("======================================")
 
     overall_table_similarity_score = compute_table_overall_similarity_score(table_name_score,
                                                                             table_desc_score,
@@ -389,5 +392,18 @@ def compute_column_similarity(col_info1: ColumnInfo,
                                                                               overall_table_similarity_score,
                                                                               column_lineage_score,
                                                                               desc_present)
+
+    print("pair: ", (col_info1.metadata.column_id, col_info2.metadata.column_id ))
+    print("name score: ", column_name_score)
+    print("-------------")
+    print(column1_desc)
+    print(column2_desc)
+    print("-------------")
+    print("desc score: " ,column_desc_score)
+    print("dtype score: ", column_dtype_score)
+    print("lineage score: ", column_lineage_score)
+    print("overall score: ", overall_column_similarity_score)
+    print("****************************")
+    # print("schema score: ", table_schema_score)
     return overall_column_similarity_score
 
