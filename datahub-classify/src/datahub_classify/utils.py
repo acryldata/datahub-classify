@@ -193,21 +193,20 @@ def name_desc_similarity(text_1: str,
             [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
             emb_2 = np.array(
             [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
-        
+
+            if str(emb_1) == "nan" or str(emb_2) == "nan":
+                embeddings = model.encode([text_1, text_2])
+                emb_1 = embeddings[0]
+                emb_2 = embeddings[1]
+
         else:
             embeddings = model.encode([text_1, text_2])
             emb_1 = embeddings[0]
             emb_2 = embeddings[1]
 
-        emb_match_score = None
-        if emb_1.shape[0] >0 and emb_2.shape[0] >0:
-            emb_match_score = cosine_similarity_score(emb_1, emb_2)
+        emb_match_score = cosine_similarity_score(emb_1, emb_2)
+        score =  np.maximum(fuzzy_match_score, emb_match_score)
 
-
-        if emb_match_score:
-            score =  np.maximum(fuzzy_match_score, emb_match_score)
-        else:
-            score = fuzzy_match_score
     else:
         score=0
 
@@ -275,12 +274,12 @@ def compute_table_overall_similarity_score(name_score: float,
                                            lineage_score: bool,
                                            schema_score: float,
                                            desc_present: bool):
-    weighted_score = 0.4*name_score + 0.1*platform_score +  0.5*schema_score
+    weighted_score = 0.3*name_score + 0.1*platform_score +  0.6*schema_score
     if desc_present:
         if desc_score >= table_desc_threshold:
             weighted_score = np.minimum(1.1 * weighted_score, 1)
         else:
-            weighted_score = 0.9*weighted_score
+            weighted_score = 0.95*weighted_score
     
     overall_table_similarity_score = weighted_score
 
@@ -345,6 +344,7 @@ def compute_table_similarity(table_info1: TableInfo,
 
     print("name score: ", table_name_score)
     print("desc score: " ,table_desc_score)
+    print("platforms: ", table1_platform, table2_platform)
     print("platform score: ", table_platform_score)
     print("lineae score: ", table_lineage_score)
     print("schema score: ", table_schema_score)
