@@ -1,851 +1,1001 @@
-Id,Alias,PersonId
-1,111th congress,1
-2,agna usemb kabul afghanistan,2
-3,ap,3
-4,asuncion,4
-5,alec,5
-6,dupuy alex,6
-7,american beverage association,7
-8,mayock andrew,8
-9,shapiro andrew j,9
-10,shapiroa@state.gov,9
-11,slaughter annmarie,10
-12,slaughter anne marie,10
-13,slaughter annemarie,10
-14,slaughtera@state.gov,10
-15,lake anthony,11
-16,valenzuela arturo a,12
-17,valenzuelaaa@state.gov,12
-18,kimoon ban,13
-19,obama barack,14
-20,president,14
-21,bam@mikulski.senate.gov,15
-22,mikulski bam,15
-23,mikulski bam (mikulski),15
-24,mikulski bam (mitkulski),15
-25,mikulskibam (mikulski),15
-26,betsy.ebeling,16
-27,ebeling betsy,16
-28,betsyebeling,16
-29,betsyebeling1050,16
-30,clinton william j,17
-31,dad,17
-32,biography,18
-33,klehr bonnie,19
-34,brian,20
-35,bstrider,21
-36,strider burns,21
-37,capricia marshall,22
-38,marshall capricia,22
-39,marshall capricia p,22
-40,capriciamarshall,22
-41,capriciamarshall@,22
-42,cmarshall,22
-43,marshallcp@state.gov,22
-44,pascual carlos,23
-45,adler caroline e,24
-46,button case,25
-47,richards cecile,26
-48,eur/rus:weson chad,27
-49,nea/pi/ce:kiamie charles,28
-50,chelsea,29
-51,blair cherie,30
-52,cherie blair,30
-53,cb,30
-54,cherieblair,30
-55,cheryl,31
-56,c:mills cheryl,32
-57,cheryl mills,32
-58,cheryl mills cos,32
-59,mill cheryl,32
-60,mills cherlyl d,32
-61,mills chery d,32
-62,mills cheryl,32
-63,mills cheryl d,32
-64,millscheryl d,32
-65,mills. cherl d,32
-66,mills. cheryl d,32
-67,millscd@state.gov,32
-68,cheryl.mills,32
-69,cheryl.mills@,32
-70,crocker chester a,33
-71,butzgy christopher h,34
-72,edwards christopher,35
-73,eap/j:green christopher,36
-74,hill christopher r (baghdad),37
-75,hillcr@state.gov,37
-76,coleman claire l,38
-77,colin powell,39
-78,council on foreign relations,40
-79,beale courtney a karamer,41
-80,beale courtney a kramer,41
-81,bealeca@state.gov,41
-82,kelly craig a,42
-83,daily sun,43
-84,hyde dana,44
-85,daniel,45
-86,baer daniel,46
-87,baer daniel b,46
-88,baer daniel d,46
-89,baer.daniel,46
-90,daniel.baer,46
-91,inonye daniel,47
-92,schwerin daniel b,48
-93,schwerindb@state.gov,48
-94,brian danielle,49
-95,axelrod david m,50
-96,axelrod_d,50
-97,brock david,51
-98,david_garten@lautenberg.senate.gov,52
-99,garten david (lautenberg),52
-100,inl:johnson david t,53
-101,d.gunners2010,54
-102,department of state,55
-103,chollet derek h,56
-104,cholletdh@state.gov,56
-105,reynolds diane,57
-106,donald,58
-107,band doug,59
-108,hattaway doug,60
-109,doug,60
-110,pelton e,61
-111,politico  drew elizabeth,62
-112,tauscher ellen o,63
-113,tauschereo@state.gov,63
-114,faleomavaega eni f,64
-115,woodard eric w,65
-116,brimmer esther d,66
-117,brimmere@state.gov,66
-118,finca international,67
-119,foreign affairs magazine,68
-120,prm/mce:wills g,69
-121,lou de bac g/tip,70
-122,prm/mce:willsg,71
-123,mitchell george,72
-124,glantz gina,73
-125,glantz.,73
-126,govenman etazini,74
-127,haiti,75
-128,duksoo han,76
-129,koh harold hongju,77
-130,kohhh@state.gov,77
-131,heintz,78
-132,hill,79
-133,hillary clinton,80
-134,clinton,80
-135,clinton hillary r,80
-136,clinton hillary,80
-137,clinton hillary rodham,80
-138,h,80
-139,h2,80
-140,hrc,80
-141,hillary,80
-142,hillary rodham clinton,80
-143,madam secretary,80
-144,secretary,80
-145,secretary clinton,80
-146,secretary of state,80
-147,hr15@mycingular.blackberry.net,80
-148,hrod17@clintonemail.com,80
-149,the honorable hillary rodham clinton secretary of state,80
-150,hdr22@clintonemail.com,80
-151,abedin huma,81
-152,abedinh@state.gov,81
-153,abein huma,81
-154,abendin huma,81
-155,adedin huma,81
-156,huma abedin,81
-157,huma@clintonemail.com,81
-158,abedin@state.gov,81
-159,abendinh@state.gov,81
-160,adedinh@state.gov,81
-161,kelly ian,82
-162,ds/pa:finkle j,83
-163,jama,84
-164,newmyer jackie,85
-165,newmyer,85
-166,lew,86
-167,lew jacob,86
-168,lew jacob j,86
-169,jacobjlew,86
-170,lewjj@state.gov,86
-171,sullivan jj@state.gov,87
-172,sullivan jacbo j,87
-173,sullivan jack,87
-174,sullivan jacob,87
-175,sullivan jacob h,87
-176,sullivan jacob j,87
-177,sullivan jake,87
-178,sullivan jake j,87
-179,sullivanjj@state.gov,87
-180,jake. sullivan,87
-181,jake.sullivan,87
-182,jake.sullivan@,87
-183,sulllivanjj@state.gov,87
-184,sullivanil@state.gov,87
-185,sullivann@state.gov.,87
-186,mcgovern james p,88
-187,smith james e,89
-188,steinberg james b,90
-189,steinbergjb@state.gov,90
-190,steinbertjb@state.gov,90
-191,jpiercy,91
-192,jacobs janice l,92
-193,farrow jeffrey,93
-194,farrow jeffrey l,93
-195,jfarrow,93
-196,feltman jeffrey d,94
-197,feltmanjd@state.gov,94
-198,robinson jennifer,95
-199,hoagland jim,96
-200,kennedy jim,97
-201,laszczych joanne,98
-202,olver john,99
-203,podesta john,100
-204,jpodesta,100
-205,carson johnnie,101
-206,carsonj@state.gov,101
-207,jonathan prince,102
-208,daniel joshua j,103
-209,kieffer judith,104
-210,mchale judith,105
-211,mchale judith a,105
-212,mchaleja@state.gov,105
-213,cooper justin,106
-214,kpk,107
-215,kabul lgf request,108
-216,eikenberry karl w,109
-217,kellyc@state.gov,110
-218,conrad kent,111
-219,baldersonkm@state.gov,112
-220,balderston kris m,112
-221,balderstone kris m,112
-222,balderstonkm@state.gov,112
-223,campbell kurt m,113
-224,campbellkm@state.gov,113
-225,eap/k:rosenberger l,114
-226,lgraham,115
-227,jilloty lauren c,116
-228,jiloty cheryl d,116
-229,jiloty lauren,116
-230,jiloty lauren c,116
-231,jiloty lauren cd,116
-232,jiloty. lauren c,116
-233,jilotylc@state.gov,116
-234,jjiloty lauren c,116
-235,jjilotylc@state.gov,116
-236,lauren jiloty,116
-237,rubiner laurie,117
-238,brown lee r,118
-239,feinstein lee,119
-240,dewan linda l,120
-241,captuol,121
-242,caputol,121
-243,imuscatine,122
-244,lissa muscatine,122
-245,muscantine lissa,122
-246,muscatine lissa,122
-247,muscatine lisa,122
-248,muscatinelissa,122
-249,muscatine. lissa,122
-250,muscatinel@state.gov,122
-251,lmuscatine,122
-252,muscantinel@state.gov,122
-253,quam lois,123
-254,valmmorolj@state.gov,124
-255,valmoro lona,124
-256,valmoro lona j,124
-257,valmoroli@state.gov,124
-258,valmorolj@state.gov,124
-259,walmoro lona j,124
-260,long term strategy group,125
-261,diamond louise,126
-262,cue lourdes c,127
-263,g/tip:cdebaca luis,128
-264,luzzatto,129
-265,lynn,130
-266,albright m k,131
-267,albright madeleine,132
-268,williamsbarrett,133
-269,calivis maria,134
-270,otero maria,135
-271,oterom2@state.gov,135
-272,af/pdpa:scott marianne,136
-273,mark,137
-274,markjpenn,138
-275,mtorrey,139
-276,eca:pally maura,140
-277,pally maura m,140
-278,baucus max,141
-279,rooney megan,142
-280,pverveer,143
-281,vereer melanne s,143
-282,verveer melanne e,143
-283,verveer melanne s,143
-284,verveerms@state.gov,143
-285,fuchs michael h,144
-286,fuchsmh@state.gov,144
-287,posner michael h,145
-288,posnermh@state.gov,145
-289,bond michele t,146
-290,michele.flournoy,147
-291,rodriguez miguel e,148
-292,mike,149
-293,hanley monica r,150
-294,hanleymr@state.gov,150
-295,nhla,151
-296,nancy,152
-297,neera tanden,153
-298,tandem neera,153
-299,tanden neera,153
-300,ntanden,153
-301,new york times,154
-302,norman nicholas,155
-303,toiv nora f,156
-304,toivnf@state.gov,156
-305,tov nora f,157
-306,opinion research,158
-307,sanchez oscar arias,159
-308,flores oscar,160
-309,lores oscar,161
-310,pvervee,162
-311,kennedy patrick f,163
-312,m:kennedy patrick f,163
-313,collier paul,164
-314,jones paul w,165
-315,nea/ipa:knopf payton,166
-316,robinson peter,167
-317,crowley philip,168
-318,crowley philip j,168
-319,gordon philip h,169
-320,gordon. philip h,169
-321,gordonph@state.gov,169
-322,pir,170
-323,reines philipe i,170
-324,reines philippe,170
-325,reines philippe i,170
-326,reines phillippe i,170
-327,rines philippe i,170
-328,preines,170
-329,reines@state.gov,170
-330,reinesp@state.gov,170
-331,crowley phillip j,171
-332,crowleypj@state.gov,171
-333,campbell piper,172
-334,prime minister,173
-335,shah rajiv,174
-336,rshah,174
-337,recos,175
-338,philippe reines,176
-339,preval rene,177
-340,lewis reta jo,178
-341,holbrookerc@state.gov,179
-342,verma richard,180
-343,verma richard r,180
-344,vermarr@state.gov,180
-345,rsloan,181
-346,blake robert o,182
-347,danford robert a,183
-348,hormats robert d,184
-349,hormatsrd@state.gov,184
-350,russo robert  v,185
-351,russo robert v,185
-352,russorv@state.gov,185
-353,rodriguezme@state.gov,186
-354,howe rosemarie,187
-355,rosemarie.howe,187
-356,zaidi s akbar,188
-357,s/srgia,189
-358,state,190
-359,berger samuel r,191
-360,sberger,191
-361,sandy,191
-362,berger samuel,192
-363,sgration,193
-364,blumenthal sidney,194
-365,sid,194
-366,sbwhoeop,194
-367,sbwhoeop@,194
-368,sbwhoop,194
-369,sir,195
-370,talbott strobe,196
-371,stalbott,196
-372,stallbott,196
-373,rice susan e,197
-374,rice susan e.,197
-375,grantham suzanne l,198
-376,terry.duffy,199
-377,donilon thomas e,200
-378,nides thomas r,201
-379,nidestr@state.gov,201
-380,shannon thomas a,202
-381,wha: shannon thomas a,202
-382,shannonta@state.gov,202
-383,tflourno,203
-384,stern todd,204
-385,stern todd d,204
-386,stern todd d (s/secc),204
-387,sterntd@state.gov,204
-388,tillemann tomicah,205
-389,tillemann tomicah s,205
-390,tillemannts@state.gov,205
-391,elbegdori tsakina,206
-392,u.s. global leadership coalition,207
-393,estados unidos da america,208
-394,estados unidos de norteamerica,208
-395,etatunis damerique,208
-396,etatsunis damerique,208
-397,united states of america,208
-398,nuland victoria j,209
-399,ebeling voda,210
-400,ebelling voda,210
-401,whadp,211
-402,washington post,212
-403,sherman wendy,213
-404,sherman wendy r,213
-405,wsherman,213
-406,ilic werner x,214
-407,white house,215
-408,burns william j,216
-409,burnswj@state.gov,216
-410,wburns,216
-411,wburns66,216
-412,wburns66@,216
-413,hubbard william,217
-414,iscol zachary,218
-415,aclb,219
-416,alcb,220
-417,l,221
-418,latimes.com,222
-419,mh.interiors,223
-420,mhcaleja@state.gov,224
-421,postmaster@state.gov,225
-422,rooneym@state.gov,226
-423,rrh.interiors,227
-424,b6,228
-425,sullivan jacob 1,87
-426,mills cheryl 0,32
-427,nuiand victoria j,229
-428,reines philippe f,230
-429,sullivan jacob j nuland victoria 1,231
-430,sullivan jacobi,87
-431,russorv@stategov,232
-432,sullivan jacob .1 ‹sullivann@state.gov>,87
-433,sullivan jacob i,87
-434,burns strider,21
-435,mcdonough denis r. (mailto: b6,87
-436,sullivan jacob .1,87
-437,abeclin huma,81
-438,oscar flores,233
-439,milts cheryl 0,32
-440,sidney blumenthal,194
-441,su ii iva gll@state.gov.,234
-442,annemarie slaughter,10
-443,sullivahu@state.gov,235
-444,barton rick (cso),32
-445,mills cheryl id,32
-446,russoiv@state.gov,236
-447,miliscd@stategov,237
-448,sullivan jacob 3,87
-449,abedin hume,81
-450,hanky monica r,150
-451,h ehrod17@clintonemailcom>,80
-452,abedinh@stategov,238
-453,lvlills cheryl d,32
-454,tomlinson christina b3 cia pers/org,32
-455,h ‹hrod17@clintonernail.com>,80
-456,tanleyrnr@state.gov,239
-457,hanleymr@stategov,240
-458,hanley monica r .,150
-459,sullivan jacob.),87
-460,hemmen chris,32
-461,rnillscd@state.gov,241
-462,sullivan jacob .‹suilivan1j©st.ate.gov>,87
-463,rnillscd@stategov.,242
-464,sullivanjj@state.gov.,243
-465,mills chey 0,32
-466,reiriesp@state.gov,244
-467,sidney blumenthal b6,194
-468,suilivanii@stategov,245
-469,sullivanj@state.gov,246
-470,suilivanij@state.gok,247
-471,hanleymr@state.gov.,248
-472,reines philippe t,249
-473,hanleyrnr@state.gov,250
-474,h 1,80
-475,hanieymr@state.gov,251
-476,mills. cheryl 0,32
-477,hanleymrgastategov,252
-478,sulliyanfostate.gott,253
-479,aliilscd@state.gov,254
-480,sullivan jacob j esullivanii@stategov>,87
-481,mills cheryl d :miliscd@stategov>,32
-482,mills cheryl d [mailto:millscd@stategovi,80
-483,mills cheryl d [mailto:millscd©state.gov],80
-484,valmoro lona j ‹valmorou c stategov>,124
-485,valnnoro lona j,124
-486,mills cheryl 0emillscd@state.gov>,32
-487,nidesth@stategoy,255
-488,bums william j,216
-489,h ‹hrod17@clintonemailcom>,80
-490,millscd@state.gov.,256
-491,jacob j sullivan,257
-492,reines philippe),170
-493,sullivan jacobj,87
-494,jake sullivan _,87
-495,sullivanji@state.gov,258
-496,stevens john c,87
-497,sullivanjj@state.golt,259
-498,millscd@state.goy,260
-499,nulandyj@state.goy,261
-500,sulliyanij@state.goy,262
-501,rnillscd@state.govs,263
-502,nuland victoria 3,209
-503,jake.sullivar,264
-504,jilotylc@state.gov.,265
-505,jake.sulliyan,266
-506,michele.fl,267
-507,cheryimills millscd@state.gov,268
-508,jake.sulliva,269
-509,valmoroll@state.gov.,270
-510,habedin b6,271
-511,valmorou@state.gov,272
-512,filotylc@state.gov,273
-513,habedin,274
-514,cheryl.mills jake.sullivan,275
-515,abedinh@state.gov.,276
-516,millscd@state.aov,277
-517,illotylc@state.gov,278
-518,millscd@state ov,279
-519,habedin(,280
-520,doug band,281
-521,sullivanij@state.gov.,282
-522,preines@,283
-523,abedinh  state ov,284
-524,cheryl.mills abedinh@state.gov,285
-525,cheryl.mill,286
-526,briar,287
-527,abedinh@state.goy,288
-528,a bedinh@state.gov,289
-529,preine,290
-530,valmorol.1@state.gov,291
-531,sullivanij@state.gov,292
-532,preines sullivanjj@state.gov b6,293
-533,valmorolj@state.gov.,294
-534,leltmanjd@state.gov,295
-535,ullivanjj@state.gov,296
-536,sta i bott,297
-537,sullivanjj©state ov,298
-538,millscd@state.00v.,299
-539,steinbergib@state.gov,300
-540,cheryl.millf.,301
-541,mhcaleja@state.gove,302
-542,cheryl.millsi,303
-543,s abedinh@state.gov,304
-544,valmorou@state.gov.,305
-545,chetyl.mills sullivanij@state.gov,306
-546,sullivanu@state.gov.,307
-547,muscatinel@state.goy,308
-548,preines  sullivanjj@state.gov,309
-549,axelrod_,310
-550,wburns6,311
-551,valmorol1@state.gov.,312
-552,steinberg1b@state.gov,313
-553,. huma abedin,314
-554,abedinh@stategovl,315
-555,valmorou©state.gov,316
-556,reinesp@state.goy,317
-557,sulliyanjj@state.goy,318
-558,emillscd@state.gov,319
-559,cheryl.mill sullivanjj@state.gov,320
-560,cheryl.mills millscd@state.gov.,321
-561,preines verveerms@state.gov,322
-562,jilotylc@state.goy,323
-563,val moro u@state.gov,324
-564,a bed inh@state.gov,325
-565,mot lc@state.gov,326
-566,jilot lc@state. ov,327
-567,.1ilotylc@state.gov.,328
-568,iilotylc@state.gov.,329
-569,jilotylc©state.gov.,330
-570,cheryl.mills sullivanjj@state.gov,331
-571,iewjj@state.gov,332
-572,cheryl.mills _,333
-573,sulliva njj@state.g ov,334
-574,pverveel,335
-575,. h,80
-576,preines sullivanij@state.gov.,336
-577,sta ibott,337
-578,balderstonkm@state.gov.,338
-579,11,80
-580,rossdb@state.gov,339
-581,bowens,340
-582,jacobjlev,341
-583,yeryeerms@state.goy,342
-584,preines b6,343
-585,valmorou@state.gove,344
-586,abedinh@state.gove,345
-587,campbelikm@state.gov,346
-588,nancy millscd@state.gov b6,347
-589,valmorou©state.gov.,348
-590,andy manatos,80
-591,vanbuskirk michael 1,349
-592,huma abed in,350
-593,caputo,351
-594,.gordonph@state.gov.,352
-595,preines sullivanjj@state.gov,353
-596,cheryl.mills sullivanjj@state.gov b6,354
-597,cheryl.mills( sullivanjj@state.gov,355
-598,huma abedin b6,356
-599,mtorrey1,357
-600,glantz.gina,358
-601,millscd@tate.gov,359
-602,cheryl.mills huma abedin,360
-603,cheryl.mills millscd@state.gov,361
-604,campbelikm©state.gov,362
-605,jacobjlew vermarr@state.gov,363
-606,sullivanjj@state.gov b6,364
-607,iilotylc@state.gov,365
-608,rnillscd@state.gov.,366
-609,sullivanjj@state.govr,367
-610,lewij@state.gov,368
-611,williamsbarrett millscd@state.gov.,369
-612,abedinh©state.gov,370
-613,s sullivanjj@state.gov,371
-614,filotylc@state.gov.,372
-615,..lilotylc@state.gov.,373
-616,baer.danie,374
-617,reines philippe i (pace),170
-618,mills.cheryl d,32
-619,millscd@state.ov,375
-620,cmills,376
-621,newmyer on behalf of jackie newmyer,85
-622,cheryl mills[,32
-623,otero mildred (clinton),377
-624,iewij@state.gov,378
-625,abed in huma,81
-626,jake sullivan,87
-627,preines huma abedin,379
-628,h.,80
-629,ieltmanjd@state.gov.,380
-630,valmoroll@state.gov,381
-631,h [mailto:hdr22@clintonemail.com],32
-632,ben kobren,80
-633,todd stern,382
-634,jonespw2@state.gov.,383
-635,daniel.baer@,384
-636,jonespw2@state.gov,385
-637,cmarshal,386
-638,sbwhoeop b6,387
-639,jackie newmyer,85
-640,pverveer b6,143
-641,cheryl.mill abedin huma,388
-642,lee feinstein,119
-643,cheryl.mills b6,32
-644,strobe talbott,196
-645,berger samuel r.,191
-646,abedin hurna,81
-647,abed in hu ma,81
-648,jeffrey l farrow,93
-649,pvervee _,143
-650,jeffrey farrow,93
-651,eizenstat stuart,32
-652,valmoro lona j walmorou@state.goy>,124
-653,lew jacob i,389
-654,steinberg james,390
-655,rosemarie.howe h,391
-656,abedin hu ma,81
-657,sbwhoeor,194
-658,esullivanjj@state.gov,392
-659,cheryl.miils@ millscd@state.gov,393
-660,millscd©state.gov,394
-661,justin cooper,395
-662,strobe talbott b6,196
-663,valmoro lona 1,124
-664,axelrod david m.,50
-665,john podesta,100
-666,eabedinh@state.gov,396
-667,abedinh@state.govr,397
-668,cheryl.mills@ millscd@state.gov.,398
-669,williamsbarre0,399
-670,lissa muscatine b6,122
-671,minyon moore .,32
-672,capricia penavic marshall,400
-673,maggie williams,401
-674,rosemarie howe,402
-675,valmoro lona j walmorou@state.gov>,124
-676,lewjj@state.gov.,403
-677,wendy sherman,213
-678,jim kennedy,404
-679,jake.sullivan(,87
-680,choilet derek h,56
-681,cdm,405
-682,axelrod david m. b6,50
-683,wburns66 b6 i,216
-684,donilon thomas e.,200
-685,jacob lew,86
-686,lou de baca g/tip,70
-687,* abedin huma,81
-688,pj,406
-689,crowleyp  state ov. preines,407
-690,hume abedin,408
-691,valmoro lona1,124
-692,marciel scot a,409
-693,0 mills cheryl d,32
-694,.,410
-695,smith daniel b,411
-696,il,412
-697,cheryl.mill1,413
-698,jpier4,414
-699,berger samuel r. b6,191
-700,sbwhoeopc,194
-701,sullivanii@state.govr,415
-702,holbrooke richard c,416
-703,verveer melanne s werveerms@state.gov>,143
-704,cheryl.millsc,32
-705,m.k albright,131
-706,tauscher ellen 0,63
-707,jake sullivar,87
-708,gina glantz b6,73
-709,voda ebeling,210
-710,abedin huma eabedinh@state.gov>,81
-711,lew jacob 1,86
-712,sbwhoeop b61,194
-713,info@mailva.evite.com,81
-714,luzzatt,417
-715,daniel baer,46
-716,reta jo lewis special representative global intergovernmental affairs,178
-717,daniel.bae,418
-718,valmorou state. ov,419
-719,vanbuskirk michael .3,420
-720,edwards christopher (jakarta/pro),421
-721,merten kenneth h,32
-722,preine h,422
-723,preines h,423
-724,shah rajiv (aid/a),174
-725,sbwhoeor.,194
-726,williamsbarret,424
-727,sullivanii@state.gov,425
-728,hannah richert,426
-729,ross alec j,427
-730,sbwhoecip,194
-731,sbwhoeopi,428
-732,. sullivan jacobi,87
-733,betsyebelin,16
-734,sbwhoeor b6,194
-735,doua band,429
-736,daniel meron,180
-737,adams david s,430
-738,doug hattaway,431
-739,mills; cheryl d,32
-740,colby cooper,81
-741,kritenbrink daniel j,432
-742,cheryl mills b6,32
-743,abdinh@state.gov,433
-744,fareed zein,32
-745,sawsanhassan1,434
-746,stanton katie,435
-747,h b6,436
-748,blake robert 0,182
-749,irussorv@state.gov,437
-750,valmoro lona .1,438
-751,valmorol1@state.gov,439
-752,valmorou@state.goy,440
-753,valmdrou@state.gov,441
-754,dimartino kitty,442
-755,waxman sharon l,443
-756,jcooper,444
-757,lgraham doug band,445
-758,jai:e sullivan,446
-759,crowley philip 1,168
-760,crowley philip1,168
-761,sullivanii@state.gov.,447
-762,hume abed in,448
-763,sbvvhoeop,194
-764,berniertoth michelle,449
-765,coley theodore r,450
-766,c — cheryl mills,32
-767,rice susan e (usun),197
-768,bonnie klehr,451
-769,ramamurthy,452
-770,h i,453
-771,eichensehr kristen e,454
-772,hooke kathleen h,455
-773,johnson clifton m,456
-774,tones susan,457
-775,townley stephen g,458
-776,torres susan,459
-777,abedinhuma,81
-778,evergreen,460
-779,lona valmoro,461
-780,fl,462
-781,elaine weiss,463
-782,kevin m. okeefe,464
-783,michael m. conway,465
-784,lew jacobi,466
-785,hai,467
-786,holbrooke richard,87
-787,harris jennifer m,468
-788,p1r,170
-789,pcharron,469
-790,zachary iscol,218
-791,jiloty lauren c dilotylc@state.gov>,116
-792,preine5,470
-793,samuel berger,192
-794,laurenjiloty jilotylc@state.gov,471
-795,laurenjiloty,472
-796,ian1evqr@state.gov,473
-797,jake sullivan b6,87
-798,woodardew@state.gov,474
-799,sullivan jacob),87
-800,rshal,475
-801,megan rooney,142
-802,millscd@state. ov,476
-803,jacobjle iewjj@state.gov b6,477
-804,declan kelly,478
-805,jake.sullivan b6,87
-806,steinberg1b@state.gov.,479
-807,jake.sullivan h,480
-808,ogordonph@state.gov.,481
-809,crowley @state.  ov,482
-810,sbwhoeo,483
-811,steven.everts,80
-812,sullivanij@state.gove,484
-813,p rei n es,485
-814,imuscatine huma abedin b6,486
-815,tillemannts@state.gov.,487
-816,sullivan jacob1,87
-817,markjpenr,488
-818,dad mom,489
-819,vaimorou@state.gov,490
-820,prein6,491
-821,sullivanjj@state.goy,492
-822,. vermarr@state.gov,493
-823,sullivanjj@siate.gov,494
-824,rina amiri,87
-825,feldman daniel f,495
-826,ruggiero frank 3,496
-827,singh vikram,497
-828,.filotylc@state.gov.,498
-829,h hrod17@clintonemail.com>,80
-830,bstrider mmoore,499
-831,.1ilotylc@state.gov,500
-832,abed inh@state.gov.,501
-833,burns strider b6,21
-834,jon davidson,502
-835,aclb b6,220
-836,iynn,503
-837,a bed in h@state.gov,504
-838,sullivan jacob.,87
-839,scott gration,87
-840,s_specialassistants,505
-841,jake.sullivar preines,506
-842,david brock,51
-843,lanny j. davis,72
-844,capriciamarshall huma abedin,507
-845,jilotylc©state.gov,508
-846,marshallcp@state.goy,509
-847,sid blumenthal,510
-848,monica.hanle,511
-849,hanle mr@state.gov,512
-850,ha nleym r@state.gov,513
+Unnamed: 0,Id,Alias,PersonId
+0,1.0,111th congress,1.0
+1,2.0,agna usemb kabul afghanistan,2.0
+2,3.0,ap,3.0
+3,4.0,asuncion,4.0
+4,5.0,alec,5.0
+5,6.0,dupuy alex,6.0
+6,7.0,american beverage association,7.0
+7,8.0,mayock andrew,8.0
+8,9.0,shapiro andrew j,9.0
+9,10.0,shapiroa@state.gov,9.0
+10,11.0,slaughter annmarie,10.0
+11,12.0,slaughter anne marie,10.0
+12,13.0,slaughter annemarie,10.0
+13,14.0,slaughtera@state.gov,10.0
+14,15.0,lake anthony,11.0
+15,16.0,valenzuela arturo a,12.0
+16,17.0,valenzuelaaa@state.gov,12.0
+17,18.0,kimoon ban,13.0
+18,19.0,obama barack,14.0
+19,20.0,president,14.0
+20,21.0,bam@mikulski.senate.gov,15.0
+21,22.0,mikulski bam,15.0
+22,23.0,mikulski bam (mikulski),15.0
+23,24.0,mikulski bam (mitkulski),15.0
+24,25.0,mikulskibam (mikulski),15.0
+25,26.0,betsy.ebeling,16.0
+26,27.0,ebeling betsy,16.0
+27,28.0,betsyebeling,16.0
+28,29.0,betsyebeling1050,16.0
+29,30.0,clinton william j,17.0
+30,31.0,dad,17.0
+31,32.0,biography,18.0
+32,33.0,klehr bonnie,19.0
+33,34.0,brian,20.0
+34,35.0,bstrider,21.0
+35,36.0,strider burns,21.0
+36,37.0,capricia marshall,22.0
+37,38.0,marshall capricia,22.0
+38,39.0,marshall capricia p,22.0
+39,40.0,capriciamarshall,22.0
+40,41.0,capriciamarshall@,22.0
+41,42.0,cmarshall,22.0
+42,43.0,marshallcp@state.gov,22.0
+43,44.0,pascual carlos,23.0
+44,45.0,adler caroline e,24.0
+45,46.0,button case,25.0
+46,47.0,richards cecile,26.0
+47,48.0,eur/rus:weson chad,27.0
+48,49.0,nea/pi/ce:kiamie charles,28.0
+49,50.0,chelsea,29.0
+50,51.0,blair cherie,30.0
+51,52.0,cherie blair,30.0
+52,53.0,cb,30.0
+53,54.0,cherieblair,30.0
+54,55.0,cheryl,31.0
+55,56.0,c:mills cheryl,32.0
+56,57.0,cheryl mills,32.0
+57,58.0,cheryl mills cos,32.0
+58,59.0,mill cheryl,32.0
+59,60.0,mills cherlyl d,32.0
+60,61.0,mills chery d,32.0
+61,62.0,mills cheryl,32.0
+62,63.0,mills cheryl d,32.0
+63,64.0,millscheryl d,32.0
+64,65.0,mills. cherl d,32.0
+65,66.0,mills. cheryl d,32.0
+66,67.0,millscd@state.gov,32.0
+67,68.0,cheryl.mills,32.0
+68,69.0,cheryl.mills@,32.0
+69,70.0,crocker chester a,33.0
+70,71.0,butzgy christopher h,34.0
+71,72.0,edwards christopher,35.0
+72,73.0,eap/j:green christopher,36.0
+73,74.0,hill christopher r (baghdad),37.0
+74,75.0,hillcr@state.gov,37.0
+75,76.0,coleman claire l,38.0
+76,77.0,colin powell,39.0
+77,78.0,council on foreign relations,40.0
+78,79.0,beale courtney a karamer,41.0
+79,80.0,beale courtney a kramer,41.0
+80,81.0,bealeca@state.gov,41.0
+81,82.0,kelly craig a,42.0
+82,83.0,daily sun,43.0
+83,84.0,hyde dana,44.0
+84,85.0,daniel,45.0
+85,86.0,baer daniel,46.0
+86,87.0,baer daniel b,46.0
+87,88.0,baer daniel d,46.0
+88,89.0,baer.daniel,46.0
+89,90.0,daniel.baer,46.0
+90,91.0,inonye daniel,47.0
+91,92.0,schwerin daniel b,48.0
+92,93.0,schwerindb@state.gov,48.0
+93,94.0,brian danielle,49.0
+94,95.0,axelrod david m,50.0
+95,96.0,axelrod_d,50.0
+96,97.0,brock david,51.0
+97,98.0,david_garten@lautenberg.senate.gov,52.0
+98,99.0,garten david (lautenberg),52.0
+99,100.0,inl:johnson david t,53.0
+100,101.0,d.gunners2010,54.0
+101,102.0,department of state,55.0
+102,103.0,chollet derek h,56.0
+103,104.0,cholletdh@state.gov,56.0
+104,105.0,reynolds diane,57.0
+105,106.0,donald,58.0
+106,107.0,band doug,59.0
+107,108.0,hattaway doug,60.0
+108,109.0,doug,60.0
+109,110.0,pelton e,61.0
+110,111.0,politico  drew elizabeth,62.0
+111,112.0,tauscher ellen o,63.0
+112,113.0,tauschereo@state.gov,63.0
+113,114.0,faleomavaega eni f,64.0
+114,115.0,woodard eric w,65.0
+115,116.0,brimmer esther d,66.0
+116,117.0,brimmere@state.gov,66.0
+117,118.0,finca international,67.0
+118,119.0,foreign affairs magazine,68.0
+119,120.0,prm/mce:wills g,69.0
+120,121.0,lou de bac g/tip,70.0
+121,122.0,prm/mce:willsg,71.0
+122,123.0,mitchell george,72.0
+123,124.0,glantz gina,73.0
+124,125.0,glantz.,73.0
+125,126.0,govenman etazini,74.0
+126,127.0,haiti,75.0
+127,128.0,duksoo han,76.0
+128,129.0,koh harold hongju,77.0
+129,130.0,kohhh@state.gov,77.0
+130,131.0,heintz,78.0
+131,132.0,hill,79.0
+132,133.0,hillary clinton,80.0
+133,134.0,clinton,80.0
+134,135.0,clinton hillary r,80.0
+135,136.0,clinton hillary,80.0
+136,137.0,clinton hillary rodham,80.0
+137,138.0,h,80.0
+138,139.0,h2,80.0
+139,140.0,hrc,80.0
+140,141.0,hillary,80.0
+141,142.0,hillary rodham clinton,80.0
+142,143.0,madam secretary,80.0
+143,144.0,secretary,80.0
+144,145.0,secretary clinton,80.0
+145,146.0,secretary of state,80.0
+146,147.0,hr15@mycingular.blackberry.net,80.0
+147,148.0,hrod17@clintonemail.com,80.0
+148,149.0,the honorable hillary rodham clinton secretary of state,80.0
+149,150.0,hdr22@clintonemail.com,80.0
+150,151.0,abedin huma,81.0
+151,152.0,abedinh@state.gov,81.0
+152,153.0,abein huma,81.0
+153,154.0,abendin huma,81.0
+154,155.0,adedin huma,81.0
+155,156.0,huma abedin,81.0
+156,157.0,huma@clintonemail.com,81.0
+157,158.0,abedin@state.gov,81.0
+158,159.0,abendinh@state.gov,81.0
+159,160.0,adedinh@state.gov,81.0
+160,161.0,kelly ian,82.0
+161,162.0,ds/pa:finkle j,83.0
+162,163.0,jama,84.0
+163,164.0,newmyer jackie,85.0
+164,165.0,newmyer,85.0
+165,166.0,lew,86.0
+166,167.0,lew jacob,86.0
+167,168.0,lew jacob j,86.0
+168,169.0,jacobjlew,86.0
+169,170.0,lewjj@state.gov,86.0
+170,171.0,sullivan jj@state.gov,87.0
+171,172.0,sullivan jacbo j,87.0
+172,173.0,sullivan jack,87.0
+173,174.0,sullivan jacob,87.0
+174,175.0,sullivan jacob h,87.0
+175,176.0,sullivan jacob j,87.0
+176,177.0,sullivan jake,87.0
+177,178.0,sullivan jake j,87.0
+178,179.0,sullivanjj@state.gov,87.0
+179,180.0,jake. sullivan,87.0
+180,181.0,jake.sullivan,87.0
+181,182.0,jake.sullivan@,87.0
+182,183.0,sulllivanjj@state.gov,87.0
+183,184.0,sullivanil@state.gov,87.0
+184,185.0,sullivann@state.gov.,87.0
+185,186.0,mcgovern james p,88.0
+186,187.0,smith james e,89.0
+187,188.0,steinberg james b,90.0
+188,189.0,steinbergjb@state.gov,90.0
+189,190.0,steinbertjb@state.gov,90.0
+190,191.0,jpiercy,91.0
+191,192.0,jacobs janice l,92.0
+192,193.0,farrow jeffrey,93.0
+193,194.0,farrow jeffrey l,93.0
+194,195.0,jfarrow,93.0
+195,196.0,feltman jeffrey d,94.0
+196,197.0,feltmanjd@state.gov,94.0
+197,198.0,robinson jennifer,95.0
+198,199.0,hoagland jim,96.0
+199,200.0,kennedy jim,97.0
+200,201.0,laszczych joanne,98.0
+201,202.0,olver john,99.0
+202,203.0,podesta john,100.0
+203,204.0,jpodesta,100.0
+204,205.0,carson johnnie,101.0
+205,206.0,carsonj@state.gov,101.0
+206,207.0,jonathan prince,102.0
+207,208.0,daniel joshua j,103.0
+208,209.0,kieffer judith,104.0
+209,210.0,mchale judith,105.0
+210,211.0,mchale judith a,105.0
+211,212.0,mchaleja@state.gov,105.0
+212,213.0,cooper justin,106.0
+213,214.0,kpk,107.0
+214,215.0,kabul lgf request,108.0
+215,216.0,eikenberry karl w,109.0
+216,217.0,kellyc@state.gov,110.0
+217,218.0,conrad kent,111.0
+218,219.0,baldersonkm@state.gov,112.0
+219,220.0,balderston kris m,112.0
+220,221.0,balderstone kris m,112.0
+221,222.0,balderstonkm@state.gov,112.0
+222,223.0,campbell kurt m,113.0
+223,224.0,campbellkm@state.gov,113.0
+224,225.0,eap/k:rosenberger l,114.0
+225,226.0,lgraham,115.0
+226,227.0,jilloty lauren c,116.0
+227,228.0,jiloty cheryl d,116.0
+228,229.0,jiloty lauren,116.0
+229,230.0,jiloty lauren c,116.0
+230,231.0,jiloty lauren cd,116.0
+231,232.0,jiloty. lauren c,116.0
+232,233.0,jilotylc@state.gov,116.0
+233,234.0,jjiloty lauren c,116.0
+234,235.0,jjilotylc@state.gov,116.0
+235,236.0,lauren jiloty,116.0
+236,237.0,rubiner laurie,117.0
+237,238.0,brown lee r,118.0
+238,239.0,feinstein lee,119.0
+239,240.0,dewan linda l,120.0
+240,241.0,captuol,121.0
+241,242.0,caputol,121.0
+242,243.0,imuscatine,122.0
+243,244.0,lissa muscatine,122.0
+244,245.0,muscantine lissa,122.0
+245,246.0,muscatine lissa,122.0
+246,247.0,muscatine lisa,122.0
+247,248.0,muscatinelissa,122.0
+248,249.0,muscatine. lissa,122.0
+249,250.0,muscatinel@state.gov,122.0
+250,251.0,lmuscatine,122.0
+251,252.0,muscantinel@state.gov,122.0
+252,253.0,quam lois,123.0
+253,254.0,valmmorolj@state.gov,124.0
+254,255.0,valmoro lona,124.0
+255,256.0,valmoro lona j,124.0
+256,257.0,valmoroli@state.gov,124.0
+257,258.0,valmorolj@state.gov,124.0
+258,259.0,walmoro lona j,124.0
+259,260.0,long term strategy group,125.0
+260,261.0,diamond louise,126.0
+261,262.0,cue lourdes c,127.0
+262,263.0,g/tip:cdebaca luis,128.0
+263,264.0,luzzatto,129.0
+264,265.0,lynn,130.0
+265,266.0,albright m k,131.0
+266,267.0,albright madeleine,132.0
+267,268.0,williamsbarrett,133.0
+268,269.0,calivis maria,134.0
+269,270.0,otero maria,135.0
+270,271.0,oterom2@state.gov,135.0
+271,272.0,af/pdpa:scott marianne,136.0
+272,273.0,mark,137.0
+273,274.0,markjpenn,138.0
+274,275.0,mtorrey,139.0
+275,276.0,eca:pally maura,140.0
+276,277.0,pally maura m,140.0
+277,278.0,baucus max,141.0
+278,279.0,rooney megan,142.0
+279,280.0,pverveer,143.0
+280,281.0,vereer melanne s,143.0
+281,282.0,verveer melanne e,143.0
+282,283.0,verveer melanne s,143.0
+283,284.0,verveerms@state.gov,143.0
+284,285.0,fuchs michael h,144.0
+285,286.0,fuchsmh@state.gov,144.0
+286,287.0,posner michael h,145.0
+287,288.0,posnermh@state.gov,145.0
+288,289.0,bond michele t,146.0
+289,290.0,michele.flournoy,147.0
+290,291.0,rodriguez miguel e,148.0
+291,292.0,mike,149.0
+292,293.0,hanley monica r,150.0
+293,294.0,hanleymr@state.gov,150.0
+294,295.0,nhla,151.0
+295,296.0,nancy,152.0
+296,297.0,neera tanden,153.0
+297,298.0,tandem neera,153.0
+298,299.0,tanden neera,153.0
+299,300.0,ntanden,153.0
+300,301.0,new york times,154.0
+301,302.0,norman nicholas,155.0
+302,303.0,toiv nora f,156.0
+303,304.0,toivnf@state.gov,156.0
+304,305.0,tov nora f,157.0
+305,306.0,opinion research,158.0
+306,307.0,sanchez oscar arias,159.0
+307,308.0,flores oscar,160.0
+308,309.0,lores oscar,161.0
+309,310.0,pvervee,162.0
+310,311.0,kennedy patrick f,163.0
+311,312.0,m:kennedy patrick f,163.0
+312,313.0,collier paul,164.0
+313,314.0,jones paul w,165.0
+314,315.0,nea/ipa:knopf payton,166.0
+315,316.0,robinson peter,167.0
+316,317.0,crowley philip,168.0
+317,318.0,crowley philip j,168.0
+318,319.0,gordon philip h,169.0
+319,320.0,gordon. philip h,169.0
+320,321.0,gordonph@state.gov,169.0
+321,322.0,pir,170.0
+322,323.0,reines philipe i,170.0
+323,324.0,reines philippe,170.0
+324,325.0,reines philippe i,170.0
+325,326.0,reines phillippe i,170.0
+326,327.0,rines philippe i,170.0
+327,328.0,preines,170.0
+328,329.0,reines@state.gov,170.0
+329,330.0,reinesp@state.gov,170.0
+330,331.0,crowley phillip j,171.0
+331,332.0,crowleypj@state.gov,171.0
+332,333.0,campbell piper,172.0
+333,334.0,prime minister,173.0
+334,335.0,shah rajiv,174.0
+335,336.0,rshah,174.0
+336,337.0,recos,175.0
+337,338.0,philippe reines,176.0
+338,339.0,preval rene,177.0
+339,340.0,lewis reta jo,178.0
+340,341.0,holbrookerc@state.gov,179.0
+341,342.0,verma richard,180.0
+342,343.0,verma richard r,180.0
+343,344.0,vermarr@state.gov,180.0
+344,345.0,rsloan,181.0
+345,346.0,blake robert o,182.0
+346,347.0,danford robert a,183.0
+347,348.0,hormats robert d,184.0
+348,349.0,hormatsrd@state.gov,184.0
+349,350.0,russo robert  v,185.0
+350,351.0,russo robert v,185.0
+351,352.0,russorv@state.gov,185.0
+352,353.0,rodriguezme@state.gov,186.0
+353,354.0,howe rosemarie,187.0
+354,355.0,rosemarie.howe,187.0
+355,356.0,zaidi s akbar,188.0
+356,357.0,s/srgia,189.0
+357,358.0,state,190.0
+358,359.0,berger samuel r,191.0
+359,360.0,sberger,191.0
+360,361.0,sandy,191.0
+361,362.0,berger samuel,192.0
+362,363.0,sgration,193.0
+363,364.0,blumenthal sidney,194.0
+364,365.0,sid,194.0
+365,366.0,sbwhoeop,194.0
+366,367.0,sbwhoeop@,194.0
+367,368.0,sbwhoop,194.0
+368,369.0,sir,195.0
+369,370.0,talbott strobe,196.0
+370,371.0,stalbott,196.0
+371,372.0,stallbott,196.0
+372,373.0,rice susan e,197.0
+373,374.0,rice susan e.,197.0
+374,375.0,grantham suzanne l,198.0
+375,376.0,terry.duffy,199.0
+376,377.0,donilon thomas e,200.0
+377,378.0,nides thomas r,201.0
+378,379.0,nidestr@state.gov,201.0
+379,380.0,shannon thomas a,202.0
+380,381.0,wha: shannon thomas a,202.0
+381,382.0,shannonta@state.gov,202.0
+382,383.0,tflourno,203.0
+383,384.0,stern todd,204.0
+384,385.0,stern todd d,204.0
+385,386.0,stern todd d (s/secc),204.0
+386,387.0,sterntd@state.gov,204.0
+387,388.0,tillemann tomicah,205.0
+388,389.0,tillemann tomicah s,205.0
+389,390.0,tillemannts@state.gov,205.0
+390,391.0,elbegdori tsakina,206.0
+391,392.0,u.s. global leadership coalition,207.0
+392,393.0,estados unidos da america,208.0
+393,394.0,estados unidos de norteamerica,208.0
+394,395.0,etatunis damerique,208.0
+395,396.0,etatsunis damerique,208.0
+396,397.0,united states of america,208.0
+397,398.0,nuland victoria j,209.0
+398,399.0,ebeling voda,210.0
+399,400.0,ebelling voda,210.0
+400,401.0,whadp,211.0
+401,402.0,washington post,212.0
+402,403.0,sherman wendy,213.0
+403,404.0,sherman wendy r,213.0
+404,405.0,wsherman,213.0
+405,406.0,ilic werner x,214.0
+406,407.0,white house,215.0
+407,408.0,burns william j,216.0
+408,409.0,burnswj@state.gov,216.0
+409,410.0,wburns,216.0
+410,411.0,wburns66,216.0
+411,412.0,wburns66@,216.0
+412,413.0,hubbard william,217.0
+413,414.0,iscol zachary,218.0
+414,415.0,aclb,219.0
+415,416.0,alcb,220.0
+416,417.0,l,221.0
+417,418.0,latimes.com,222.0
+418,419.0,mh.interiors,223.0
+419,420.0,mhcaleja@state.gov,224.0
+420,421.0,postmaster@state.gov,225.0
+421,422.0,rooneym@state.gov,226.0
+422,423.0,rrh.interiors,227.0
+423,424.0,b6,228.0
+424,425.0,sullivan jacob 1,87.0
+425,426.0,mills cheryl 0,32.0
+426,427.0,nuiand victoria j,229.0
+427,428.0,reines philippe f,230.0
+428,429.0,sullivan jacob j nuland victoria 1,231.0
+429,430.0,sullivan jacobi,87.0
+430,431.0,russorv@stategov,232.0
+431,432.0,sullivan jacob .1 ‹sullivann@state.gov>,87.0
+432,433.0,sullivan jacob i,87.0
+433,434.0,burns strider,21.0
+434,435.0,mcdonough denis r. (mailto: b6,87.0
+435,436.0,sullivan jacob .1,87.0
+436,437.0,abeclin huma,81.0
+437,438.0,oscar flores,233.0
+438,439.0,milts cheryl 0,32.0
+439,440.0,sidney blumenthal,194.0
+440,441.0,su ii iva gll@state.gov.,234.0
+441,442.0,annemarie slaughter,10.0
+442,443.0,sullivahu@state.gov,235.0
+443,444.0,barton rick (cso),32.0
+444,445.0,mills cheryl id,32.0
+445,446.0,russoiv@state.gov,236.0
+446,447.0,miliscd@stategov,237.0
+447,448.0,sullivan jacob 3,87.0
+448,449.0,abedin hume,81.0
+449,450.0,hanky monica r,150.0
+450,451.0,h ehrod17@clintonemailcom>,80.0
+451,452.0,abedinh@stategov,238.0
+452,453.0,lvlills cheryl d,32.0
+453,454.0,tomlinson christina b3 cia pers/org,32.0
+454,455.0,h ‹hrod17@clintonernail.com>,80.0
+455,456.0,tanleyrnr@state.gov,239.0
+456,457.0,hanleymr@stategov,240.0
+457,458.0,hanley monica r .,150.0
+458,459.0,sullivan jacob.),87.0
+459,460.0,hemmen chris,32.0
+460,461.0,rnillscd@state.gov,241.0
+461,462.0,sullivan jacob .‹suilivan1j©st.ate.gov>,87.0
+462,463.0,rnillscd@stategov.,242.0
+463,464.0,sullivanjj@state.gov.,243.0
+464,465.0,mills chey 0,32.0
+465,466.0,reiriesp@state.gov,244.0
+466,467.0,sidney blumenthal b6,194.0
+467,468.0,suilivanii@stategov,245.0
+468,469.0,sullivanj@state.gov,246.0
+469,470.0,suilivanij@state.gok,247.0
+470,471.0,hanleymr@state.gov.,248.0
+471,472.0,reines philippe t,249.0
+472,473.0,hanleyrnr@state.gov,250.0
+473,474.0,h 1,80.0
+474,475.0,hanieymr@state.gov,251.0
+475,476.0,mills. cheryl 0,32.0
+476,477.0,hanleymrgastategov,252.0
+477,478.0,sulliyanfostate.gott,253.0
+478,479.0,aliilscd@state.gov,254.0
+479,480.0,sullivan jacob j esullivanii@stategov>,87.0
+480,481.0,mills cheryl d :miliscd@stategov>,32.0
+481,482.0,mills cheryl d [mailto:millscd@stategovi,80.0
+482,483.0,mills cheryl d [mailto:millscd©state.gov],80.0
+483,484.0,valmoro lona j ‹valmorou c stategov>,124.0
+484,485.0,valnnoro lona j,124.0
+485,486.0,mills cheryl 0emillscd@state.gov>,32.0
+486,487.0,nidesth@stategoy,255.0
+487,488.0,bums william j,216.0
+488,489.0,h ‹hrod17@clintonemailcom>,80.0
+489,490.0,millscd@state.gov.,256.0
+490,491.0,jacob j sullivan,257.0
+491,492.0,reines philippe),170.0
+492,493.0,sullivan jacobj,87.0
+493,494.0,jake sullivan _,87.0
+494,495.0,sullivanji@state.gov,258.0
+495,496.0,stevens john c,87.0
+496,497.0,sullivanjj@state.golt,259.0
+497,498.0,millscd@state.goy,260.0
+498,499.0,nulandyj@state.goy,261.0
+499,500.0,sulliyanij@state.goy,262.0
+500,501.0,rnillscd@state.govs,263.0
+501,502.0,nuland victoria 3,209.0
+502,503.0,jake.sullivar,264.0
+503,504.0,jilotylc@state.gov.,265.0
+504,505.0,jake.sulliyan,266.0
+505,506.0,michele.fl,267.0
+506,507.0,cheryimills millscd@state.gov,268.0
+507,508.0,jake.sulliva,269.0
+508,509.0,valmoroll@state.gov.,270.0
+509,510.0,habedin b6,271.0
+510,511.0,valmorou@state.gov,272.0
+511,512.0,filotylc@state.gov,273.0
+512,513.0,habedin,274.0
+513,514.0,cheryl.mills jake.sullivan,275.0
+514,515.0,abedinh@state.gov.,276.0
+515,516.0,millscd@state.aov,277.0
+516,517.0,illotylc@state.gov,278.0
+517,518.0,millscd@state ov,279.0
+518,519.0,habedin(,280.0
+519,520.0,doug band,281.0
+520,521.0,sullivanij@state.gov.,282.0
+521,522.0,preines@,283.0
+522,523.0,abedinh  state ov,284.0
+523,524.0,cheryl.mills abedinh@state.gov,285.0
+524,525.0,cheryl.mill,286.0
+525,526.0,briar,287.0
+526,527.0,abedinh@state.goy,288.0
+527,528.0,a bedinh@state.gov,289.0
+528,529.0,preine,290.0
+529,530.0,valmorol.1@state.gov,291.0
+530,531.0,sullivanij@state.gov,292.0
+531,532.0,preines sullivanjj@state.gov b6,293.0
+532,533.0,valmorolj@state.gov.,294.0
+533,534.0,leltmanjd@state.gov,295.0
+534,535.0,ullivanjj@state.gov,296.0
+535,536.0,sta i bott,297.0
+536,537.0,sullivanjj©state ov,298.0
+537,538.0,millscd@state.00v.,299.0
+538,539.0,steinbergib@state.gov,300.0
+539,540.0,cheryl.millf.,301.0
+540,541.0,mhcaleja@state.gove,302.0
+541,542.0,cheryl.millsi,303.0
+542,543.0,s abedinh@state.gov,304.0
+543,544.0,valmorou@state.gov.,305.0
+544,545.0,chetyl.mills sullivanij@state.gov,306.0
+545,546.0,sullivanu@state.gov.,307.0
+546,547.0,muscatinel@state.goy,308.0
+547,548.0,preines  sullivanjj@state.gov,309.0
+548,549.0,axelrod_,310.0
+549,550.0,wburns6,311.0
+550,551.0,valmorol1@state.gov.,312.0
+551,552.0,steinberg1b@state.gov,313.0
+552,553.0,. huma abedin,314.0
+553,554.0,abedinh@stategovl,315.0
+554,555.0,valmorou©state.gov,316.0
+555,556.0,reinesp@state.goy,317.0
+556,557.0,sulliyanjj@state.goy,318.0
+557,558.0,emillscd@state.gov,319.0
+558,559.0,cheryl.mill sullivanjj@state.gov,320.0
+559,560.0,cheryl.mills millscd@state.gov.,321.0
+560,561.0,preines verveerms@state.gov,322.0
+561,562.0,jilotylc@state.goy,323.0
+562,563.0,val moro u@state.gov,324.0
+563,564.0,a bed inh@state.gov,325.0
+564,565.0,mot lc@state.gov,326.0
+565,566.0,jilot lc@state. ov,327.0
+566,567.0,.1ilotylc@state.gov.,328.0
+567,568.0,iilotylc@state.gov.,329.0
+568,569.0,jilotylc©state.gov.,330.0
+569,570.0,cheryl.mills sullivanjj@state.gov,331.0
+570,571.0,iewjj@state.gov,332.0
+571,572.0,cheryl.mills _,333.0
+572,573.0,sulliva njj@state.g ov,334.0
+573,574.0,pverveel,335.0
+574,575.0,. h,80.0
+575,576.0,preines sullivanij@state.gov.,336.0
+576,577.0,sta ibott,337.0
+577,578.0,balderstonkm@state.gov.,338.0
+578,579.0,11,80.0
+579,580.0,rossdb@state.gov,339.0
+580,581.0,bowens,340.0
+581,582.0,jacobjlev,341.0
+582,583.0,yeryeerms@state.goy,342.0
+583,584.0,preines b6,343.0
+584,585.0,valmorou@state.gove,344.0
+585,586.0,abedinh@state.gove,345.0
+586,587.0,campbelikm@state.gov,346.0
+587,588.0,nancy millscd@state.gov b6,347.0
+588,589.0,valmorou©state.gov.,348.0
+589,590.0,andy manatos,80.0
+590,591.0,vanbuskirk michael 1,349.0
+591,592.0,huma abed in,350.0
+592,593.0,caputo,351.0
+593,594.0,.gordonph@state.gov.,352.0
+594,595.0,preines sullivanjj@state.gov,353.0
+595,596.0,cheryl.mills sullivanjj@state.gov b6,354.0
+596,597.0,cheryl.mills( sullivanjj@state.gov,355.0
+597,598.0,huma abedin b6,356.0
+598,599.0,mtorrey1,357.0
+599,600.0,glantz.gina,358.0
+600,601.0,millscd@tate.gov,359.0
+601,602.0,cheryl.mills huma abedin,360.0
+602,603.0,cheryl.mills millscd@state.gov,361.0
+603,604.0,campbelikm©state.gov,362.0
+604,605.0,jacobjlew vermarr@state.gov,363.0
+605,606.0,sullivanjj@state.gov b6,364.0
+606,607.0,iilotylc@state.gov,365.0
+607,608.0,rnillscd@state.gov.,366.0
+608,609.0,sullivanjj@state.govr,367.0
+609,610.0,lewij@state.gov,368.0
+610,611.0,williamsbarrett millscd@state.gov.,369.0
+611,612.0,abedinh©state.gov,370.0
+612,613.0,s sullivanjj@state.gov,371.0
+613,614.0,filotylc@state.gov.,372.0
+614,615.0,..lilotylc@state.gov.,373.0
+615,616.0,baer.danie,374.0
+616,617.0,reines philippe i (pace),170.0
+617,618.0,mills.cheryl d,32.0
+618,619.0,millscd@state.ov,375.0
+619,620.0,cmills,376.0
+620,621.0,newmyer on behalf of jackie newmyer,85.0
+621,622.0,cheryl mills[,32.0
+622,623.0,otero mildred (clinton),377.0
+623,624.0,iewij@state.gov,378.0
+624,625.0,abed in huma,81.0
+625,626.0,jake sullivan,87.0
+626,627.0,preines huma abedin,379.0
+627,628.0,h.,80.0
+628,629.0,ieltmanjd@state.gov.,380.0
+629,630.0,valmoroll@state.gov,381.0
+630,631.0,h [mailto:hdr22@clintonemail.com],32.0
+631,632.0,ben kobren,80.0
+632,633.0,todd stern,382.0
+633,634.0,jonespw2@state.gov.,383.0
+634,635.0,daniel.baer@,384.0
+635,636.0,jonespw2@state.gov,385.0
+636,637.0,cmarshal,386.0
+637,638.0,sbwhoeop b6,387.0
+638,639.0,jackie newmyer,85.0
+639,640.0,pverveer b6,143.0
+640,641.0,cheryl.mill abedin huma,388.0
+641,642.0,lee feinstein,119.0
+642,643.0,cheryl.mills b6,32.0
+643,644.0,strobe talbott,196.0
+644,645.0,berger samuel r.,191.0
+645,646.0,abedin hurna,81.0
+646,647.0,abed in hu ma,81.0
+647,648.0,jeffrey l farrow,93.0
+648,649.0,pvervee _,143.0
+649,650.0,jeffrey farrow,93.0
+650,651.0,eizenstat stuart,32.0
+651,652.0,valmoro lona j walmorou@state.goy>,124.0
+652,653.0,lew jacob i,389.0
+653,654.0,steinberg james,390.0
+654,655.0,rosemarie.howe h,391.0
+655,656.0,abedin hu ma,81.0
+656,657.0,sbwhoeor,194.0
+657,658.0,esullivanjj@state.gov,392.0
+658,659.0,cheryl.miils@ millscd@state.gov,393.0
+659,660.0,millscd©state.gov,394.0
+660,661.0,justin cooper,395.0
+661,662.0,strobe talbott b6,196.0
+662,663.0,valmoro lona 1,124.0
+663,664.0,axelrod david m.,50.0
+664,665.0,john podesta,100.0
+665,666.0,eabedinh@state.gov,396.0
+666,667.0,abedinh@state.govr,397.0
+667,668.0,cheryl.mills@ millscd@state.gov.,398.0
+668,669.0,williamsbarre0,399.0
+669,670.0,lissa muscatine b6,122.0
+670,671.0,minyon moore .,32.0
+671,672.0,capricia penavic marshall,400.0
+672,673.0,maggie williams,401.0
+673,674.0,rosemarie howe,402.0
+674,675.0,valmoro lona j walmorou@state.gov>,124.0
+675,676.0,lewjj@state.gov.,403.0
+676,677.0,wendy sherman,213.0
+677,678.0,jim kennedy,404.0
+678,679.0,jake.sullivan(,87.0
+679,680.0,choilet derek h,56.0
+680,681.0,cdm,405.0
+681,682.0,axelrod david m. b6,50.0
+682,683.0,wburns66 b6 i,216.0
+683,684.0,donilon thomas e.,200.0
+684,685.0,jacob lew,86.0
+685,686.0,lou de baca g/tip,70.0
+686,687.0,* abedin huma,81.0
+687,688.0,pj,406.0
+688,689.0,crowleyp  state ov. preines,407.0
+689,690.0,hume abedin,408.0
+690,691.0,valmoro lona1,124.0
+691,692.0,marciel scot a,409.0
+692,693.0,0 mills cheryl d,32.0
+693,694.0,.,410.0
+694,695.0,smith daniel b,411.0
+695,696.0,il,412.0
+696,697.0,cheryl.mill1,413.0
+697,698.0,jpier4,414.0
+698,699.0,berger samuel r. b6,191.0
+699,700.0,sbwhoeopc,194.0
+700,701.0,sullivanii@state.govr,415.0
+701,702.0,holbrooke richard c,416.0
+702,703.0,verveer melanne s werveerms@state.gov>,143.0
+703,704.0,cheryl.millsc,32.0
+704,705.0,m.k albright,131.0
+705,706.0,tauscher ellen 0,63.0
+706,707.0,jake sullivar,87.0
+707,708.0,gina glantz b6,73.0
+708,709.0,voda ebeling,210.0
+709,710.0,abedin huma eabedinh@state.gov>,81.0
+710,711.0,lew jacob 1,86.0
+711,712.0,sbwhoeop b61,194.0
+712,713.0,info@mailva.evite.com,81.0
+713,714.0,luzzatt,417.0
+714,715.0,daniel baer,46.0
+715,716.0,reta jo lewis special representative global intergovernmental affairs,178.0
+716,717.0,daniel.bae,418.0
+717,718.0,valmorou state. ov,419.0
+718,719.0,vanbuskirk michael .3,420.0
+719,720.0,edwards christopher (jakarta/pro),421.0
+720,721.0,merten kenneth h,32.0
+721,722.0,preine h,422.0
+722,723.0,preines h,423.0
+723,724.0,shah rajiv (aid/a),174.0
+724,725.0,sbwhoeor.,194.0
+725,726.0,williamsbarret,424.0
+726,727.0,sullivanii@state.gov,425.0
+727,728.0,hannah richert,426.0
+728,729.0,ross alec j,427.0
+729,730.0,sbwhoecip,194.0
+730,731.0,sbwhoeopi,428.0
+731,732.0,. sullivan jacobi,87.0
+732,733.0,betsyebelin,16.0
+733,734.0,sbwhoeor b6,194.0
+734,735.0,doua band,429.0
+735,736.0,daniel meron,180.0
+736,737.0,adams david s,430.0
+737,738.0,doug hattaway,431.0
+738,739.0,mills; cheryl d,32.0
+739,740.0,colby cooper,81.0
+740,741.0,kritenbrink daniel j,432.0
+741,742.0,cheryl mills b6,32.0
+742,743.0,abdinh@state.gov,433.0
+743,744.0,fareed zein,32.0
+744,745.0,sawsanhassan1,434.0
+745,746.0,stanton katie,435.0
+746,747.0,h b6,436.0
+747,748.0,blake robert 0,182.0
+748,749.0,irussorv@state.gov,437.0
+749,750.0,valmoro lona .1,438.0
+750,751.0,valmorol1@state.gov,439.0
+751,752.0,valmorou@state.goy,440.0
+752,753.0,valmdrou@state.gov,441.0
+753,754.0,dimartino kitty,442.0
+754,755.0,waxman sharon l,443.0
+755,756.0,jcooper,444.0
+756,757.0,lgraham doug band,445.0
+757,758.0,jai:e sullivan,446.0
+758,759.0,crowley philip 1,168.0
+759,760.0,crowley philip1,168.0
+760,761.0,sullivanii@state.gov.,447.0
+761,762.0,hume abed in,448.0
+762,763.0,sbvvhoeop,194.0
+763,764.0,berniertoth michelle,449.0
+764,765.0,coley theodore r,450.0
+765,766.0,c — cheryl mills,32.0
+766,767.0,rice susan e (usun),197.0
+767,768.0,bonnie klehr,451.0
+768,769.0,ramamurthy,452.0
+769,770.0,h i,453.0
+770,771.0,eichensehr kristen e,454.0
+771,772.0,hooke kathleen h,455.0
+772,773.0,johnson clifton m,456.0
+773,774.0,tones susan,457.0
+774,775.0,townley stephen g,458.0
+775,776.0,torres susan,459.0
+776,777.0,abedinhuma,81.0
+777,778.0,evergreen,460.0
+778,779.0,lona valmoro,461.0
+779,780.0,fl,462.0
+780,781.0,elaine weiss,463.0
+781,782.0,kevin m. okeefe,464.0
+782,783.0,michael m. conway,465.0
+783,784.0,lew jacobi,466.0
+784,785.0,hai,467.0
+785,786.0,holbrooke richard,87.0
+786,787.0,harris jennifer m,468.0
+787,788.0,p1r,170.0
+788,789.0,pcharron,469.0
+789,790.0,zachary iscol,218.0
+790,791.0,jiloty lauren c dilotylc@state.gov>,116.0
+791,792.0,preine5,470.0
+792,793.0,samuel berger,192.0
+793,794.0,laurenjiloty jilotylc@state.gov,471.0
+794,795.0,laurenjiloty,472.0
+795,796.0,ian1evqr@state.gov,473.0
+796,797.0,jake sullivan b6,87.0
+797,798.0,woodardew@state.gov,474.0
+798,799.0,sullivan jacob),87.0
+799,800.0,rshal,475.0
+800,801.0,megan rooney,142.0
+801,802.0,millscd@state. ov,476.0
+802,803.0,jacobjle iewjj@state.gov b6,477.0
+803,804.0,declan kelly,478.0
+804,805.0,jake.sullivan b6,87.0
+805,806.0,steinberg1b@state.gov.,479.0
+806,807.0,jake.sullivan h,480.0
+807,808.0,ogordonph@state.gov.,481.0
+808,809.0,crowley @state.  ov,482.0
+809,810.0,sbwhoeo,483.0
+810,811.0,steven.everts,80.0
+811,812.0,sullivanij@state.gove,484.0
+812,813.0,p rei n es,485.0
+813,814.0,imuscatine huma abedin b6,486.0
+814,815.0,tillemannts@state.gov.,487.0
+815,816.0,sullivan jacob1,87.0
+816,817.0,markjpenr,488.0
+817,818.0,dad mom,489.0
+818,819.0,vaimorou@state.gov,490.0
+819,820.0,prein6,491.0
+820,821.0,sullivanjj@state.goy,492.0
+821,822.0,. vermarr@state.gov,493.0
+822,823.0,sullivanjj@siate.gov,494.0
+823,824.0,rina amiri,87.0
+824,825.0,feldman daniel f,495.0
+825,826.0,ruggiero frank 3,496.0
+826,827.0,singh vikram,497.0
+827,828.0,.filotylc@state.gov.,498.0
+828,829.0,h hrod17@clintonemail.com>,80.0
+829,830.0,bstrider mmoore,499.0
+830,831.0,.1ilotylc@state.gov,500.0
+831,832.0,abed inh@state.gov.,501.0
+832,833.0,burns strider b6,21.0
+833,834.0,jon davidson,502.0
+834,835.0,aclb b6,220.0
+835,836.0,iynn,503.0
+836,837.0,a bed in h@state.gov,504.0
+837,838.0,sullivan jacob.,87.0
+838,839.0,scott gration,87.0
+839,840.0,s_specialassistants,505.0
+840,841.0,jake.sullivar preines,506.0
+841,842.0,david brock,51.0
+842,843.0,lanny j. davis,72.0
+843,844.0,capriciamarshall huma abedin,507.0
+844,845.0,jilotylc©state.gov,508.0
+845,846.0,marshallcp@state.goy,509.0
+846,847.0,sid blumenthal,510.0
+847,848.0,monica.hanle,511.0
+848,849.0,hanle mr@state.gov,512.0
+849,850.0,ha nleym r@state.gov,513.0
+850,,,
+851,,,
+852,,,
+853,,,
+854,,,
+855,,,
+856,,,
+857,,,
+858,,,
+859,,,
+860,,,
+861,,,
+862,,,
+863,,,
+864,,,
+865,,,
+866,,,
+867,,,
+868,,,
+869,,,
+870,,,
+871,,,
+872,,,
+873,,,
+874,,,
+875,,,
+876,,,
+877,,,
+878,,,
+879,,,
+880,,,
+881,,,
+882,,,
+883,,,
+884,,,
+885,,,
+886,,,
+887,,,
+888,,,
+889,,,
+890,,,
+891,,,
+892,,,
+893,,,
+894,,,
+895,,,
+896,,,
+897,,,
+898,,,
+899,,,
+900,,,
+901,,,
+902,,,
+903,,,
+904,,,
+905,,,
+906,,,
+907,,,
+908,,,
+909,,,
+910,,,
+911,,,
+912,,,
+913,,,
+914,,,
+915,,,
+916,,,
+917,,,
+918,,,
+919,,,
+920,,,
+921,,,
+922,,,
+923,,,
+924,,,
+925,,,
+926,,,
+927,,,
+928,,,
+929,,,
+930,,,
+931,,,
+932,,,
+933,,,
+934,,,
+935,,,
+936,,,
+937,,,
+938,,,
+939,,,
+940,,,
+941,,,
+942,,,
+943,,,
+944,,,
+945,,,
+946,,,
+947,,,
+948,,,
+949,,,
+950,,,
+951,,,
+952,,,
+953,,,
+954,,,
+955,,,
+956,,,
+957,,,
+958,,,
+959,,,
+960,,,
+961,,,
+962,,,
+963,,,
+964,,,
+965,,,
+966,,,
+967,,,
+968,,,
+969,,,
+970,,,
+971,,,
+972,,,
+973,,,
+974,,,
+975,,,
+976,,,
+977,,,
+978,,,
+979,,,
+980,,,
+981,,,
+982,,,
+983,,,
+984,,,
+985,,,
+986,,,
+987,,,
+988,,,
+989,,,
+990,,,
+991,,,
+992,,,
+993,,,
+994,,,
+995,,,
+996,,,
+997,,,
+998,,,
+999,,,

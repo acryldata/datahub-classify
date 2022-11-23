@@ -1,9 +1,0 @@
-InfoType_Name,TP,FP,TN,FN
-Street_Address,9,22,308,0
-Gender,10,0,307,0
-Credit_Card_Number,3,0,314,0
-Email_Address,5,0,312,0
-Phone_Number,7,0,310,0
-Full_Name,10,2,307,4
-Age,3,1,314,0
-no_infotype,270,4,47,25
