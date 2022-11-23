@@ -1,6 +1,7 @@
 import ipaddress
 import logging
 import re
+import string
 from typing import Any, Dict
 
 import numpy as np
@@ -38,6 +39,8 @@ except OSError:
     download(spacy_model_name)
     nlp_english = spacy.load(spacy_model_name)
 spacy_models_list = [nlp_english]
+
+# TODO: pull out the common/repetitive code
 
 
 def inspect_for_email_address(metadata, values, config):
@@ -410,7 +413,7 @@ def inspect_for_full_name(metadata, values, config):  # noqa: C901
                     try:
                         if (
                             len(value) <= 50
-                            and len(re.split(r"[^a-zA-Z0-9]", value)) >= 2
+                            and len(re.split(rf"[\s{string.punctuation}]+", value)) >= 2
                         ):
                             if detect_named_entity_spacy(
                                 spacy_models_list, entities_of_interest, value
