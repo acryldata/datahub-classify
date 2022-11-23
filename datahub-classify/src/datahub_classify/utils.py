@@ -304,7 +304,7 @@ def compute_column_overall_similarity_score(name_score: float,
 
     if weighted_score > column_weighted_score_threshold:
         if table_similarity_score > table_similarity_threshold:
-            weighted_score = 1.05 * weighted_score
+            weighted_score = 1.1* weighted_score
         if lineage_score ==1:
             weighted_score = 1.1* weighted_score
 
@@ -344,13 +344,13 @@ def compute_table_similarity(table_info1: TableInfo,
     table_lineage_score = compute_lineage_score(table1_parents, table2_parents, table1_name, table2_name)
     table_schema_score = table_schema_similarity(table_1_cols_name_dtypes, table_2_cols_name_dtypes)
 
-    print("name score: ", table_name_score)
-    print("desc score: " ,table_desc_score)
-    print("platforms: ", table1_platform, table2_platform)
-    print("platform score: ", table_platform_score)
-    print("lineae score: ", table_lineage_score)
-    print("schema score: ", table_schema_score)
-    print("======================================")
+    # print("name score: ", table_name_score)
+    # print("desc score: " ,table_desc_score)
+    # print("platforms: ", table1_platform, table2_platform)
+    # print("platform score: ", table_platform_score)
+    # print("lineae score: ", table_lineage_score)
+    # print("schema score: ", table_schema_score)
+    # print("======================================")
 
     overall_table_similarity_score = compute_table_overall_similarity_score(table_name_score,
                                                                             table_desc_score,
@@ -393,17 +393,17 @@ def compute_column_similarity(col_info1: ColumnInfo,
                                                                               column_lineage_score,
                                                                               desc_present)
 
-    print("pair: ", (col_info1.metadata.column_id, col_info2.metadata.column_id ))
-    print("name score: ", column_name_score)
-    print("-------------")
-    print(column1_desc)
-    print(column2_desc)
-    print("-------------")
-    print("desc score: " ,column_desc_score)
-    print("dtype score: ", column_dtype_score)
-    print("lineage score: ", column_lineage_score)
-    print("overall score: ", overall_column_similarity_score)
-    print("****************************")
+    # print("pair: ", (col_info1.metadata.column_id, col_info2.metadata.column_id ))
+    # print("name score: ", column_name_score)
+    # print("-------------")
+    # print(column1_desc)
+    # print(column2_desc)
+    # print("-------------")
+    # print("desc score: " ,column_desc_score)
+    # print("dtype score: ", column_dtype_score)
+    # print("lineage score: ", column_lineage_score)
+    # print("overall score: ", overall_column_similarity_score)
+    # print("****************************")
     # print("schema score: ", table_schema_score)
     return overall_column_similarity_score
 
