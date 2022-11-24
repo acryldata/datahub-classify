@@ -14,10 +14,12 @@ def get_long_description():
 
 
 base_requirements = {
+    "vininfo>=1.7.0",
+    "schwifty>=2022.9.0",
+    "python-stdnum>=1.17",
+    "ipaddress>=1.0.23",
     "spacy>=3.4.1,<=3.4.3",
     "phonenumbers>=8.12.56,<=8.13.0",
-    "pandas>=1.5.0,<=1.5.1",
-    "spacy-download>=1.0.0"
 }
 
 dev_requirements = {
@@ -27,9 +29,12 @@ dev_requirements = {
     "flake8>=3.8.3",
     "flake8-tidy-imports>=4.3.0",
     "isort>=5.7.0",
-    "mypy>=0.901,<0.920",
+    # Because of https://github.com/python/mypy/issues/13627 issue, set the mypy version to 0.981, we can revisit this in future
+    "mypy>=0.981",
     "pytest-cov>=2.8.1",
     "scikit-learn",
+    "pandas>=1.2.0,<=1.5.1",
+    "openpyxl"
 }
 
 
