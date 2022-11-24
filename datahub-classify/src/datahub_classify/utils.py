@@ -136,7 +136,8 @@ word_to_vec_map = read_glove_vector(glove_vec)
 
 
 def name_desc_similarity(text_1: str,
-                         text_2: str):
+                         text_2: str,
+                         name: bool):
     text_1 = text_1.lower().strip()
     text_2 = text_2.lower().strip()
 
@@ -149,6 +150,18 @@ def name_desc_similarity(text_1: str,
         text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower()).strip()
         text_1_words= [word for word in text_1_cleaned.split() if word not in (stop_words)]
         text_2_words = [word for word in text_2_cleaned.split() if word not in (stop_words)]
+
+        max_fuzz_score = 0
+        if name:
+            
+            if len(text_1_words)==1 or len(text_2_words)==1:
+                for word_1 in text_1_words:
+                    for word_2 in text_2_words:
+                        fuzz_score = fuzz.token_set_ratio(word_1, word_2) / 100
+                        if fuzz_score > max_fuzz_score:
+                            max_fuzz_score = fuzz_score
+        
+        fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
 
         if len(text_1_words)<=1 and len(text_2_words)<=1:
             emb_1 = np.array(
@@ -219,7 +232,7 @@ def table_schema_similarity(table_1_cols_name_dtypes: list[tuple],
             col2_name = col2[0]
             col1_dtype = col1[1]
             col2_dtype =col2[1]
-            col_name_score = name_desc_similarity(col1_name, col2_name)
+            col_name_score = name_desc_similarity(col1_name, col2_name, name=True)
             col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
             pair_score = 0.8*col_name_score + 0.2*col_dtype_score
 
@@ -308,8 +321,8 @@ def compute_table_similarity(table_info1: TableInfo,
     else:
         desc_present = False
 
-    table_name_score = name_desc_similarity(table1_name, table2_name)
-    table_desc_score = name_desc_similarity(table1_desc, table2_desc)
+    table_name_score = name_desc_similarity(table1_name, table2_name, name=True)
+    table_desc_score = name_desc_similarity(table1_desc, table2_desc, name=False)
     table_platform_score = table_platform_similarity (table1_platform, table2_platform )
     table_lineage_score = compute_lineage_score(table1_parents, table2_parents, table1_name, table2_name)
     table_schema_score = table_schema_similarity(table_1_cols_name_dtypes, table_2_cols_name_dtypes)
@@ -349,9 +362,9 @@ def compute_column_similarity(col_info1: ColumnInfo,
     else:
         desc_present = False
 
-    column_name_score = name_desc_similarity(column1_name, column2_name)
+    column_name_score = name_desc_similarity(column1_name, column2_name, name=True)
     if desc_present:
-        column_desc_score = name_desc_similarity(column1_desc, column2_desc)
+        column_desc_score = name_desc_similarity(column1_desc, column2_desc, name=False)
     else:
         column_desc_score = None
     column_dtype_score = column_dtype_similarity(column1_dtype, column2_dtype)
