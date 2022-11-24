@@ -135,44 +135,6 @@ def read_glove_vector(glove_vec: str):
 word_to_vec_map = read_glove_vector(glove_vec)
 
 
-# def name_desc_similarity(text_1: str,
-#                          text_2: str):
-#     text_1 = text_1.strip()
-#     text_2 = text_2.strip()
-
-#     if (text_1 not in ([None,""])) and (text_2 not in ([None,""])):
-#         fuzzy_match_score = fuzz.partial_ratio(text_1, text_2) / 100
-#         if fuzzy_match_score <= 0.5:
-#             fuzzy_match_score = 0.8 * fuzzy_match_score
-#         text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower())
-#         text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower())
-#         text_1_words= [word for word in text_1_cleaned.split() if word not in (stop_words)]
-#         text_2_words = [word for word in text_2_cleaned.split() if word not in (stop_words)]
-#         text_1_avg_glove_emb = np.array(
-#             [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
-#         text_2_avg_glove_emb = np.array(
-#             [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
-
-#         # print(text_1_avg_glove_emb)
-#         emb_match_score = None
-#         if text_1_avg_glove_emb.shape[0] >0 and text_2_avg_glove_emb.shape[0] >0:
-#             emb_match_score = cosine_similarity_score(text_1_avg_glove_emb, text_2_avg_glove_emb)
-
-#         if emb_match_score:
-#             score = np.maximum(fuzzy_match_score, emb_match_score)
-#         else:
-#             score = fuzzy_match_score
-#     else:
-#         score=0
-
-#     print(text_1)
-#     print(text_2)
-#     print("fuzzy score: ", fuzzy_match_score)
-#     print("glove score: ", emb_match_score)
-#     return score
-
-
-
 def name_desc_similarity(text_1: str,
                          text_2: str):
     text_1 = text_1.lower().strip()
@@ -205,6 +167,7 @@ def name_desc_similarity(text_1: str,
             emb_2 = embeddings[1]
 
         emb_match_score = cosine_similarity_score(emb_1, emb_2)
+
         score =  np.maximum(fuzzy_match_score, emb_match_score)
 
     else:
@@ -258,7 +221,7 @@ def table_schema_similarity(table_1_cols_name_dtypes: list[tuple],
             col2_dtype =col2[1]
             col_name_score = name_desc_similarity(col1_name, col2_name)
             col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
-            pair_score = 0.7*col_name_score + 0.3*col_dtype_score
+            pair_score = 0.8*col_name_score + 0.2*col_dtype_score
 
             if pair_score > pair_score_threshold:
                 matched_pairs.append((col1, col2))
@@ -277,9 +240,10 @@ def compute_table_overall_similarity_score(name_score: float,
     weighted_score = 0.3*name_score + 0.1*platform_score +  0.6*schema_score
     if desc_present:
         if desc_score >= table_desc_threshold:
-            weighted_score = np.minimum(1.1 * weighted_score, 1)
-        else:
-            weighted_score = 0.95*weighted_score
+            weighted_score = np.minimum(1.2 * weighted_score, 1)
+
+        if desc_score < 0.5:
+            weighted_score = 0.9*weighted_score
     
     overall_table_similarity_score = weighted_score
 
@@ -295,18 +259,24 @@ def compute_column_overall_similarity_score(name_score: float,
                                             table_similarity_score: float,
                                             lineage_score: bool,
                                             desc_present: bool):
-    weighted_score = 0.8* name_score + 0.2* dtype_score
+    weighted_score = name_score  
+    if dtype_score==1:
+        weighted_score  = 1.2* weighted_score
+    else:
+        weighted_score  = 0.95* weighted_score
+
     if desc_present:
         if desc_score >= column_desc_threshold:
-            weighted_score = 1.1 * weighted_score
-        else:
-            weighted_score = 0.95*weighted_score
+            weighted_score = 1.2 * weighted_score
+            
+        if desc_score < 0.5:
+            weighted_score = 0.9*weighted_score
 
     if weighted_score > column_weighted_score_threshold:
         if table_similarity_score > table_similarity_threshold:
-            weighted_score = 1.1* weighted_score
+            weighted_score = 1.2* weighted_score
         if lineage_score ==1:
-            weighted_score = 1.1* weighted_score
+            weighted_score = 1.2* weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
     
@@ -394,16 +364,16 @@ def compute_column_similarity(col_info1: ColumnInfo,
                                                                               desc_present)
 
     # print("pair: ", (col_info1.metadata.column_id, col_info2.metadata.column_id ))
-    # print("name score: ", column_name_score)
+    print("name score: ", column_name_score)
     # print("-------------")
     # print(column1_desc)
     # print(column2_desc)
     # print("-------------")
-    # print("desc score: " ,column_desc_score)
-    # print("dtype score: ", column_dtype_score)
-    # print("lineage score: ", column_lineage_score)
-    # print("overall score: ", overall_column_similarity_score)
-    # print("****************************")
+    print("desc score: " ,column_desc_score)
+    print("dtype score: ", column_dtype_score)
+    print("lineage score: ", column_lineage_score)
+    print("overall score: ", overall_column_similarity_score)
+    print("****************************")
     # print("schema score: ", table_schema_score)
     return overall_column_similarity_score
 

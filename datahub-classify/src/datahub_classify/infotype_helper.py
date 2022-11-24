@@ -21,7 +21,7 @@ from datahub_classify.constants import (
     TYPE,
     VALUES,
 )
-from datahub_classify.infotype_utils import (
+from datahub_classify.utils import (
     detect_named_entity_spacy,
     match_datatype,
     match_regex,
