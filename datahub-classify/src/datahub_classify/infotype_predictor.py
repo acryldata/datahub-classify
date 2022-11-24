@@ -3,7 +3,7 @@ import logging
 from typing import List, Optional
 
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
-from datahub_classify.infotype_utils import perform_basic_checks
+from datahub_classify.utils import perform_basic_checks
 
 logger = logging.getLogger(__name__)
 
