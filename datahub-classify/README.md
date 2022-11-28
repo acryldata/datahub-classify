@@ -102,6 +102,13 @@ A debug information is associated with each infotype proposal, it provides detai
 5. Phone Number
 6. Street Address
 7. Credit-Debit Card Number
+8. International Bank Account Number
+9. Vehicle Identification Number
+10. US Social Security Number
+11. Ipv4 Address
+12. Ipv6 Address
+13. Swift Code
+14. US Driving License Number
 
 ## Required Libraries
 
