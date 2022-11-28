@@ -168,11 +168,11 @@ def name_desc_similarity(text_1: str,
                 emb_2 = word_to_vec_map.get( text_2_words[0], "nan")
 
                 if str(emb_1) == "nan" or str(emb_2) == "nan":
-                    embeddings = model.encode([text_1, text_2])
+                    embeddings = model.encode([text_1, text_2], show_progress_bar= False)
                     emb_1 = embeddings[0]
                     emb_2 = embeddings[1]
             else:
-                embeddings = model.encode([text_1, text_2])
+                embeddings = model.encode([text_1, text_2], show_progress_bar= False)
                 emb_1 = embeddings[0]
                 emb_2 = embeddings[1]
             emb_match_score = cosine_similarity_score(emb_1, emb_2)
