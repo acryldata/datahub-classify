@@ -20,6 +20,11 @@ base_requirements = {
     "ipaddress>=1.0.23",
     "spacy>=3.4.1,<=3.4.3",
     "phonenumbers>=8.12.56,<=8.13.0",
+    "sentence-transformers>=2.2.2",
+    "python-Levenshtein>=0.20.8",
+    "nltk>=3.7",
+    "scipy>=1.9.3",
+    "thefuzz>=0.19.0"
 }
 
 dev_requirements = {
