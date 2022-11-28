@@ -1,11 +1,12 @@
 
-from helper_classes import TableInfo
-from utils import compute_table_similarity, compute_column_similarity, read_glove_vector
+from datahub_classify.helper_classes import TableInfo
+from datahub_classify.utils import compute_table_similarity, compute_column_similarity, read_glove_vector
 import logging
+import os
 
 logger = logging.getLogger(__name__)
-
-glove_vec = "C:\\Users\\GS-3490\\Glossary_creation\\Glossary_stage_2\\glove.6B\\glove.6B.50d.txt"
+current_wdr = os.path.dirname(os.path.abspath(__file__))
+glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
 word_to_vec_map = read_glove_vector(glove_vec)
 
 
