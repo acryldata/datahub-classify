@@ -3,7 +3,7 @@ from thefuzz import fuzz
 from nltk.corpus import stopwords
 from numpy.linalg import norm
 import numpy as np
-from helper_classes import TableInfo, ColumnInfo
+from datahub_classify.helper_classes import TableInfo, ColumnInfo
 import logging
 import re
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
