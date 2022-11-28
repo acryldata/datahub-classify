@@ -9,7 +9,7 @@ import pandas as pd
 import pytest
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
 
-from datahub_classify.helper_classes import ColumnInfo, Metadata
+from datahub_classify.helper_classes import ColumnInfo, ColumnMetadata
 from datahub_classify.infotype_predictor import predict_infotypes
 from datahub_classify.reference_input import input1 as input_dict
 
@@ -20,9 +20,6 @@ input_data_dir = os.path.join(current_wdr, "datasets")
 input_jsons_dir = os.path.join(current_wdr, "expected_output")
 confidence_threshold = 0.6
 update_confidence_slabs_json = False
-
-logging_directory = os.path.join(current_wdr, "logs", "logs.log")
-
 
 infotypes_to_use = [
     "Street_Address",
@@ -206,7 +203,7 @@ def populate_column_info_list(public_data_list):
                 "Datatype": "str",
                 "Dataset_Name": dataset_name,
             }
-            metadata = Metadata(fields)
+            metadata = ColumnMetadata(fields)
             if len(data[col].dropna()) > 1000:
                 values = data[col].dropna().values[:1000]
             else:
