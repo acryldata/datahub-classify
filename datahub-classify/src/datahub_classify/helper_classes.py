@@ -10,7 +10,7 @@ class InfotypeProposal:
 
 
 @dataclass
-class Metadata:
+class ColumnMetadata:
     meta_info: dict
     name: str = field(init=False)
     description: str = field(init=False)
@@ -28,14 +28,14 @@ class Metadata:
 
 @dataclass
 class ColumnInfo:
-    metadata: Metadata
+    metadata: ColumnMetadata
     parent_columns: Optional[List] = None
     values: Optional[List] = None
     infotype_proposals: Optional[List[InfotypeProposal]] = None
 
 
 @dataclass
-class Metadata_table:
+class TableMetadata:
     meta_info: dict
     name: str = field(init=False)
     description: str = field(init=False)
@@ -48,8 +48,9 @@ class Metadata_table:
         self.platform = self.meta_info.get('Platform', None)
         self.table_id = self.meta_info.get('Table_Id', None)
 
+
 @dataclass      
 class TableInfo:
-    metadata: Metadata_table
+    metadata: TableMetadata
     parent_tables: list
     column_infos: list

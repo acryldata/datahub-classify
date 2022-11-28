@@ -1,22 +1,20 @@
-
 from fuzzywuzzy import fuzz
-## GLOVE URL :  https://nlp.stanford.edu/data/glove.6B.zip
+# GLOVE URL :  https://nlp.stanford.edu/data/glove.6B.zip
 from nltk.corpus import stopwords
 from numpy.linalg import norm
-import re
 import numpy as np
 from helper_classes import TableInfo, ColumnInfo
 import logging
 import re
-# from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
+from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
+from sentence_transformers import SentenceTransformer
+
 
 logger = logging.getLogger(__name__)
 glove_vec = "C:\\Users\\GS-3490\\Glossary_creation\\Glossary_stage_2\\glove.6B\\glove.6B.50d.txt"
 stop_words = set(stopwords.words('english'))
 
-from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('all-MiniLM-L6-v2')
-
 
 column_desc_threshold = 0.65
 column_weighted_score_threshold = 0.7
@@ -26,9 +24,6 @@ table_similarity_threshold = 0.7
 table_desc_threshold = 0.65
 table_weighted_score_threshold = 0.7
 
-
-
-##### Stage -1 Utils
 
 # TODO: Exception handling
 # Match regex for Name and Description
@@ -43,7 +38,7 @@ def match_regex(text_to_match, regex_list):
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
-                re.fullmatch(pattern, original_text)
+                    re.fullmatch(pattern, original_text)
             ):
                 match_score = 1
                 break
@@ -103,27 +98,26 @@ def perform_basic_checks(metadata, values, config_dict, infotype=None):
     basic_checks_status = True
     minimum_values_threshold = 50
     if (
-        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
-        and len(values) < minimum_values_threshold
+            config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+            and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
     # TODO: Add more basic checks
     return basic_checks_status
 
 
-
-### Stage 2 Utils
-
-def cosine_similarity_score(vec1,
-                            vec2):
-    cos_sim = np.dot(vec1, vec2)/ (norm(vec1) * norm(vec2))
-    if cos_sim <=0:
+def cosine_similarity_score(vec1, vec2):
+    try:
+        cos_sim = np.dot(vec1, vec2) / (norm(vec1) * norm(vec2))
+    except ValueError as e:
+        raise Exception(f"Failed to get cosine similarity - \n {str(e)}")
+    if cos_sim <= 0:
         cos_sim = 0
-    # return  (1 + cos_sim) / 2
     return cos_sim
 
-def read_glove_vector(glove_vec: str):
-    with open(glove_vec, 'r', encoding='UTF-8') as f:
+
+def read_glove_vector(glove_vector: str):
+    with open(glove_vector, 'r', encoding='UTF-8') as f:
         word_to_vec_map = {}
         for line in f:
             w_line = line.split()
@@ -132,59 +126,67 @@ def read_glove_vector(glove_vec: str):
     return word_to_vec_map
 
 
+# TODO: do we need to load glove embedding upfront when utils is getting imported
+# TODO: Or as need basis we will load it once and reuse later
 word_to_vec_map = read_glove_vector(glove_vec)
 
 
 def name_desc_similarity(text_1: str,
                          text_2: str,
-                         name: bool):
+                         text_type: str):
+    # TODO - Verify: third variable type to str instead of bool,
+    # TODO: current expected values are 'name' or 'desc', in future other values can be supported if needed
+
+    # TODO: add a exception handling block, raise an exception
     text_1 = text_1.lower().strip()
     text_2 = text_2.lower().strip()
 
-    if (text_1 not in ([None,""])) and (text_2 not in ([None,""])):
+    if (text_1 not in ([None, ""])) and (text_2 not in ([None, ""])):
+        # TODO: have a look at following, fuzzywuzzy library renamed to thefuzz
+        # TODO: https://github.com/seatgeek/fuzzywuzzy
+        # TODO: This project has been renamed and moved to https://github.com/seatgeek/thefuzz
+        # TODO: Do we need to use "pip install thefuzz?"
         fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
         if fuzzy_match_score <= 0.5:
             fuzzy_match_score = 0.8 * fuzzy_match_score
 
         text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower()).strip()
         text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower()).strip()
-        text_1_words= [word for word in text_1_cleaned.split() if word not in (stop_words)]
-        text_2_words = [word for word in text_2_cleaned.split() if word not in (stop_words)]
+        text_1_words = [word for word in text_1_cleaned.split() if word not in stop_words]
+        text_2_words = [word for word in text_2_cleaned.split() if word not in stop_words]
 
         max_fuzz_score = 0
-        if name:
-            
-            if len(text_1_words)==1 or len(text_2_words)==1:
+        if text_type == 'name':
+            if len(text_1_words) == 1 or len(text_2_words) == 1:
                 for word_1 in text_1_words:
                     for word_2 in text_2_words:
                         fuzz_score = fuzz.token_set_ratio(word_1, word_2) / 100
                         if fuzz_score > max_fuzz_score:
                             max_fuzz_score = fuzz_score
-        
+
         fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
 
-        if len(text_1_words)<=1 and len(text_2_words)<=1:
+        # TODO: do we need "<=" or "==" in the following condition?
+        if len(text_1_words) <= 1 and len(text_2_words) <= 1:
+            # TODO: can we change following two statements to "emb_x = word_to_vec_map[text_x_words[0]"
+            # TODO: only one word is present in "text_x_words" so we don't need list comprehension
             emb_1 = np.array(
-            [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
+                [word_to_vec_map[word] for word in text_1_words if word in word_to_vec_map.keys()]).mean(axis=0)
             emb_2 = np.array(
-            [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
+                [word_to_vec_map[word] for word in text_2_words if word in word_to_vec_map.keys()]).mean(axis=0)
 
             if str(emb_1) == "nan" or str(emb_2) == "nan":
                 embeddings = model.encode([text_1, text_2])
                 emb_1 = embeddings[0]
                 emb_2 = embeddings[1]
-
         else:
             embeddings = model.encode([text_1, text_2])
             emb_1 = embeddings[0]
             emb_2 = embeddings[1]
-
         emb_match_score = cosine_similarity_score(emb_1, emb_2)
-
-        score =  np.maximum(fuzzy_match_score, emb_match_score)
-
+        score = np.maximum(fuzzy_match_score, emb_match_score)
     else:
-        score=0
+        score = 0
 
     # print(text_1)
     # print(text_2)
@@ -204,11 +206,12 @@ def column_dtype_similarity(column_1_dtype: str,
 
 def table_platform_similarity(platform_1_name: str,
                               platform_2_name: str):
-    if not platform_1_name == platform_2_name:
+    if platform_1_name != platform_2_name:
         platform_score = 1
     else:
         platform_score = 0
     return platform_score
+
 
 def compute_lineage_score(entity_1_parents: list,
                           entity_2_parents: list,
@@ -217,8 +220,9 @@ def compute_lineage_score(entity_1_parents: list,
     if (entity_1_id in entity_2_parents) or (entity_2_id in entity_1_parents):
         lineage_score = 1
     else:
-        lineage_score= 0
+        lineage_score = 0
     return lineage_score
+
 
 def table_schema_similarity(table_1_cols_name_dtypes: list[tuple],
                             table_2_cols_names_dtypes: list[tuple],
@@ -231,69 +235,69 @@ def table_schema_similarity(table_1_cols_name_dtypes: list[tuple],
             col1_name = col1[0]
             col2_name = col2[0]
             col1_dtype = col1[1]
-            col2_dtype =col2[1]
-            col_name_score = name_desc_similarity(col1_name, col2_name, name=True)
+            col2_dtype = col2[1]
+            col_name_score = name_desc_similarity(col1_name, col2_name, text_type='name')
             col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
-            pair_score = 0.8*col_name_score + 0.2*col_dtype_score
+            pair_score = 0.8 * col_name_score + 0.2 * col_dtype_score
 
             if pair_score > pair_score_threshold:
                 matched_pairs.append((col1, col2))
+                # TODO: table_2_cols_names_dtypes dict is getting used in the for loop and modified at runtime
+                # TODO: verify: it will not create any problem
                 table_2_cols_names_dtypes.remove(col2)
                 break
-    schema_score = 2* len(matched_pairs) / (num_cols_table1 + num_cols_table2)
+    schema_score = 2 * len(matched_pairs) / (num_cols_table1 + num_cols_table2)
     return schema_score
 
 
+# TODO: platform_score and lineage_score type can be int, not bool
 def compute_table_overall_similarity_score(name_score: float,
                                            desc_score: float,
                                            platform_score: bool,
                                            lineage_score: bool,
                                            schema_score: float,
                                            desc_present: bool):
-    weighted_score = 0.3*name_score + 0.1*platform_score +  0.6*schema_score
+    weighted_score = 0.3 * name_score + 0.1 * platform_score + 0.6 * schema_score
+    # TODO: can we think of something like, if platform_score is 1 then boost by x% and if 0 then boost by y%
+    # TODO: here x < y, i.e. if platform_score 0 means less probability of having two tables as similar
     if desc_present:
         if desc_score >= table_desc_threshold:
             weighted_score = np.minimum(1.2 * weighted_score, 1)
-
         if desc_score < 0.5:
-            weighted_score = 0.9*weighted_score
-    
+            weighted_score = 0.9 * weighted_score
     overall_table_similarity_score = weighted_score
+    if weighted_score >= table_weighted_score_threshold and lineage_score == 1:
+        overall_table_similarity_score = 1
+    return np.round(overall_table_similarity_score, 2)
 
-    if weighted_score >= table_weighted_score_threshold:
-        if lineage_score ==1:
-            overall_table_similarity_score = 1
-   
-    return np.round(overall_table_similarity_score,2)
 
+# TODO: dtype_score and lineage_score can be int instead of bool
 def compute_column_overall_similarity_score(name_score: float,
                                             dtype_score: bool,
                                             desc_score: float,
                                             table_similarity_score: float,
                                             lineage_score: bool,
                                             desc_present: bool):
-    weighted_score = name_score  
-    if dtype_score==1:
-        weighted_score  = 1.2* weighted_score
+    weighted_score = name_score
+    if dtype_score == 1:
+        weighted_score = 1.2 * weighted_score
     else:
-        weighted_score  = 0.95* weighted_score
+        weighted_score = 0.95 * weighted_score
 
     if desc_present:
         if desc_score >= column_desc_threshold:
             weighted_score = 1.2 * weighted_score
-            
         if desc_score < 0.5:
-            weighted_score = 0.9*weighted_score
+            weighted_score = 0.9 * weighted_score
 
     if weighted_score > column_weighted_score_threshold:
         if table_similarity_score > table_similarity_threshold:
-            weighted_score = 1.2* weighted_score
-        if lineage_score ==1:
-            weighted_score = 1.2* weighted_score
+            weighted_score = 1.2 * weighted_score
+        if lineage_score == 1:
+            weighted_score = 1.2 * weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
-    
-  
+
     return np.round(overall_column_similarity_score, 2)
 
 
@@ -309,21 +313,21 @@ def compute_table_similarity(table_info1: TableInfo,
 
     table2_name = table_info2.metadata.name
     table2_desc = table_info2.metadata.description
-    table2_platform =table_info2.metadata.platform
+    table2_platform = table_info2.metadata.platform
     table2_parents = table_info2.parent_tables
     table_2_cols_name_dtypes = list()
     for col_info in table_info2.column_infos:
         table_2_cols_name_dtypes.append((col_info.metadata.name, col_info.metadata.datatype))
 
-
     if table1_desc and table2_desc:
-        desc_present=True
+        desc_present = True
     else:
         desc_present = False
 
-    table_name_score = name_desc_similarity(table1_name, table2_name, name=True)
-    table_desc_score = name_desc_similarity(table1_desc, table2_desc, name=False)
-    table_platform_score = table_platform_similarity (table1_platform, table2_platform )
+    table_name_score = name_desc_similarity(table1_name, table2_name, text_type='name')
+    table_desc_score = name_desc_similarity(table1_desc, table2_desc, text_type='desc')
+    table_platform_score = table_platform_similarity(table1_platform, table2_platform)
+    # TODO: shall we pass table1_id instead of table1_name?
     table_lineage_score = compute_lineage_score(table1_parents, table2_parents, table1_name, table2_name)
     table_schema_score = table_schema_similarity(table_1_cols_name_dtypes, table_2_cols_name_dtypes)
 
@@ -358,16 +362,17 @@ def compute_column_similarity(col_info1: ColumnInfo,
     column2_parents = col_info2.parent_columns
 
     if column1_desc and column2_desc:
-        desc_present=True
+        desc_present = True
     else:
         desc_present = False
 
-    column_name_score = name_desc_similarity(column1_name, column2_name, name=True)
+    column_name_score = name_desc_similarity(column1_name, column2_name, text_type='name')
     if desc_present:
-        column_desc_score = name_desc_similarity(column1_desc, column2_desc, name=False)
+        column_desc_score = name_desc_similarity(column1_desc, column2_desc, text_type='desc')
     else:
         column_desc_score = None
     column_dtype_score = column_dtype_similarity(column1_dtype, column2_dtype)
+    # TODO: do we need to pass col_id instead of column_name for lineage_similarity?
     column_lineage_score = compute_lineage_score(column1_parents, column2_parents, column1_name, column2_name)
     overall_column_similarity_score = compute_column_overall_similarity_score(column_name_score,
                                                                               column_dtype_score,
@@ -382,11 +387,10 @@ def compute_column_similarity(col_info1: ColumnInfo,
     # print(column1_desc)
     # print(column2_desc)
     # print("-------------")
-    print("desc score: " ,column_desc_score)
+    print("desc score: ", column_desc_score)
     print("dtype score: ", column_dtype_score)
     print("lineage score: ", column_lineage_score)
     print("overall score: ", overall_column_similarity_score)
     print("****************************")
     # print("schema score: ", table_schema_score)
     return overall_column_similarity_score
-
