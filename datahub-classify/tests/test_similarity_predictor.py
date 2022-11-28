@@ -2,19 +2,25 @@ import numpy as np
 import pandas as pd
 import os
 import  logging
-from helper_classes import *
-from utils import *
-from similarity_predictor import check_similarity
+from datahub_classify.helper_classes import ColumnInfo, ColumnMetadata, TableMetadata, TableInfo
+from datahub_classify.utils import *
+from datahub_classify.similarity_predictor import check_similarity
 from itertools import combinations
 import json
-from tqdm import tqdm
+import pickle
 
-ideal_json_path = "C:\\Glossary_Terms_Git\\datahub-classify\\test\\expected_output\\expected_infotypes_IDEAL.json"
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
+current_wdr = os.path.dirname(os.path.abspath(__file__))
+input_data_dir = os.path.join(current_wdr, "datasets")
+input_jsons_dir = os.path.join(current_wdr, "expected_output")
+
+
+ideal_json_path = os.path.join(input_jsons_dir,"expected_infotypes_IDEAL.json")
 with open(ideal_json_path, "rb") as file:
     ideal_infotypes = json.load(file)
 
 similar_threshold = 0.75
-input_data_dir = "C:\\Glossary_Terms_Git\\datahub-classify\\test\\datasets"
 
 
 def get_public_data(input_data_path):
@@ -274,39 +280,40 @@ def populate_similar_tableinfo_object(dataset_key):
     table_info = TableInfo(metadata_table, parent_tables, col_infos)
     return table_info
 
-
+logger.info(f"----------Starting Testing-----------")
 public_data_list = get_public_data(input_data_dir)
 data_combinations = combinations(public_data_list.keys(),2)
-
+correct_preds = []
+wrong_preds = []
 for comb in data_combinations:
-    print("processing_comb: ", comb)
+    logger.info(f"Processing_combination: {comb}")
     dataset_key_1 = comb[0]
     dataset_key_2 = comb[1]
-
     table_info_1 = populate_tableinfo_object(dataset_key=dataset_key_1)
     table_info_2 = populate_tableinfo_object(dataset_key=dataset_key_2)
     overall_table_similarity_score, column_similarity_scores = check_similarity(table_info_1, table_info_2)
     for col_pair in column_similarity_scores.keys():
         col_1 = col_pair[0].split("_", 1)[1]
         col_2 = col_pair[1].split("_", 1)[1]
-
         if ideal_infotypes[dataset_key_1].get(col_1, None) and ideal_infotypes[dataset_key_2].get(col_2, None):
             if ideal_infotypes[dataset_key_1][col_1] == ideal_infotypes[dataset_key_2][col_2]:
                 if column_similarity_scores[col_pair] >= similar_threshold:
                     correct_preds.append((col_pair, column_similarity_scores[col_pair]))
-
                 else:
                     wrong_preds.append((col_pair, column_similarity_scores[col_pair]))
-
-
             else:
                 if column_similarity_scores[col_pair] >= similar_threshold:
                     wrong_preds.append((col_pair, column_similarity_scores[col_pair]))
-
                 else:
                     correct_preds.append((col_pair, column_similarity_scores[col_pair]))
 
+logger.info(f"Correct predictions: {correct_preds}")
+logger.info(f"Wrong predictions: {wrong_preds}")
 
+
+
+# with open("../src/datahub_classify/wrong_predictions_final.pkl", "wb") as file:
+#       pickle.dump(wrong_preds,file)
 
 
 
