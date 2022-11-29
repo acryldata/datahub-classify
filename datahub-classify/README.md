@@ -4,7 +4,7 @@ Predict InfoTypes for [DataHub](https://datahubproject.io/).
 
 ## Installation
 
-`python3 -m pip install --upgrade datahub-classify`
+`python3 -m pip install --upgrade acryl-datahub-classify`
 
 ## API `predict_infotypes`
 
@@ -102,17 +102,13 @@ A debug information is associated with each infotype proposal, it provides detai
 5. Phone Number
 6. Street Address
 7. Credit-Debit Card Number
-
-## Required Libraries
-
-Following libraries are required
-
-- Spacy 3.4.1
-- phonenumbers 8.12.56
-
-### Required Spacy model
-
-`$ python3 -m spacy download en_core_web_sm`
+8. International Bank Account Number
+9. Vehicle Identification Number
+10. US Social Security Number
+11. Ipv4 Address
+12. Ipv6 Address
+13. Swift Code
+14. US Driving License Number
 
 ## Assumptions
 
@@ -124,7 +120,7 @@ Following libraries are required
 
 ```sh
 cd datahub-classify
-../gradlew :datahub-classify:installDev # OR pip install -e '.[dev]'
+../gradlew :datahub-classify:installDev # OR pip install -e ".[dev]"
 source venv/bin/activate
 ```
 
@@ -137,7 +133,7 @@ pytest tests/ --capture=no --log-cli-level=DEBUG
 ### Sanity check code before committing
 
 ```sh
-# Assumes: pip install -e '.[dev]' and venv is activated
+# Assumes: pip install -e ".[dev]" and venv is activated
 black src/ tests/
 isort src/ tests/
 flake8 src/ tests/
