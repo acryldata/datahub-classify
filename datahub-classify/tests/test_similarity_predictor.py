@@ -307,8 +307,8 @@ for comb in data_combinations:
                 else:
                     correct_preds.append((col_pair, column_similarity_scores[col_pair]))
 
-logger.info(f"Correct predictions: {correct_preds}")
-logger.info(f"Wrong predictions: {wrong_preds}")
+logger.info(f"Correct predictions: {len(correct_preds)}")
+logger.info(f"Wrong predictions: {len(wrong_preds)}")
 
 
 
