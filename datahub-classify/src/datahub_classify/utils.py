@@ -91,7 +91,6 @@ def detect_named_entity_spacy(spacy_models_list, entities_of_interest, value):
                 return True
     return False
 
-
 def perform_basic_checks(metadata, values, config_dict, infotype=None):
     basic_checks_status = True
     minimum_values_threshold = 50
@@ -123,18 +122,11 @@ def read_glove_vector(glove_vector: Path):
             word_to_vec_map[curr_word] = np.array(w_line[1:], dtype=np.float64)
     return word_to_vec_map
 
-
-# TODO: do we need to load glove embedding upfront when utils is getting imported
-# TODO: Or as need basis we will load it once and reuse later
-
+# TODO: Rename 'name_dsc_similarity' to compute_string_similarity  and move the similarity specific functions to infotype predictor
 def name_desc_similarity(text_1: str,
                          text_2: str,
                          text_type: str,
                          word_to_vec_map: dict):
-    # TODO - Verify: third variable type to str instead of bool,
-    # TODO: current expected values are 'name' or 'desc', in future other values can be supported if needed
-
-    # TODO: add a exception handling block, raise an exception
     try:
         text_1 = text_1.lower().strip()
         text_2 = text_2.lower().strip()
@@ -187,9 +179,6 @@ def name_desc_similarity(text_1: str,
         # print("fuzzy score: ", fuzzy_match_score)
         # print("glove score: ", emb_match_score)
     return score
-
-
-
 
 def column_dtype_similarity(column_1_dtype: str,
                             column_2_dtype: str):
@@ -260,8 +249,6 @@ def table_schema_similarity(table_1_cols_name_dtypes: list[tuple],
         logger.error(f"Failed to compute table schema similarity ", exc_info=e)
     return schema_score
 
-
-# TODO: platform_score and lineage_score type can be int, not bool
 def compute_table_overall_similarity_score(name_score: float,
                                            desc_score: float,
                                            platform_score: int,
@@ -281,8 +268,6 @@ def compute_table_overall_similarity_score(name_score: float,
         overall_table_similarity_score = 1
     return np.round(overall_table_similarity_score, 2)
 
-
-# TODO: dtype_score and lineage_score can be int instead of bool
 def compute_column_overall_similarity_score(name_score: float,
                                             dtype_score: int,
                                             desc_score: float,
@@ -343,7 +328,6 @@ def compute_table_similarity(table_info1: TableInfo,
     table_desc_score = name_desc_similarity(table1_desc, table2_desc, text_type='desc',
                                             word_to_vec_map = word_to_vec_map)
     table_platform_score = table_platform_similarity(table1_platform, table2_platform)
-    # TODO: shall we pass table1_id instead of table1_name?
     table_lineage_score = compute_lineage_score(table1_parents, table2_parents, table1_id, table2_id)
     table_schema_score = table_schema_similarity(table_1_cols_name_dtypes, table_2_cols_name_dtypes,
                                                  word_to_vec_map = word_to_vec_map)
@@ -395,7 +379,6 @@ def compute_column_similarity(col_info1: ColumnInfo,
     else:
         column_desc_score = None
     column_dtype_score = column_dtype_similarity(column1_dtype, column2_dtype)
-    # TODO: do we need to pass col_id instead of column_name for lineage_similarity?
     column_lineage_score = compute_lineage_score(column1_parents, column2_parents, column1_id, column2_id)
     overall_column_similarity_score = compute_column_overall_similarity_score(column_name_score,
                                                                               column_dtype_score,
