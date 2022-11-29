@@ -23,7 +23,6 @@ base_requirements = {
     "sentence-transformers>=2.2.2",
     "python-Levenshtein>=0.20.8",
     "nltk>=3.7",
-    "scipy>=1.9.3",
     "thefuzz>=0.19.0"
 }
 
