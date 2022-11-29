@@ -110,17 +110,6 @@ A debug information is associated with each infotype proposal, it provides detai
 13. Swift Code
 14. US Driving License Number
 
-## Required Libraries
-
-Following libraries are required
-
-- Spacy 3.4.1
-- phonenumbers 8.12.56
-
-### Required Spacy model
-
-`$ python3 -m spacy download en_core_web_sm`
-
 ## Assumptions
 
 - If value prediction factor weight is non-zero (indicating values should be used for infotype inspection) then a minimum 50 non-null column values should be present.
@@ -131,7 +120,7 @@ Following libraries are required
 
 ```sh
 cd datahub-classify
-../gradlew :datahub-classify:installDev # OR pip install -e '.[dev]'
+../gradlew :datahub-classify:installDev # OR pip install -e ".[dev]"
 source venv/bin/activate
 ```
 
@@ -144,7 +133,7 @@ pytest tests/ --capture=no --log-cli-level=DEBUG
 ### Sanity check code before committing
 
 ```sh
-# Assumes: pip install -e '.[dev]' and venv is activated
+# Assumes: pip install -e ".[dev]" and venv is activated
 black src/ tests/
 isort src/ tests/
 flake8 src/ tests/
