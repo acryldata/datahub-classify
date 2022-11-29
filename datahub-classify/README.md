@@ -4,7 +4,7 @@ Predict InfoTypes for [DataHub](https://datahubproject.io/).
 
 ## Installation
 
-`python3 -m pip install --upgrade datahub-classify`
+`python3 -m pip install --upgrade acryl-datahub-classify`
 
 ## API `predict_infotypes`
 
