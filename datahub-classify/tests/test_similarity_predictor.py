@@ -1,12 +1,12 @@
 import json
 import logging
 import os
+# import pickle
 from itertools import combinations
 
 import numpy as np
 import pandas as pd
 import pytest
-import pickle
 
 from datahub_classify.helper_classes import (
     ColumnInfo,
@@ -28,9 +28,10 @@ with open(ideal_json_path, "rb") as file:
 similar_threshold = 0.75
 update_expected_similarity_scores_UNIT_TESTING = False
 quick_test = False
-save_predictions = False
+# save_predictions = False
 
-def get_public_data(input_data_path, run_quick_test= False):
+
+def get_public_data(input_data_path, run_quick_test=False):
     logger.info(f"==============={input_data_path}=================")
     data1 = pd.read_csv(os.path.join(input_data_path, "UCI_Credit_Card.csv"))
     data2 = pd.read_csv(os.path.join(input_data_path, "Age2_address1_credit_card3.csv"))
@@ -124,11 +125,7 @@ def get_public_data(input_data_path, run_quick_test= False):
     data56 = pd.read_excel(os.path.join(input_data_path, "US_Driving_License.xlsx"))
 
     if run_quick_test:
-        return {
-            "data1": data1,
-            "data2": data2,
-            "data3": data3
-        }
+        return {"data1": data1, "data2": data2, "data3": data3}
     return {
         "data1": data1,
         "data2": data2,
@@ -188,6 +185,7 @@ def get_public_data(input_data_path, run_quick_test= False):
         "data56": data56,
     }
 
+
 dataset_name_mapping = {
     "data1": "UCI_Credit_Card",
     "data2": "Age2_address1_credit_card3",
@@ -244,7 +242,7 @@ dataset_name_mapping = {
     "data53": "score-banks-updated-sep2022",
     "data54": "blz-aktuell-xlsx-data",
     "data55": "automotive_service_data",
-    "data56": "US_Driving_License"
+    "data56": "US_Driving_License",
 }
 
 platforms = ["A", "B", "C", "D", "E"]
@@ -275,6 +273,7 @@ def populate_tableinfo_object(dataset_key):
     # parent_tables = list()
     table_info = TableInfo(metadata_table, col_infos)
     return table_info
+
 
 def populate_similar_tableinfo_object(dataset_key):
     df = public_data_list[dataset_key].copy()
@@ -314,16 +313,20 @@ def populate_similar_tableinfo_object(dataset_key):
     table_info = TableInfo(metadata_table, parent_tables, col_infos)
     return table_info
 
+
 def load_expected_similarity_json(input_jsons_path):
     with open(
-            os.path.join(input_jsons_path, "expected_similarity_scores_UNIT_TESTING.json")) as filename:
+        os.path.join(input_jsons_path, "expected_similarity_scores_UNIT_TESTING.json")
+    ) as filename:
         expected_similarity_scores_unit_testing = json.load(filename)
     return expected_similarity_scores_unit_testing
 
 
-def get_predicted_expected_similarity_scores_mapping(predicted_similarity_scores_unit_testing,
-                                            predicted_similarity_labels_unit_testing,
-                                            expected_similarity_scores_unit_testing):
+def get_predicted_expected_similarity_scores_mapping(
+    predicted_similarity_scores_unit_testing,
+    predicted_similarity_labels_unit_testing,
+    expected_similarity_scores_unit_testing,
+):
     mapping = []
     for column_pair in predicted_similarity_scores_unit_testing.keys():
         key_ = column_pair[0] + "-" + column_pair[1]
@@ -332,12 +335,16 @@ def get_predicted_expected_similarity_scores_mapping(predicted_similarity_scores
                 expected_similarity_label_unit_testing = "similar"
             else:
                 expected_similarity_label_unit_testing = "not_similar"
-            mapping.append((column_pair[0],
-                            column_pair[1],
-                           predicted_similarity_scores_unit_testing[column_pair],
-                           predicted_similarity_labels_unit_testing[column_pair],
-                           expected_similarity_scores_unit_testing[key_],
-                           expected_similarity_label_unit_testing))
+            mapping.append(
+                (
+                    column_pair[0],
+                    column_pair[1],
+                    predicted_similarity_scores_unit_testing[column_pair],
+                    predicted_similarity_labels_unit_testing[column_pair],
+                    expected_similarity_scores_unit_testing[key_],
+                    expected_similarity_label_unit_testing,
+                )
+            )
     return mapping
 
 
@@ -384,13 +391,15 @@ for comb in data_combinations:
 logger.info("-------Test Statistics-------------")
 logger.info(f"Correct predictions: {len(correct_preds)}")
 logger.info(f"Wrong predictions: {len(wrong_preds)}")
-logger.info(f"Accuracy: {np.round(len(correct_preds) / (len(wrong_preds) + len(correct_preds)), 2)}")
+logger.info(
+    f"Accuracy: {np.round(len(correct_preds) / (len(wrong_preds) + len(correct_preds)), 2)}"
+)
 
-if save_predictions:
-    with open(os.path.join(input_jsons_dir,"wrong_predictions.pkl"),"wb") as file:
-        pickle.dump(wrong_preds, file)
-    with open(os.path.join(input_jsons_dir,"correct_predictions.pkl"),"wb") as file:
-        pickle.dump(correct_preds, file)
+# if save_predictions:
+#     with open(os.path.join(input_jsons_dir, "wrong_predictions.pkl"), "wb") as file:
+#         pickle.dump(wrong_preds, file)
+#     with open(os.path.join(input_jsons_dir, "correct_predictions.pkl"), "wb") as file:
+#         pickle.dump(correct_preds, file)
 
 
 if update_expected_similarity_scores_UNIT_TESTING:
@@ -403,15 +412,19 @@ if update_expected_similarity_scores_UNIT_TESTING:
         if ideal_infotypes[dataset_key_1].get(col_1, None) and ideal_infotypes[
             dataset_key_2
         ].get(col_2, None):
-            expected_similarity_scores[key[0] +"-" + key[1]] = predicted_scores[key]
+            expected_similarity_scores[key[0] + "-" + key[1]] = predicted_scores[key]
     logger.info("Updating expected_similarity_scores_UNIT_TESTING json..")
-    with open(os.path.join(input_jsons_dir, "expected_similarity_scores_UNIT_TESTING.json"),"w") as filename:
-            json.dump(expected_similarity_scores, filename, indent = 4)
+    with open(
+        os.path.join(input_jsons_dir, "expected_similarity_scores_UNIT_TESTING.json"),
+        "w",
+    ) as filename:
+        json.dump(expected_similarity_scores, filename, indent=4)
 
 expected_similarity_scores_unit_testing = load_expected_similarity_json(input_jsons_dir)
-similarity_mapping_unit_testing = get_predicted_expected_similarity_scores_mapping(predicted_scores,
-                                                                          predicted_labels,
-                                                                          expected_similarity_scores_unit_testing)
+similarity_mapping_unit_testing = get_predicted_expected_similarity_scores_mapping(
+    predicted_scores, predicted_labels, expected_similarity_scores_unit_testing
+)
+
 
 @pytest.mark.parametrize(
     "col_id_1, col_id_2, predicted_score, predicted_label, expected_score, expected_label",
@@ -428,8 +441,6 @@ def test_similarity_public_datasets(
     assert (
         predicted_label == expected_label
     ), f"Test1 failed for column pair: '{(col_id_1, col_id_2)}'"
-    assert predicted_score >= np.floor(expected_score * 10) / 10, (
-        f"Test2 failed for column pair: '{(col_id_1, col_id_2)}'"
-    )
-
-
+    assert (
+        predicted_score >= np.floor(expected_score * 10) / 10
+    ), f"Test2 failed for column pair: '{(col_id_1, col_id_2)}'"
