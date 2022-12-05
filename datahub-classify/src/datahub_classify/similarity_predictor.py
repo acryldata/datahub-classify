@@ -287,7 +287,7 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
     )
     global word_to_vec_map
     if not word_to_vec_map:
-        logger.debug("Loading Glove Embeddings")
+        logger.info("Loading Glove Embeddings..")
         word_to_vec_map = read_glove_vector(glove_vec)
     overall_table_similarity_score = 0.0
     try:
@@ -301,7 +301,6 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
         )
 
     column_similarity_scores = {}
-    logger.info("====================================")
     logger.info(
         "******************** Finding column similarities **********************"
     )
@@ -331,4 +330,5 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
             column_similarity_scores[
                 (column1_id, column2_id)
             ] = overall_column_similarity_score
+    logger.info("===============================================")
     return overall_table_similarity_score, column_similarity_scores
