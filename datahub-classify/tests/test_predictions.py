@@ -44,155 +44,16 @@ infotypes_to_use = [
 
 def get_public_data(input_data_path):
     print("===============%s=================" % input_data_path)
-    data1 = pd.read_csv(os.path.join(input_data_path, "UCI_Credit_Card.csv"))
-    data2 = pd.read_csv(os.path.join(input_data_path, "Age2_address1_credit_card3.csv"))
-    data3 = pd.read_csv(os.path.join(input_data_path, "list_of_real_usa_addresses.csv"))
-    data4 = pd.read_csv(os.path.join(input_data_path, "CardBase.csv"))
-    data5 = pd.read_csv(os.path.join(input_data_path, "Credit_Card2.csv"))
-    data6 = pd.read_csv(os.path.join(input_data_path, "catalog.csv"))
-    data7 = pd.read_csv(os.path.join(input_data_path, "iban.csv"))
-    # data8 = pd.read_csv(os.path.join(input_data_path, "USA_cars_datasets.csv"))
-    # data9 = pd.read_csv(os.path.join(input_data_path, "email_1.csv"))
-    # data10 = pd.read_csv(os.path.join(input_data_path, "email_2.csv"))
-    # data11 = pd.read_csv(os.path.join(input_data_path, "email_3.csv"))
-    data12 = pd.read_csv(
-        os.path.join(input_data_path, "2018-seattle-business-districts.csv")
-    )
-    data13 = pd.read_csv(os.path.join(input_data_path, "Customer_Segmentation.csv"))
-    data14 = pd.read_csv(os.path.join(input_data_path, "application_record.csv"))
-    data15 = pd.read_csv(os.path.join(input_data_path, "Airbnb_Open_Data.csv"))
-    data16 = pd.read_csv(
-        os.path.join(input_data_path, "Book1.xlsx-credit-card-number.csv")
-    )
-    data17 = pd.read_csv(os.path.join(input_data_path, "Aliases.csv"))
-    # data18 = pd.read_csv(os.path.join(input_data_path, "athletes.csv"))
-    # data19 = pd.read_csv(os.path.join(input_data_path, "coaches.csv"))
-    # data20 = pd.read_csv(os.path.join(input_data_path, "curling_results.csv"))
-    data21 = pd.read_csv(os.path.join(input_data_path, "Emails.csv"))
-    # data22 = pd.read_csv(os.path.join(input_data_path, "hockey_players_stats.csv"))
-    # data23 = pd.read_csv(os.path.join(input_data_path, "hockey_results.csv"))
-    # data24 = pd.read_csv(os.path.join(input_data_path, "medals.csv"))
-    data25 = pd.read_csv(os.path.join(input_data_path, "Persons.csv"))
-    # data26 = pd.read_csv(os.path.join(input_data_path, "technical_officials.csv"))
-    data27 = pd.read_csv(os.path.join(input_data_path, "Bachelor_Degree_Majors.csv"))
-    data28 = pd.read_csv(os.path.join(input_data_path, "CrabAgePrediction.csv"))
-    data29 = pd.read_csv(os.path.join(input_data_path, "Salary_Data.csv"))
-    data30 = pd.read_csv(os.path.join(input_data_path, "drug-use-by-age.csv"))
-    data31 = pd.read_csv(
-        os.path.join(input_data_path, "Book1.xlsx-us-social-security-22-cvs.csv")
-    )
-    data32 = pd.read_csv(os.path.join(input_data_path, "sample-data.csv"))
-    data33 = pd.read_excel(os.path.join(input_data_path, "1-MB-Test.xlsx"))
-    data34 = pd.read_csv(os.path.join(input_data_path, "random_ibans.csv"))
-    # data35 = pd.read_csv(
-    #     os.path.join(input_data_path, "used_cars_data.csv"), nrows=1000
-    # )
-    data36 = pd.read_csv(os.path.join(input_data_path, "train.csv"), nrows=1000)
-    data37 = pd.read_csv(os.path.join(input_data_path, "test.csv"), nrows=1000)
-    data38 = pd.read_csv(os.path.join(input_data_path, "vehicles_1.csv"), nrows=1000)
-    data39 = pd.read_csv(os.path.join(input_data_path, "vehicles_2.csv"), nrows=1000)
-    data40 = pd.read_csv(os.path.join(input_data_path, "vehicles_3.csv"), nrows=1000)
-    # data41 = pd.read_csv(
-    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_1.csv")
-    # )
-    # data42 = pd.read_csv(
-    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_2.csv")
-    # )
-    # data43 = pd.read_csv(
-    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_3.csv")
-    # )
-    # data44 = pd.read_csv(
-    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_4.csv")
-    # )
-    # data45 = pd.read_csv(
-    #     os.path.join(input_data_path, "Dataset-Unicauca-Version2-87Atts_5.csv")
-    # )
-    # data46 = pd.read_csv(
-    #     os.path.join(input_data_path, "visitor-interests.csv"), nrows=1000
-    # )
-    # data47 = pd.read_csv(
-    #     os.path.join(input_data_path, "Darknet_.csv"), nrows=1000, on_bad_lines="skip"
-    # )
-    data48 = pd.read_csv(os.path.join(input_data_path, "vehicles_4.csv"))
-    data49 = pd.read_csv(os.path.join(input_data_path, "vehicles_5.csv"))
-    # data50 = pd.read_csv(
-    #     os.path.join(
-    #         input_data_path, "Device Report - BU175-VPC2021-03-21_11-00-03.csv"
-    #     )
-    # )
-    # data51 = pd.read_csv(
-    #     os.path.join(
-    #         input_data_path,
-    #         "2021-04-23_honeypot-cloud-digitalocean-geo-1_netflow-extended.csv",
-    #     ),
-    #     nrows=1000,
-    # )
-    data52 = pd.read_csv(os.path.join(input_data_path, "ipv6_random_generated.csv"))
-    # data53 = pd.read_csv(
-    #     os.path.join(input_data_path, "score-banks-updated-sep2022.csv")
-    # )
-    # data54 = pd.read_csv(os.path.join(input_data_path, "blz-aktuell-xlsx-data.csv"))
-    # data55 = pd.read_csv(os.path.join(input_data_path, "automotive_service_data.csv"))
-    data56 = pd.read_excel(os.path.join(input_data_path, "US_Driving_License.xlsx"))
-
-    return {
-        "data1": data1,
-        "data2": data2,
-        "data3": data3,
-        "data4": data4,
-        "data5": data5,
-        "data6": data6,
-        "data7": data7,
-        # "data8": data8,
-        # "data9": data9,
-        # "data10": data10,
-        # "data11": data11,
-        "data12": data12,
-        "data13": data13,
-        "data14": data14,
-        "data15": data15,
-        "data16": data16,
-        "data17": data17,
-        # "data18": data18,
-        # "data19": data19,
-        # "data20": data20,
-        "data21": data21,
-        # "data22": data22,
-        # "data23": data23,
-        # "data24": data24,
-        "data25": data25,
-        # "data26": data26,
-        "data27": data27,
-        "data28": data28,
-        "data29": data29,
-        "data30": data30,
-        "data31": data31,
-        "data32": data32,
-        "data33": data33,
-        "data34": data34,
-        # "data35": data35,
-        "data36": data36,
-        "data37": data37,
-        "data38": data38,
-        "data39": data39,
-        "data40": data40,
-        # "data41": data41,
-        # "data42": data42,
-        # "data43": data43,
-        # "data44": data44,
-        # "data45": data45,
-        # "data46": data46,
-        # "data47": data47,
-        "data48": data48,
-        "data49": data49,
-        # "data50": data50,
-        # "data51": data51,
-        "data52": data52,
-        # "data53": data53,
-        # "data54": data54,
-        # "data55": data55,
-        "data56": data56,
-    }
+    dataset_dict = {}
+    for root, dirs, files in os.walk(input_data_path):
+        for filename in files:
+            if filename.endswith('.csv'):
+                dataset_name = filename.replace('.csv', '')
+                dataset_dict[dataset_name] = pd.read_csv(os.path.join(root, filename), nrows=1000)
+            elif filename.endswith('.xlsx'):
+                dataset_name = filename.replace('.xlsx', '')
+                dataset_dict[dataset_name] = pd.read_excel(os.path.join(root, filename), nrows=1000)
+    return dataset_dict
 
 
 def populate_column_info_list(public_data_list):
