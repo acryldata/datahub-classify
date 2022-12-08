@@ -20,6 +20,7 @@ input_data_dir = os.path.join(current_wdr, "datasets")
 input_jsons_dir = os.path.join(current_wdr, "expected_output")
 confidence_threshold = 0.6
 update_confidence_slabs_json = False
+quick_test = False
 
 logging_directory = os.path.join(current_wdr, "logs", "logs.log")
 
@@ -42,11 +43,13 @@ infotypes_to_use = [
 ]
 
 
-def get_public_data(input_data_path):
-    print("===============%s=================" % input_data_path)
+def get_public_data(input_data_path, run_quick_test):
+    logger.info("===============%s=================" % input_data_path)
+    if run_quick_test:
+        logger.info("------Running Quick Test------- ")
     dataset_dict = {}
     for root, dirs, files in os.walk(input_data_path):
-        for filename in files:
+        for i, filename in enumerate(files):
             if filename.endswith(".csv"):
                 dataset_name = filename.replace(".csv", "")
                 dataset_dict[dataset_name] = pd.read_csv(
@@ -57,6 +60,8 @@ def get_public_data(input_data_path):
                 dataset_dict[dataset_name] = pd.read_excel(
                     os.path.join(root, filename), nrows=1000
                 )
+            if run_quick_test and i > 2:
+                break
     return dataset_dict
 
 
@@ -259,7 +264,7 @@ logger.info(
     f"Start Time --->  {datetime.now()}",
 )
 
-public_data_list = get_public_data(input_data_dir)
+public_data_list = get_public_data(input_data_dir, quick_test)
 (
     expected_output_ideal,
     expected_output_unit_testing,
