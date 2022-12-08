@@ -8,7 +8,9 @@ from datahub_classify.infotype_utils import perform_basic_checks
 logger = logging.getLogger(__name__)
 
 
-def get_infotype_function_mapping(infotypes, global_config):
+def get_infotype_function_mapping(
+    infotypes: Optional[list], global_config: dict
+) -> dict:
     from inspect import getmembers, isfunction
 
     module_name = "datahub_classify.infotype_helper"
@@ -16,7 +18,7 @@ def get_infotype_function_mapping(infotypes, global_config):
     module_fn_dict = dict(getmembers(module, isfunction))
     infotype_function_map = {}
     if not infotypes:
-        infotypes = global_config.keys()
+        infotypes = list(global_config.keys())
     for infotype in infotypes:
         if infotype not in global_config.keys():
             logger.warning(f"Configuration is not available for infotype - {infotype}")
