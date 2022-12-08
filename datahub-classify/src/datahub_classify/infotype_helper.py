@@ -21,6 +21,7 @@ from datahub_classify.constants import (
     TYPE,
     VALUES,
 )
+from datahub_classify.helper_classes import Metadata
 from datahub_classify.infotype_utils import (
     detect_named_entity_spacy,
     match_datatype,
@@ -43,29 +44,10 @@ spacy_models_list = [nlp_english]
 # TODO: pull out the common/repetitive code
 
 
-def inspect_for_email_address(metadata, values, config):
+def compute_name_description_dtype_score(
+    metadata: Metadata, config: dict, debug_info: dict
+) -> dict:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
-
-    # Value Logic
-    if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
-        try:
-            if config[VALUES][PREDICTION_TYPE] == "regex":
-                values_score = match_regex_for_values(values, config[VALUES][REGEX])
-            elif config[VALUES][PREDICTION_TYPE] == "library":
-                raise Exception(
-                    "Currently prediction type 'library' is not supported for infotype Email Address"
-                )
-            else:
-                raise Exception(
-                    f"Inappropriate Prediction type {config[VALUES][PREDICTION_TYPE]}"
-                )
-        except Exception as e:
-            logger.error(f"Column {metadata.name} failed due to {e}")
-        values_score = np.round(values_score, 2)
-        debug_info[VALUES] = values_score
-
     # Name Logic
     if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
@@ -90,22 +72,55 @@ def inspect_for_email_address(metadata, values, config):
             debug_info[DATATYPE] = match_datatype(
                 metadata.datatype, config[DATATYPE][TYPE]
             )
+    return debug_info
 
+
+def compute_overall_confidence(debug_info: dict, config: dict) -> float:
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     confidence_level = 0
     for key in debug_info.keys():
         if type(debug_info[key]) != str:
             confidence_level += prediction_factors_weights[key] * debug_info[key]
     confidence_level = np.round(confidence_level, 2)
+    return confidence_level
+
+
+def inspect_for_email_address(metadata: Metadata, values: list, config: dict) -> tuple:
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
+    debug_info: Dict[str, Any] = {}
+    # Value Logic
+    if prediction_factors_weights.get(VALUES, 0) > 0:
+        values_score = 0.0
+        try:
+            if config[VALUES][PREDICTION_TYPE] == "regex":
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                raise Exception(
+                    "Currently prediction type 'library' is not supported for infotype Email Address"
+                )
+            else:
+                raise Exception(
+                    f"Inappropriate Prediction type {config[VALUES][PREDICTION_TYPE]}"
+                )
+        except Exception as e:
+            logger.error(f"Column {metadata.name} failed due to {e}")
+        values_score = np.round(values_score, 2)
+        debug_info[VALUES] = values_score
+
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_street_address(metadata, values, config):  # noqa: C901
+def inspect_for_street_address(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score = 0.0
         try:
             if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -133,47 +148,20 @@ def inspect_for_street_address(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_gender(metadata, values, config):  # noqa: C901
+def inspect_for_gender(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score = 0.0
         try:
             if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -190,30 +178,8 @@ def inspect_for_gender(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
 
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
     try:
         if (
             debug_info.get(NAME, None)
@@ -226,25 +192,22 @@ def inspect_for_gender(metadata, values, config):  # noqa: C901
                 debug_info[VALUES] = 0.9
     except Exception as e:
         logger.error(
-            f"Failed to evaluate unique values whn name_score==1 for Gender due to {e}"
+            f"Failed to evaluate unique values when name_score==1 for Gender due to {e}"
         )
 
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_credit_debit_card_number(metadata, values, config):
+def inspect_for_credit_debit_card_number(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score = 0.0
         try:
             values = [str(s).lower() for s in values]
             values_cleaned = []
@@ -268,41 +231,14 @@ def inspect_for_credit_debit_card_number(metadata, values, config):
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_phone_number(metadata, values, config):  # noqa: C901
+def inspect_for_phone_number(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -334,7 +270,7 @@ def inspect_for_phone_number(metadata, values, config):  # noqa: C901
     # fmt: on
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score: float = 0
+        values_score: float = 0.0
         try:
             if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -361,47 +297,20 @@ def inspect_for_phone_number(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_full_name(metadata, values, config):  # noqa: C901
+def inspect_for_full_name(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score = 0
+        values_score = 0.0
         try:
             if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -432,30 +341,8 @@ def inspect_for_full_name(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
 
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
     try:
         if (
             debug_info.get(NAME, None)
@@ -467,22 +354,19 @@ def inspect_for_full_name(metadata, values, config):  # noqa: C901
     except Exception as e:
         logger.error(f"Column {metadata.name} failed due to {e}")
 
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_age(metadata, values, config):  # noqa: C901
+def inspect_for_age(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
-        values_score: float = 0
+        values_score: float = 0.0
         try:
             if config[VALUES][PREDICTION_TYPE] == "regex":
                 values_score = match_regex_for_values(values, config[VALUES][REGEX])
@@ -509,41 +393,14 @@ def inspect_for_age(metadata, values, config):  # noqa: C901
             logger.error(f"Column {metadata.name} failed due to {e}")
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_iban(metadata, values, config):  # noqa: C901
+def inspect_for_iban(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -571,41 +428,14 @@ def inspect_for_iban(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_vehicle_identification_number(metadata, values, config):  # noqa: C901
+def inspect_for_vehicle_identification_number(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -634,41 +464,14 @@ def inspect_for_vehicle_identification_number(metadata, values, config):  # noqa
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_ip_address_v4(metadata, values, config):  # noqa: C901
+def inspect_for_ip_address_v4(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -696,41 +499,14 @@ def inspect_for_ip_address_v4(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_ip_address_v6(metadata, values, config):  # noqa: C901
+def inspect_for_ip_address_v6(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -758,41 +534,14 @@ def inspect_for_ip_address_v6(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_us_driving_license_number(metadata, values, config):
+def inspect_for_us_driving_license_number(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -816,41 +565,14 @@ def inspect_for_us_driving_license_number(metadata, values, config):
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_us_social_security_number(metadata, values, config):  # noqa: C901
+def inspect_for_us_social_security_number(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -878,41 +600,14 @@ def inspect_for_us_social_security_number(metadata, values, config):  # noqa: C9
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
 
 
-def inspect_for_swift_code(metadata, values, config):  # noqa: C901
+def inspect_for_swift_code(
+    metadata: Metadata, values: list, config: dict
+) -> tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -940,34 +635,6 @@ def inspect_for_swift_code(metadata, values, config):  # noqa: C901
         values_score = np.round(values_score, 2)
         debug_info[VALUES] = values_score
 
-    # Name Logic
-    if prediction_factors_weights.get(NAME, 0) > 0:
-        if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
-        else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
-
-    # Description_Logic
-    if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
-        if not metadata.description or not metadata.description.strip():
-            debug_info[DESCRIPTION] = f"0.0 (Blank {DESCRIPTION} Metadata)"
-        else:
-            debug_info[DESCRIPTION] = match_regex(
-                metadata.description, config[DESCRIPTION][REGEX]
-            )
-
-    # Datatype_Logic
-    if prediction_factors_weights.get(DATATYPE, 0) > 0:
-        if not metadata.datatype or not metadata.datatype.strip():
-            debug_info[DATATYPE] = f"0.0 (Blank {DATATYPE} Metadata)"
-        else:
-            debug_info[DATATYPE] = match_datatype(
-                metadata.datatype, config[DATATYPE][TYPE]
-            )
-    confidence_level = 0
-    for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
-    confidence_level = np.round(confidence_level, 2)
-
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
     return confidence_level, debug_info
