@@ -52,14 +52,10 @@ def get_public_data(input_data_path, run_quick_test):
         for i, filename in enumerate(files):
             if filename.endswith(".csv"):
                 dataset_name = filename.replace(".csv", "")
-                dataset_dict[dataset_name] = pd.read_csv(
-                    os.path.join(root, filename), nrows=1000
-                )
+                dataset_dict[dataset_name] = pd.read_csv(os.path.join(root, filename))
             elif filename.endswith(".xlsx"):
                 dataset_name = filename.replace(".xlsx", "")
-                dataset_dict[dataset_name] = pd.read_excel(
-                    os.path.join(root, filename), nrows=1000
-                )
+                dataset_dict[dataset_name] = pd.read_excel(os.path.join(root, filename))
             if run_quick_test and i > 2:
                 break
     return dataset_dict
