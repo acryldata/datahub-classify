@@ -41,8 +41,6 @@ except OSError:
     nlp_english = spacy.load(spacy_model_name)
 spacy_models_list = [nlp_english]
 
-# TODO: pull out the common/repetitive code
-
 
 def compute_name_description_dtype_score(
     metadata: Metadata, config: dict, debug_info: dict
