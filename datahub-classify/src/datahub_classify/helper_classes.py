@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, AnyStr
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -11,7 +11,7 @@ class InfotypeProposal:
 
 @dataclass
 class Metadata:
-    meta_info: Dict
+    meta_info: Dict[str, Any]
     name: str = field(init=False)
     description: str = field(init=False)
     datatype: str = field(init=False)
@@ -27,5 +27,5 @@ class Metadata:
 @dataclass
 class ColumnInfo:
     metadata: Metadata
-    values: List
+    values: List[Any]
     infotype_proposals: Optional[List[InfotypeProposal]] = None

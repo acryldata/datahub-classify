@@ -1,6 +1,6 @@
 import importlib
 import logging
-from typing import List, Optional, Dict
+from typing import Any, Dict, List, Optional
 
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
 from datahub_classify.infotype_utils import perform_basic_checks
@@ -9,8 +9,8 @@ logger = logging.getLogger(__name__)
 
 
 def get_infotype_function_mapping(
-    infotypes: Optional[List], global_config: Dict
-) -> Dict:
+    infotypes: Optional[List[str]], global_config: Dict[str, Any]
+) -> Dict[str, Any]:
     from inspect import getmembers, isfunction
 
     module_name = "datahub_classify.infotype_helper"
@@ -31,7 +31,7 @@ def get_infotype_function_mapping(
 def predict_infotypes(
     column_infos: List[ColumnInfo],
     confidence_level_threshold: float,
-    global_config: Dict,
+    global_config: Dict[str, Any],
     infotypes: Optional[List[str]] = None,
 ) -> List[ColumnInfo]:
     infotype_function_map = get_infotype_function_mapping(infotypes, global_config)

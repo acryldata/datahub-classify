@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Optional, List, Dict
+from typing import Any, Dict, List, Optional
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 from datahub_classify.helper_classes import Metadata
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: Exception handling
 # Match regex for Name and Description
-def match_regex(text_to_match: str, regex_list: List) -> float:
+def match_regex(text_to_match: str, regex_list: List[str]) -> float:
     original_text = text_to_match.lower()
     cleaned_text = "".join(e for e in original_text if e.isalpha())
     match_score: float = 0
@@ -49,7 +49,7 @@ def match_datatype(dtype_to_match: str, dtype_list: List[str]) -> int:
 
 
 # Match regex for values
-def match_regex_for_values(values: List, regex_list: List) -> float:
+def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
     values_score_list = []
     length_values = len(values)
     values = [str(x).lower() for x in values]
@@ -80,7 +80,10 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-    metadata: Metadata, values: List, config_dict: Dict, infotype: Optional[str] = None
+    metadata: Metadata,
+    values: List[Any],
+    config_dict: Dict[str, Any],
+    infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
