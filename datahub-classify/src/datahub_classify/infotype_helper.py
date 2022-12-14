@@ -2,7 +2,7 @@ import ipaddress
 import logging
 import re
 import string
-from typing import Any, Dict
+from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import phonenumbers
@@ -43,8 +43,8 @@ spacy_models_list = [nlp_english]
 
 
 def compute_name_description_dtype_score(
-    metadata: Metadata, config: dict, debug_info: dict
-) -> dict:
+    metadata: Metadata, config: Dict, debug_info: Dict
+) -> Dict:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     # Name Logic
     if prediction_factors_weights.get(NAME, 0) > 0:
@@ -73,7 +73,7 @@ def compute_name_description_dtype_score(
     return debug_info
 
 
-def compute_overall_confidence(debug_info: dict, config: dict) -> float:
+def compute_overall_confidence(debug_info: Dict, config: Dict) -> float:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     confidence_level = 0
     for key in debug_info.keys():
@@ -83,7 +83,7 @@ def compute_overall_confidence(debug_info: dict, config: dict) -> float:
     return confidence_level
 
 
-def inspect_for_email_address(metadata: Metadata, values: list, config: dict) -> tuple:
+def inspect_for_email_address(metadata: Metadata, values: List, config: Dict) -> Tuple:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
     # Value Logic
@@ -111,8 +111,8 @@ def inspect_for_email_address(metadata: Metadata, values: list, config: dict) ->
 
 
 def inspect_for_street_address(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -152,8 +152,8 @@ def inspect_for_street_address(
 
 
 def inspect_for_gender(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -198,8 +198,8 @@ def inspect_for_gender(
 
 
 def inspect_for_credit_debit_card_number(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -235,8 +235,8 @@ def inspect_for_credit_debit_card_number(
 
 
 def inspect_for_phone_number(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -301,8 +301,8 @@ def inspect_for_phone_number(
 
 
 def inspect_for_full_name(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -357,8 +357,8 @@ def inspect_for_full_name(
 
 
 def inspect_for_age(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -397,8 +397,8 @@ def inspect_for_age(
 
 
 def inspect_for_iban(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -432,8 +432,8 @@ def inspect_for_iban(
 
 
 def inspect_for_vehicle_identification_number(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -468,8 +468,8 @@ def inspect_for_vehicle_identification_number(
 
 
 def inspect_for_ip_address_v4(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -503,8 +503,8 @@ def inspect_for_ip_address_v4(
 
 
 def inspect_for_ip_address_v6(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -538,8 +538,8 @@ def inspect_for_ip_address_v6(
 
 
 def inspect_for_us_driving_license_number(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -569,8 +569,8 @@ def inspect_for_us_driving_license_number(
 
 
 def inspect_for_us_social_security_number(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 
@@ -604,8 +604,8 @@ def inspect_for_us_social_security_number(
 
 
 def inspect_for_swift_code(
-    metadata: Metadata, values: list, config: dict
-) -> tuple:  # noqa: C901
+    metadata: Metadata, values: List, config: Dict
+) -> Tuple:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info: Dict[str, Any] = {}
 

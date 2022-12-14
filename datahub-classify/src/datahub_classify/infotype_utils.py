@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Optional
+from typing import Optional, List, Dict
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 from datahub_classify.helper_classes import Metadata
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 # TODO: Exception handling
 # Match regex for Name and Description
-def match_regex(text_to_match: str, regex_list: list) -> float:
+def match_regex(text_to_match: str, regex_list: List) -> float:
     original_text = text_to_match.lower()
     cleaned_text = "".join(e for e in original_text if e.isalpha())
     match_score: float = 0
@@ -38,7 +38,7 @@ def match_regex(text_to_match: str, regex_list: list) -> float:
 
 
 # Match data type
-def match_datatype(dtype_to_match: str, dtype_list: list[str]) -> int:
+def match_datatype(dtype_to_match: str, dtype_list: List[str]) -> int:
     dtype_list = [str(s).lower() for s in dtype_list]
     dtype_to_match = dtype_to_match.lower()
     if dtype_to_match in dtype_list:
@@ -49,7 +49,7 @@ def match_datatype(dtype_to_match: str, dtype_list: list[str]) -> int:
 
 
 # Match regex for values
-def match_regex_for_values(values: list, regex_list: list) -> float:
+def match_regex_for_values(values: List, regex_list: List) -> float:
     values_score_list = []
     length_values = len(values)
     values = [str(x).lower() for x in values]
@@ -69,7 +69,7 @@ def match_regex_for_values(values: list, regex_list: list) -> float:
 
 
 def detect_named_entity_spacy(
-    spacy_models_list: list, entities_of_interest: list[str], value: str
+    spacy_models_list: List, entities_of_interest: List[str], value: str
 ) -> bool:
     for spacy_model in spacy_models_list:
         doc = spacy_model(value)
@@ -80,7 +80,7 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-    metadata: Metadata, values: list, config_dict: dict, infotype: Optional[str] = None
+    metadata: Metadata, values: List, config_dict: Dict, infotype: Optional[str] = None
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
