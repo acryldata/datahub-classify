@@ -149,7 +149,6 @@ def compute_column_overall_similarity_score(
             weighted_score = 1.2 * weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
-
     return np.round(overall_column_similarity_score, 2)
 
 
@@ -283,7 +282,7 @@ def compute_column_similarity(
 
 def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
     logger.info(
-        f"Finding table similarity between Table {table_info1.metadata.table_id} and {table_info2.metadata.table_id}"
+        f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
     )
     global word_to_vec_map
     if not word_to_vec_map:
@@ -301,10 +300,8 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
         )
 
     column_similarity_scores = {}
-    logger.info(
-        "******************** Finding column similarities **********************"
-    )
-    logger.info(
+    logger.info("** Finding column similarities **")
+    logger.debug(
         f"Total pairs --> {len(table_info1.column_infos)* len(table_info2.column_infos)}"
     )
     for col_info1 in table_info1.column_infos:
