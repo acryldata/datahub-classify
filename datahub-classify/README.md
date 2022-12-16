@@ -6,7 +6,7 @@ Predict InfoTypes for [DataHub](https://datahubproject.io/).
 
 `python3 -m pip install --upgrade acryl-datahub-classify`
 
-## API `predict_infotypes`
+# API 'predict_infotypes'
 
 This API populates infotype proposal(s) for each input column by using metadata, values & confidence level threshold. Following are the input and output contract
 
@@ -30,7 +30,7 @@ API returns a list of ColumnInfo objects of length same as input ColumnInfo obje
 **Convention:**
 If `infotype_proposals` list is non-empty then it indicates that there is at least one infotype proposal with confidence greater than `confidence_level_threshold`.
 
-## Infotype Configuration
+### Infotype Configuration
 
 Infotype configuration is a dictionary with all infotypes at root level key. Each infotype has following configurable parameters (value of each parameter is a dictionary)
 
@@ -47,7 +47,7 @@ Infotype configuration is a dictionary with all infotypes at root level key. Eac
   2. `regex` - regex list which is to be matched against column values
   3. `library` - library name which is to be used to evaluate column values
 
-### Sample Infotype Configuration Dictionary
+#### Sample Infotype Configuration Dictionary
 
 ```python
 {
@@ -75,7 +75,7 @@ Infotype configuration is a dictionary with all infotypes at root level key. Eac
 }
 ```
 
-## Debug Information
+### Debug Information
 
 A debug information is associated with each infotype proposal, it provides details about confidence score from each prediction factor involved in overall confidence score calculation. This is a dictionary with following four prediction factors as key
 
@@ -93,7 +93,7 @@ A debug information is associated with each infotype proposal, it provides detai
 }
 ```
 
-## Supported Infotypes
+### Supported Infotypes
 
 1. Age
 2. Gender
@@ -110,11 +110,27 @@ A debug information is associated with each infotype proposal, it provides detai
 13. Swift Code
 14. US Driving License Number
 
-## Assumptions
+### Assumptions
 
 - If value prediction factor weight is non-zero (indicating values should be used for infotype inspection) then a minimum 50 non-null column values should be present.
 
-## Development
+# API 'check_similarity'
+This API computes the  semantic similarity score between a pair of tables and also between all possible pairs of their constituent columns. Following are the input and output contract:
+### API Input
+API expects following parameters in the input
+- `table_info1` & `table_info2` -  These are instances of TableInfo object. Each TableInfo object contains following class variables:
+  - `metadata` - Instance of TableMetadata class containing name, description, platform and table ID of the table 
+  - `parent_tables` - List of table IDs of parent tables of the input table 
+  - `column_infos` - List of instances of ColumnInfo object for each constituent column of the table. Each ColumnInfo object has following class variables 
+    - `metadata` - Instance of ColumnMetadata class containing name, description, datatype, dataset_name and column id of the column 
+    - `parent_columns` - List of column IDs of parent columns of the column
+
+### API Output
+API returns two objects:
+- `overall_table_similarity_score` - This is the overall semantic similarity score of the two input tables 
+- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs, with key being a tuple of column IDs of the column pair and value being the similarity score between the two columns
+
+# Development
 
 ### Set up your Python environment
 

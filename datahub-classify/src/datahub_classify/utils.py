@@ -116,7 +116,6 @@ def read_glove_vector(glove_vector: str) -> dict:
     return word_to_vec_map
 
 
-# TODO: Rename 'name_dsc_similarity' to compute_string_similarity  and move the similarity specific functions to infotype predictor
 def compute_string_similarity(
     text_1: str, text_2: str, text_type: str, word_to_vec_map: dict
 ) -> float:
@@ -132,10 +131,10 @@ def compute_string_similarity(
             text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower()).strip()
             text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower()).strip()
             text_1_words = [
-                word for word in text_1_cleaned.split() if word not in (stop_words)
+                word for word in text_1_cleaned.split() if word not in stop_words
             ]
             text_2_words = [
-                word for word in text_2_cleaned.split() if word not in (stop_words)
+                word for word in text_2_cleaned.split() if word not in stop_words
             ]
 
             max_fuzz_score = 0
@@ -149,10 +148,7 @@ def compute_string_similarity(
 
             fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
 
-            # TODO: do we need "<=" or "==" in the following condition?
             if len(text_1_words) == 1 and len(text_2_words) == 1:
-                # TODO: can we change following two statements to "emb_x = word_to_vec_map[text_x_words[0]"
-                # TODO: only one word is present in "text_x_words" so we don't need list comprehension
                 emb_1 = word_to_vec_map.get(text_1_words[0], "nan")
                 emb_2 = word_to_vec_map.get(text_2_words[0], "nan")
 

@@ -33,7 +33,8 @@ dev_requirements = {
     "flake8>=3.8.3",
     "flake8-tidy-imports>=4.3.0",
     "isort>=5.7.0",
-    # Because of https://github.com/python/mypy/issues/13627 issue, set the mypy version to 0.981, we can revisit this in future
+    # Because of https://github.com/python/mypy/issues/13627 issue, set the mypy version to 0.981
+    # we can revisit this in future
     "mypy>=0.981",
     "pytest-cov>=2.8.1",
     "scikit-learn",

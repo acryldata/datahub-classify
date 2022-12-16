@@ -65,14 +65,13 @@ def compute_lineage_score(
 def table_schema_similarity(
     table_1_cols_name_dtypes: List[Tuple[Any, Any]],
     table_2_cols_names_dtypes: List[Tuple[Any, Any]],
-    word_to_vec_map: dict,
+    word_vec_map: dict,
     pair_score_threshold: float = 0.7,
 ) -> float:
     try:
         matched_pairs = []
         num_cols_table1 = len(table_1_cols_name_dtypes)
         num_cols_table2 = len(table_2_cols_names_dtypes)
-        table_2_cols_names_dtypes
         for col1 in table_1_cols_name_dtypes:
             for col2 in table_2_cols_names_dtypes:
                 col1_name = col1[0]
@@ -83,7 +82,7 @@ def table_schema_similarity(
                     col1_name,
                     col2_name,
                     text_type="name",
-                    word_to_vec_map=word_to_vec_map,
+                    word_to_vec_map=word_vec_map,
                 )
                 col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
                 pair_score = 0.8 * col_name_score + 0.2 * col_dtype_score
@@ -153,7 +152,7 @@ def compute_column_overall_similarity_score(
 
 
 def compute_table_similarity(
-    table_info1: TableInfo, table_info2: TableInfo, word_to_vec_map: dict
+    table_info1: TableInfo, table_info2: TableInfo, word_vec_map: dict
 ) -> float:
     table1_id = table_info1.metadata.table_id
     table1_name = table_info1.metadata.name
@@ -183,10 +182,10 @@ def compute_table_similarity(
         desc_present = False
 
     table_name_score = compute_string_similarity(
-        table1_name, table2_name, text_type="name", word_to_vec_map=word_to_vec_map
+        table1_name, table2_name, text_type="name", word_to_vec_map=word_vec_map
     )
     table_desc_score = compute_string_similarity(
-        table1_desc, table2_desc, text_type="desc", word_to_vec_map=word_to_vec_map
+        table1_desc, table2_desc, text_type="desc", word_to_vec_map=word_vec_map
     )
     table_platform_score = table_platform_similarity(table1_platform, table2_platform)
     table_lineage_score = compute_lineage_score(
@@ -195,7 +194,7 @@ def compute_table_similarity(
     table_schema_score = table_schema_similarity(
         table_1_cols_name_dtypes,
         table_2_cols_name_dtypes,
-        word_to_vec_map=word_to_vec_map,
+        word_vec_map=word_vec_map,
     )
 
     # print("name score: ", table_name_score)
@@ -221,7 +220,7 @@ def compute_column_similarity(
     col_info1: ColumnInfo,
     col_info2: ColumnInfo,
     overall_table_similarity_score: float,
-    word_to_vec_map: dict,
+    word_vec_map: dict,
 ) -> float:
     column1_id = col_info1.metadata.column_id
     column1_name = col_info1.metadata.name
@@ -241,14 +240,14 @@ def compute_column_similarity(
         desc_present = False
 
     column_name_score = compute_string_similarity(
-        column1_name, column2_name, text_type="name", word_to_vec_map=word_to_vec_map
+        column1_name, column2_name, text_type="name", word_to_vec_map=word_vec_map
     )
     if desc_present:
         column_desc_score = compute_string_similarity(
             column1_desc,
             column2_desc,
             text_type="desc",
-            word_to_vec_map=word_to_vec_map,
+            word_to_vec_map=word_vec_map,
         )
     else:
         column_desc_score = 0.0
@@ -295,7 +294,8 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
         )
     except Exception as e:
         logger.error(
-            f"Failed to compute table similarity between Table {table_info1.metadata.table_id} and {table_info2.metadata.table_id}",
+            f"Failed to compute table similarity between Table "
+            f"{table_info1.metadata.table_id} and {table_info2.metadata.table_id}",
             exc_info=e,
         )
 
@@ -319,7 +319,8 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
                 )
             except Exception as e:
                 logger.error(
-                    f"Failed to compute column similarity between Column {col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
+                    f"Failed to compute column similarity between Column "
+                    f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
                     exc_info=e,
                 )
             column1_id = col_info1.metadata.column_id
