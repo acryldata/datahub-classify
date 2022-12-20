@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TypedDict, Union
 
 
 @dataclass
@@ -29,3 +29,10 @@ class ColumnInfo:
     metadata: Metadata
     values: List[Any]
     infotype_proposals: Optional[List[InfotypeProposal]] = None
+
+
+class DebugInfo(TypedDict, total=False):
+    Name: Union[str, float]
+    Description: Union[str, float]
+    Datatype: Union[str, float]
+    Values: Union[str, float]
