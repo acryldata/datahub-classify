@@ -2,7 +2,7 @@ import ipaddress
 import logging
 import re
 import string
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, cast
 
 import numpy as np
 import phonenumbers
@@ -21,7 +21,7 @@ from datahub_classify.constants import (
     TYPE,
     VALUES,
 )
-from datahub_classify.helper_classes import Metadata
+from datahub_classify.helper_classes import DebugInfo, Metadata
 from datahub_classify.infotype_utils import (
     detect_named_entity_spacy,
     match_datatype,
@@ -43,15 +43,15 @@ spacy_models_list = [nlp_english]
 
 
 def compute_name_description_dtype_score(
-    metadata: Metadata, config: Dict[str, Any], debug_info: Dict[str, Any]
-) -> Dict[str, Any]:
+    metadata: Metadata, config: Dict[str, Any], debug_info: DebugInfo
+) -> DebugInfo:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     # Name Logic
     if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"
+            debug_info[NAME] = f"0.0 (Blank {NAME} Metadata)"  # type: ignore
         else:
-            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])
+            debug_info[NAME] = match_regex(metadata.name, config[NAME][REGEX])  # type: ignore
 
     # Description_Logic
     if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
@@ -73,14 +73,12 @@ def compute_name_description_dtype_score(
     return debug_info
 
 
-def compute_overall_confidence(
-    debug_info: Dict[str, Any], config: Dict[str, Any]
-) -> float:
+def compute_overall_confidence(debug_info: DebugInfo, config: Dict[str, Any]) -> float:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     confidence_level = 0
     for key in debug_info.keys():
-        if type(debug_info[key]) != str:
-            confidence_level += prediction_factors_weights[key] * debug_info[key]
+        if type(debug_info[key]) != str:  # type: ignore
+            confidence_level += prediction_factors_weights[key] * debug_info[key]  # type: ignore
     confidence_level = np.round(confidence_level, 2)
     return confidence_level
 
@@ -89,7 +87,7 @@ def inspect_for_email_address(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
         values_score = 0.0
@@ -118,7 +116,7 @@ def inspect_for_street_address(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -159,7 +157,7 @@ def inspect_for_gender(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -185,7 +183,7 @@ def inspect_for_gender(
     try:
         if (
             debug_info.get(NAME, None)
-            and int(debug_info[NAME]) == 1
+            and int(debug_info[NAME]) == 1  # type: ignore
             and VALUES in debug_info.keys()
             and debug_info[VALUES] == 0
         ):
@@ -205,7 +203,7 @@ def inspect_for_credit_debit_card_number(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -242,7 +240,7 @@ def inspect_for_phone_number(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # fmt: off
     # TODO: shall we have these country codes in config?
@@ -308,7 +306,7 @@ def inspect_for_full_name(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -348,9 +346,9 @@ def inspect_for_full_name(
     try:
         if (
             debug_info.get(NAME, None)
-            and int(debug_info[NAME]) == 1
+            and int(debug_info[NAME]) == 1  # type: ignore
             and VALUES in debug_info.keys()
-            and 0.5 > debug_info[VALUES] > 0.1
+            and 0.5 > cast(float, debug_info[VALUES]) > 0.1
         ):
             debug_info[VALUES] = 0.8
     except Exception as e:
@@ -364,7 +362,7 @@ def inspect_for_age(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Values logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -404,7 +402,7 @@ def inspect_for_iban(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -439,7 +437,7 @@ def inspect_for_vehicle_identification_number(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -475,7 +473,7 @@ def inspect_for_ip_address_v4(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -510,7 +508,7 @@ def inspect_for_ip_address_v6(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -545,7 +543,7 @@ def inspect_for_us_driving_license_number(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -576,7 +574,7 @@ def inspect_for_us_social_security_number(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
@@ -611,7 +609,7 @@ def inspect_for_swift_code(
     metadata: Metadata, values: List[Any], config: Dict[str, Any]
 ) -> Tuple[float, Any]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
-    debug_info: Dict[str, Any] = {}
+    debug_info: DebugInfo = dict()
 
     # Value Logic
     if prediction_factors_weights.get(VALUES, 0) > 0:
