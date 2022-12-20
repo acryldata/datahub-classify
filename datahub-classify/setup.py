@@ -20,6 +20,7 @@ base_requirements = {
     "ipaddress>=1.0.23",
     "spacy>=3.4.1,<=3.4.3",
     "phonenumbers>=8.12.56,<=8.13.0",
+    "typing_extensions",
 }
 
 dev_requirements = {
