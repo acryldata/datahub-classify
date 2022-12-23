@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_infotype_function_mapping(
-    infotypes: Optional[List[str]], global_config: Dict[str, Any]
+    infotypes: Optional[List[str]], global_config: Dict[str, Dict]
 ) -> Dict[str, Any]:
     from inspect import getmembers, isfunction
 
@@ -31,7 +31,7 @@ def get_infotype_function_mapping(
 def predict_infotypes(
     column_infos: List[ColumnInfo],
     confidence_level_threshold: float,
-    global_config: Dict[str, Any],
+    global_config: Dict[str, Dict],
     infotypes: Optional[List[str]] = None,
 ) -> List[ColumnInfo]:
     infotype_function_map = get_infotype_function_mapping(infotypes, global_config)
