@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, TypedDict, Union
+from typing import Any, Dict, List, Optional, Union
 
 
 @dataclass
@@ -31,8 +31,9 @@ class ColumnInfo:
     infotype_proposals: Optional[List[InfotypeProposal]] = None
 
 
-class DebugInfo(TypedDict, total=False):
-    Name: Union[str, float]
-    Description: Union[str, float]
-    Datatype: Union[str, float]
-    Values: Union[str, float]
+@dataclass
+class DebugInfo:
+    name: Union[str, float] = field(init=False)
+    description: Union[str, float] = field(init=False)
+    datatype: Union[str, float] = field(init=False)
+    values: Union[str, float] = field(init=False)
