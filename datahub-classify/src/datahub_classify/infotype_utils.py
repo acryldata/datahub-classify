@@ -82,7 +82,7 @@ def detect_named_entity_spacy(
 def perform_basic_checks(
     metadata: Metadata,
     values: List[Any],
-    config_dict: Dict[str, Any],
+    config_dict: Dict[str, Dict],
     infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
