@@ -185,9 +185,9 @@ def inspect_for_gender(
 
     try:
         if (
-            debug_info.name
+            prediction_factors_weights.get(NAME, 0) > 0
             and debug_info.name == 1.0
-            and debug_info.values
+            and prediction_factors_weights.get(VALUES, 0) > 0
             and debug_info.values == 0.0
         ):
             num_unique_values = len(np.unique(values))
@@ -348,9 +348,9 @@ def inspect_for_full_name(
 
     try:
         if (
-            debug_info.name
+            prediction_factors_weights.get(NAME, 0) > 0
             and debug_info.name == 1.0
-            and debug_info.values
+            and prediction_factors_weights.get(VALUES, 0) > 0
             and 0.5 > cast(float, debug_info.values) > 0.1
         ):
 
