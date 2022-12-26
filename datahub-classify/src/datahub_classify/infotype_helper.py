@@ -80,7 +80,7 @@ def compute_overall_confidence(debug_info: DebugInfo, config: Dict[str, Dict]) -
     }
     confidence_level = 0
     for key, value in vars(debug_info).items():
-        if type(value) != str:
+        if value and type(value) != str:
             confidence_level += prediction_factors_weights[key] * value
     confidence_level = np.round(confidence_level, 2)
     return confidence_level
@@ -185,10 +185,10 @@ def inspect_for_gender(
 
     try:
         if (
-            hasattr(debug_info, "name")
-            and int(debug_info.name) == 1
-            and hasattr(debug_info, "values")
-            and debug_info.values == 0
+            debug_info.name
+            and debug_info.name == 1.0
+            and debug_info.values
+            and debug_info.values == 0.0
         ):
             num_unique_values = len(np.unique(values))
             if num_unique_values < 5:
@@ -348,11 +348,12 @@ def inspect_for_full_name(
 
     try:
         if (
-            hasattr(debug_info, "name")
-            and int(debug_info.name) == 1
-            and hasattr(debug_info, "values")
+            debug_info.name
+            and debug_info.name == 1.0
+            and debug_info.values
             and 0.5 > cast(float, debug_info.values) > 0.1
         ):
+
             debug_info.values = 0.8
     except Exception as e:
         logger.error(f"Column {metadata.name} failed due to {e}")
