@@ -1,13 +1,14 @@
 import json
 import logging
 import os
-
+# import pickle
 from itertools import combinations
 from typing import Dict, List, Tuple
 
 import numpy as np
 import pandas as pd
 import pytest
+from sklearn.metrics import confusion_matrix, precision_score, recall_score
 
 from datahub_classify.helper_classes import (
     ColumnInfo,
@@ -22,20 +23,20 @@ logging.basicConfig(level=logging.INFO)
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 input_data_dir = os.path.join(current_wdr, "datasets")
 input_jsons_dir = os.path.join(current_wdr, "expected_output")
-ideal_json_path = os.path.join(input_jsons_dir, "expected_infotypes_IDEAL.json")
 
-with open(ideal_json_path, "rb") as file:
-    ideal_infotypes = json.load(file)
 similar_threshold = 0.75
 update_columns_expected_similarity_scores_UNIT_TESTING = False
 update_tables_expected_similarity_scores_UNIT_TESTING = False
 update_tables_expected_similarity_labels_IDEAL = False
 SEED = 42
-
 np.random.seed(SEED)
+
+platforms = ["A", "B", "C", "D", "E"]
 
 
 def get_public_data(input_data_path):
+    """load public datasets from directory"""
+
     logger.info(f"==============={input_data_path}=================")
     dataset_dict = {}
     for root, dirs, files in os.walk(input_data_path):
@@ -46,13 +47,14 @@ def get_public_data(input_data_path):
             elif filename.endswith(".xlsx"):
                 dataset_name = filename.replace(".xlsx", "")
                 dataset_dict[dataset_name] = pd.read_excel(os.path.join(root, filename))
+            # if i > 1:
+            #     break
     return dataset_dict
 
 
-platforms = ["A", "B", "C", "D", "E"]
-
-
 def populate_tableinfo_object(dataset_name):
+    """populate table info object for a dataset"""
+
     np.random.seed(SEED)
     table_meta_info = {
         "Name": dataset_name,
@@ -81,6 +83,9 @@ def populate_tableinfo_object(dataset_name):
 
 
 def populate_similar_tableinfo_object(dataset_name):
+    """populate table info object for a dataset by randomly adding some additional
+    columns to the dataset, thus obtain a logical copy of input dataset"""
+
     df = public_data_list[dataset_name].copy()
     random_df_key = list(public_data_list.keys())[
         np.random.randint(0, len(public_data_list))
@@ -125,7 +130,10 @@ def populate_similar_tableinfo_object(dataset_name):
     return table_info
 
 
-def load_expected_similarity_json(input_jsons_path):
+def load_json_files(input_jsons_path):
+    """load ideal and unit testing JSON files. For columns, infotypes_IDEAL
+    serves as the ideal JSON"""
+
     logger.info("--- Loading JSON files ---")
     with open(
         os.path.join(
@@ -146,10 +154,16 @@ def load_expected_similarity_json(input_jsons_path):
     ) as filename:
         expected_tables_similarity_labels_ideal = json.load(filename)
 
+    with open(
+        os.path.join(input_jsons_path, "expected_infotypes_IDEAL.json")
+    ) as filename:
+        ideal_infotypes = json.load(filename)
+
     return (
         expected_tables_similarity_scores_unit_testing,
         expected_tables_similarity_labels_ideal,
         expected_columns_similarity_scores_unit_testing,
+        ideal_infotypes,
     )
 
 
@@ -158,6 +172,8 @@ def get_predicted_expected_similarity_scores_mapping(
     predicted_similarity_labels_unit_testing,
     expected_similarity_scores_unit_testing,
 ):
+    """generate mapping of predicted - expected similarity scores, required for unit testing"""
+
     mapping = []
     for pair in predicted_similarity_scores_unit_testing.keys():
         key_ = pair[0] + "-" + pair[1]
@@ -179,22 +195,29 @@ def get_predicted_expected_similarity_scores_mapping(
     return mapping
 
 
-def update_scores_and_labels_lists(
+def update_scores_and_labels_dicts(
     combination,
     overall_table_similarity_score,
     column_similarity_scores,
     columns_predicted_scores,
     columns_predicted_labels,
+    columns_actual_labels,
     columns_correct_preds,
     columns_wrong_preds,
     tables_predicted_scores,
     tables_predicted_labels,
+    tables_actual_labels,
 ):
+    """update dictionaries with predicted scores, labels and actual labels"""
+
     dataset_key_1 = combination[0]
     dataset_key_2 = combination[1]
     tables_predicted_scores[
         (dataset_key_1, dataset_key_2)
     ] = overall_table_similarity_score
+    tables_actual_labels[
+        (dataset_key_1, dataset_key_2)
+    ] = expected_tables_similarity_labels_ideal[dataset_key_1 + "-" + dataset_key_2]
     if overall_table_similarity_score > similar_threshold:
         tables_predicted_labels[(dataset_key_1, dataset_key_2)] = "similar"
     else:
@@ -213,6 +236,7 @@ def update_scores_and_labels_lists(
                     ideal_infotypes[dataset_key_1][col_1]
                     == ideal_infotypes[dataset_key_2][col_2]
                 ):
+                    columns_actual_labels[col_pair] = "similar"
                     if column_similarity_scores[col_pair] >= similar_threshold:
                         columns_predicted_labels[col_pair] = "similar"
                         columns_correct_preds.append(
@@ -224,6 +248,7 @@ def update_scores_and_labels_lists(
                             (col_pair, column_similarity_scores[col_pair])
                         )
                 else:
+                    columns_actual_labels[col_pair] = "not_similar"
                     if column_similarity_scores[col_pair] >= similar_threshold:
                         columns_predicted_labels[col_pair] = "similar"
                         columns_wrong_preds.append(
@@ -238,22 +263,70 @@ def update_scores_and_labels_lists(
     return (
         tables_predicted_scores,
         tables_predicted_labels,
+        tables_actual_labels,
         columns_predicted_scores,
         columns_predicted_labels,
+        columns_actual_labels,
         columns_correct_preds,
         columns_wrong_preds,
     )
 
 
+def get_prediction_statistics(predicted_labels, actual_labels, entity):
+    """generate precision, recall and confusion matrix for columns and tables similarity predictions"""
+
+    y_true = list(actual_labels.values())
+    y_pred = list(predicted_labels.values())
+    prediction_stats = pd.DataFrame()
+    prediction_stats["label"] = ["similar", "not_similar"]
+    prediction_stats["Precision"] = np.round(
+        precision_score(
+            y_true, y_pred, average=None, labels=["similar", "not_similar"]
+        ),
+        2,
+    )
+    prediction_stats["Recall"] = np.round(
+        recall_score(y_true, y_pred, average=None, labels=["similar", "not_similar"]), 2
+    )
+    df_confusion_matrix = pd.DataFrame(
+        confusion_matrix(y_true, y_pred, labels=["similar", "not_similar"]),
+        columns=["similar_predicted", "not_similar_predicted"],
+        index=["similar_actual", "not_similar_actual"],
+    )
+    logger.info(
+        f"*************Prediction Statistics for {entity} ***************************"
+    )
+    logger.info(prediction_stats)
+    logger.info("********************")
+    logger.info(df_confusion_matrix)
+    prediction_stats.to_csv(
+        f"Prediction_statistics_{entity}_{similar_threshold}.csv", index=False
+    )
+    df_confusion_matrix.to_csv(
+        f"confusion_matrix_{entity}_{similar_threshold}.csv", index=False
+    )
+
+
+# Start testing
 logger.info("----------Starting Testing-----------")
 public_data_list = get_public_data(input_data_dir)
 data_combinations = combinations(public_data_list.keys(), 2)
+
+(
+    expected_tables_similarity_scores_unit_testing,
+    expected_tables_similarity_labels_ideal,
+    expected_columns_similarity_scores_unit_testing,
+    ideal_infotypes,
+) = load_json_files(input_jsons_dir)
+
 columns_correct_preds: List[Tuple] = list()
 columns_wrong_preds: List[Tuple] = list()
 columns_predicted_scores: Dict[Tuple, float] = dict()
 columns_predicted_labels: Dict[Tuple, str] = dict()
+columns_actual_labels: Dict[Tuple, str] = dict()
 tables_predicted_scores: Dict[Tuple, float] = dict()
 tables_predicted_labels: Dict[Tuple, str] = dict()
+tables_actual_labels: Dict[Tuple, str] = dict()
 
 # Evaluate Dissimilar Tables #
 logger.info("--------Evaluating pairs composed of different tables ------")
@@ -269,20 +342,24 @@ for comb in data_combinations:
     (
         tables_predicted_scores,
         tables_predicted_labels,
+        tables_actual_labels,
         columns_predicted_scores,
         columns_predicted_labels,
+        columns_actual_labels,
         columns_correct_preds,
         columns_wrong_preds,
-    ) = update_scores_and_labels_lists(
+    ) = update_scores_and_labels_dicts(
         comb,
         overall_table_similarity_score,
         column_similarity_scores,
         columns_predicted_scores,
         columns_predicted_labels,
+        columns_actual_labels,
         columns_correct_preds,
         columns_wrong_preds,
         tables_predicted_scores,
         tables_predicted_labels,
+        tables_actual_labels,
     )
 
 # Evaluate Similar Tables (Logical Copies) #
@@ -298,29 +375,38 @@ for data in public_data_list.keys():
     (
         tables_predicted_scores,
         tables_predicted_labels,
+        tables_actual_labels,
         columns_predicted_scores,
         columns_predicted_labels,
+        columns_actual_labels,
         columns_correct_preds,
         columns_wrong_preds,
-    ) = update_scores_and_labels_lists(
+    ) = update_scores_and_labels_dicts(
         comb,
         overall_table_similarity_score,
         column_similarity_scores,
         columns_predicted_scores,
         columns_predicted_labels,
+        columns_actual_labels,
         columns_correct_preds,
         columns_wrong_preds,
         tables_predicted_scores,
         tables_predicted_labels,
+        tables_actual_labels,
     )
 
+#  Display prediction statistics ###
 logger.info("-------Test Statistics-------------")
 logger.info(f"Correct predictions (Column Similarity) : {len(columns_correct_preds)}")
 logger.info(f"Wrong predictions (Column Similarity) : {len(columns_wrong_preds)}")
 logger.info(
     f"Accuracy: {np.round(len(columns_correct_preds) / (len(columns_wrong_preds) + len(columns_correct_preds)), 2)}"
 )
+get_prediction_statistics(columns_predicted_labels, columns_actual_labels, "columns")
+get_prediction_statistics(tables_predicted_labels, tables_actual_labels, "tables")
 
+
+# update json files if required ###
 if update_columns_expected_similarity_scores_UNIT_TESTING:
     expected_columns_similarity_scores = {}
     for key in columns_predicted_scores.keys():
@@ -377,12 +463,7 @@ if update_tables_expected_similarity_labels_IDEAL:
         json.dump(expected_tables_similarity_labels, filename, indent=4)
 
 
-(
-    expected_tables_similarity_scores_unit_testing,
-    expected_tables_similarity_labels_ideal,
-    expected_columns_similarity_scores_unit_testing,
-) = load_expected_similarity_json(input_jsons_dir)
-
+# obtain mappings for unit testing
 columns_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping(
         columns_predicted_scores,
@@ -399,6 +480,9 @@ tables_similarity_mapping_unit_testing = (
     )
 )
 
+############################
+# Start unit testing #
+############################
 # Unit Test for Columns Similarity #
 logger.info("--- Unit Test for Columns Similarity ---")
 
