@@ -1,6 +1,8 @@
 import json
 import logging
 import os
+import re
+
 # import pickle
 from itertools import combinations
 from typing import Dict, List, Tuple
@@ -47,7 +49,7 @@ def get_public_data(input_data_path):
             elif filename.endswith(".xlsx"):
                 dataset_name = filename.replace(".xlsx", "")
                 dataset_dict[dataset_name] = pd.read_excel(os.path.join(root, filename))
-            # if i > 1:
+            # if i > 3:
             #     break
     return dataset_dict
 
@@ -108,9 +110,44 @@ def populate_similar_tableinfo_object(dataset_name):
         "Table_Id": dataset_name + "_LOGICAL_COPY",
     }
     col_infos = []
+    common_variations = [
+        "#",
+        "$",
+        "%",
+        "&",
+        "*",
+        "-",
+        ".",
+        ":",
+        ";",
+        "?",
+        "@",
+        "_",
+        "~",
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+    ]
     for col in second_df.columns:
+        col_name = col.split("_", 1)[1]
+        col_name_with_variation = str(
+            common_variations[np.random.randint(0, len(common_variations))]
+        )
+        for word in re.split("[^A-Za-z]", col_name):
+            random_variation = str(
+                common_variations[np.random.randint(0, len(common_variations))]
+            )
+            col_name_with_variation = col_name_with_variation + word + random_variation
+
         fields = {
-            "Name": col.split("_", 1)[1],
+            "Name": col_name_with_variation,
             "Description": f'{col.split("_", 1)[1]}',
             "Datatype": second_df[col].dropna().dtype,
             "Dataset_Name": dataset_name + "_LOGICAL_COPY",
@@ -364,13 +401,64 @@ for comb in data_combinations:
 
 # Evaluate Similar Tables (Logical Copies) #
 logger.info("-----------Evaluating Table pairs that are logical copies--------")
+column_similarity_with_variation_ideal_labels = {}
+column_similarity_with_variation_predicted_labels = {}
+
 for data in public_data_list.keys():
     dataset_name_1 = data
     table_info_1 = populate_tableinfo_object(dataset_name=dataset_name_1)
     table_info_2 = populate_similar_tableinfo_object(dataset_name=dataset_name_1)
+    column_truename_changedname_mapping = {}
+    for col_info in table_info_2.column_infos:
+        true_name = col_info.metadata.column_id.split("_SPLITTER_", 1)[1]
+        changed_name = col_info.metadata.name
+        column_truename_changedname_mapping[true_name] = changed_name
     overall_table_similarity_score, column_similarity_scores = check_similarity(
         table_info_1, table_info_2
     )
+
+    for col_pair in column_similarity_scores.keys():
+        col_1_true_name = col_pair[0].split("_SPLITTER_", 1)[1]
+        col_2_true_name = col_pair[1].split("_SPLITTER_", 1)[1]
+        col_2_changed_name = column_truename_changedname_mapping[col_2_true_name]
+
+        if col_1_true_name == col_2_true_name:
+            column_similarity_with_variation_ideal_labels[
+                (col_1_true_name, col_2_changed_name)
+            ] = "similar"
+            if column_similarity_scores[col_pair] > similar_threshold:
+                column_similarity_with_variation_predicted_labels[
+                    (col_1_true_name, col_2_changed_name)
+                ] = "similar"
+            else:
+                column_similarity_with_variation_predicted_labels[
+                    (col_1_true_name, col_2_changed_name)
+                ] = "not_similar"
+        else:
+            if ideal_infotypes[dataset_name_1].get(
+                col_1_true_name, None
+            ) and ideal_infotypes[dataset_name_1].get(col_2_true_name, None):
+                if (
+                    ideal_infotypes[dataset_name_1][col_1_true_name]
+                    == ideal_infotypes[dataset_name_1][col_2_true_name]
+                ):
+                    column_similarity_with_variation_ideal_labels[
+                        (col_1_true_name, col_2_changed_name)
+                    ] = "similar"
+                else:
+                    column_similarity_with_variation_ideal_labels[
+                        (col_1_true_name, col_2_changed_name)
+                    ] = "not_similar"
+
+                if column_similarity_scores[col_pair] > similar_threshold:
+                    column_similarity_with_variation_predicted_labels[
+                        (col_1_true_name, col_2_changed_name)
+                    ] = "similar"
+                else:
+                    column_similarity_with_variation_predicted_labels[
+                        (col_1_true_name, col_2_changed_name)
+                    ] = "not_similar"
+
     comb = (dataset_name_1, dataset_name_1 + "_LOGICAL_COPY")
     (
         tables_predicted_scores,
@@ -404,6 +492,14 @@ logger.info(
 )
 get_prediction_statistics(columns_predicted_labels, columns_actual_labels, "columns")
 get_prediction_statistics(tables_predicted_labels, tables_actual_labels, "tables")
+
+# Display statistics for testing variations in col_name
+logger.info("--Statistics for testing variations in col_name----")
+get_prediction_statistics(
+    column_similarity_with_variation_predicted_labels,
+    column_similarity_with_variation_ideal_labels,
+    "columns_with_name_variation",
+)
 
 
 # update json files if required ###
