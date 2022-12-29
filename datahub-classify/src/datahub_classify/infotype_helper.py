@@ -49,14 +49,18 @@ def compute_name_description_dtype_score(
     # Name Logic
     if prediction_factors_weights.get(NAME, 0) > 0:
         if not metadata.name or not metadata.name.strip():
-            debug_info.name = f"0.0 (Blank {NAME} Metadata)"
+            # TODO: Add message "Name is None/Blank" in error flag
+            # debug_info.name = f"0.0 (Blank {NAME} Metadata)"
+            pass
         else:
             debug_info.name = match_regex(metadata.name, config[NAME][REGEX])
 
     # Description_Logic
     if prediction_factors_weights.get(DESCRIPTION, 0) > 0:
         if not metadata.description or not metadata.description.strip():
-            debug_info.description = f"0.0 (Blank {DESCRIPTION} Metadata)"
+            # TODO: Add message "Description is None/Blank" in error flag
+            # debug_info.description = f"0.0 (Blank {DESCRIPTION} Metadata)"
+            pass
         else:
             debug_info.description = match_regex(
                 metadata.description, config[DESCRIPTION][REGEX]
@@ -65,7 +69,9 @@ def compute_name_description_dtype_score(
     # Datatype_Logic
     if prediction_factors_weights.get(DATATYPE, 0) > 0:
         if not metadata.datatype or not metadata.datatype.strip():
-            debug_info.datatype = f"0.0 (Blank {DATATYPE} Metadata)"
+            # TODO: Add message "Datatype is None/Blank" in error flag
+            # debug_info.datatype = f"0.0 (Blank {DATATYPE} Metadata)"
+            pass
         else:
             debug_info.datatype = match_datatype(
                 metadata.datatype, config[DATATYPE][TYPE]
@@ -186,7 +192,7 @@ def inspect_for_gender(
     try:
         if (
             prediction_factors_weights.get(NAME, 0) > 0
-            and debug_info.name == 1.0
+            and abs(1 - cast(float, debug_info.name)) < 1e-10
             and prediction_factors_weights.get(VALUES, 0) > 0
             and debug_info.values == 0.0
         ):
@@ -349,7 +355,7 @@ def inspect_for_full_name(
     try:
         if (
             prediction_factors_weights.get(NAME, 0) > 0
-            and debug_info.name == 1.0
+            and abs(1 - cast(float, debug_info.name)) < 1e-10
             and prediction_factors_weights.get(VALUES, 0) > 0
             and 0.5 > cast(float, debug_info.values) > 0.1
         ):

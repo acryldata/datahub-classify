@@ -33,7 +33,7 @@ class ColumnInfo:
 
 @dataclass
 class DebugInfo:
-    name: Optional[Union[str, float]] = None
-    description: Optional[Union[str, float]] = None
-    datatype: Optional[Union[str, float]] = None
-    values: Optional[Union[str, float]] = None
+    name: Optional[float] = None
+    description: Optional[float] = None
+    datatype: Optional[float] = None
+    values: Optional[float] = None
