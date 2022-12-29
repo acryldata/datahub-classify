@@ -110,6 +110,7 @@ def populate_similar_tableinfo_object(dataset_name):
         "Table_Id": dataset_name + "_LOGICAL_COPY",
     }
     col_infos = []
+    swap_case = ["yes","no"]
     common_variations = [
         "#",
         "$",
@@ -144,6 +145,9 @@ def populate_similar_tableinfo_object(dataset_name):
             random_variation = str(
                 common_variations[np.random.randint(0, len(common_variations))]
             )
+            is_swap_case = swap_case[np.random.randint(0,2)]
+            if is_swap_case:
+                word = word.swapcase()
             col_name_with_variation = col_name_with_variation + word + random_variation
 
         fields = {
