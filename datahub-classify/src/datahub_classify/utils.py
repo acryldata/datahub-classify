@@ -1,10 +1,9 @@
 import logging
+import os
 import re
 
+import nltk
 import numpy as np
-
-# GLOVE URL :  https://nlp.stanford.edu/data/glove.6B.zip
-from nltk.corpus import stopwords
 from numpy.linalg import norm
 from sentence_transformers import SentenceTransformer
 from thefuzz import fuzz
@@ -12,7 +11,20 @@ from thefuzz import fuzz
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 
 logger = logging.getLogger(__name__)
-stop_words = set(stopwords.words("english"))
+GLOVE_URL = "https://nlp.stanford.edu/data/glove.6B.zip"
+
+try:
+    logger.debug("Loading Stopwords............")
+    from nltk.corpus import stopwords
+
+    stop_words = set(stopwords.words("english"))
+
+except Exception as e:
+    logger.debug(f"Could not Load Stopwords due to {e}: Downloading Stopwords.......")
+    nltk.download("stopwords")
+    from nltk.corpus import stopwords
+
+    stop_words = set(stopwords.words("english"))
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
@@ -175,3 +187,20 @@ def compute_string_similarity(
         # print("fuzzy score: ", fuzzy_match_score)
         # print("glove score: ", emb_match_score)
     return score
+
+
+def download_glove_embeddings(glove_vec):
+    try:
+        destination_path, glove_file = os.path.split(glove_vec)
+        from io import BytesIO
+        from zipfile import ZipFile
+
+        import requests
+
+        # URL = "https://nlp.stanford.edu/data/glove.6B.zip"
+        response = requests.get(GLOVE_URL)
+        zip_object = ZipFile(BytesIO(response.content))
+        zip_object.extract(glove_file, path=destination_path)
+        logger.debug("Successfully Downloaded GLOVE Embeddings!!")
+    except Exception as e:
+        logger.error(f"Unable To Download GLOVE Embeddings due to {e}")

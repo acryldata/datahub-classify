@@ -11,6 +11,12 @@ logger = logging.getLogger(__name__)
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
 
+if not os.path.isfile(glove_vec):
+    from datahub_classify.utils import download_glove_embeddings
+
+    logger.debug("Downloading GLOVE Embeddings.............")
+    download_glove_embeddings(glove_vec)
+
 word_to_vec_map = None
 column_desc_threshold = 0.65
 column_weighted_score_threshold = 0.7

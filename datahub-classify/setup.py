@@ -23,7 +23,8 @@ base_requirements = {
     "sentence-transformers>=2.2.2",
     "python-Levenshtein>=0.20.8",
     "nltk>=3.7",
-    "thefuzz>=0.19.0"
+    "thefuzz>=0.19.0",
+    "requests>=2.28.1"
 }
 
 dev_requirements = {
