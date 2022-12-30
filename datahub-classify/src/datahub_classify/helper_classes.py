@@ -11,7 +11,7 @@ class InfotypeProposal:
 
 @dataclass
 class Metadata:
-    meta_info: dict
+    meta_info: Dict[str, Any]
     name: str = field(init=False)
     description: str = field(init=False)
     datatype: str = field(init=False)
@@ -27,5 +27,13 @@ class Metadata:
 @dataclass
 class ColumnInfo:
     metadata: Metadata
-    values: list
+    values: List[Any]
     infotype_proposals: Optional[List[InfotypeProposal]] = None
+
+
+@dataclass
+class DebugInfo:
+    name: Optional[float] = None
+    description: Optional[float] = None
+    datatype: Optional[float] = None
+    values: Optional[float] = None
