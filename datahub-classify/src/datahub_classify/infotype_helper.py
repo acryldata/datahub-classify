@@ -192,7 +192,8 @@ def inspect_for_gender(
     try:
         if (
             prediction_factors_weights.get(NAME, 0) > 0
-            and abs(1 - cast(float, debug_info.name)) < 1e-10
+            and debug_info.name
+            and abs(1 - debug_info.name) < 1e-10
             and prediction_factors_weights.get(VALUES, 0) > 0
             and debug_info.values == 0.0
         ):
@@ -355,7 +356,8 @@ def inspect_for_full_name(
     try:
         if (
             prediction_factors_weights.get(NAME, 0) > 0
-            and abs(1 - cast(float, debug_info.name)) < 1e-10
+            and debug_info.name
+            and abs(1 - debug_info.name) < 1e-10
             and prediction_factors_weights.get(VALUES, 0) > 0
             and 0.5 > cast(float, debug_info.values) > 0.1
         ):
