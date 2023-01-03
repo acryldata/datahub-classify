@@ -1,12 +1,13 @@
 import json
 import logging
 import os
+import pickle
 import re
 
 # import pickle
 from itertools import combinations
 from typing import Dict, List, Tuple
-import pickle
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -110,7 +111,7 @@ def populate_similar_tableinfo_object(dataset_name):
         "Table_Id": dataset_name + "_LOGICAL_COPY",
     }
     col_infos = []
-    swap_case = ["yes","no"]
+    swap_case = ["yes", "no"]
     common_variations = [
         "#",
         "$",
@@ -145,7 +146,7 @@ def populate_similar_tableinfo_object(dataset_name):
             random_variation = str(
                 common_variations[np.random.randint(0, len(common_variations))]
             )
-            is_swap_case = swap_case[np.random.randint(0,2)]
+            is_swap_case = swap_case[np.random.randint(0, 2)]
             if is_swap_case:
                 word = word.swapcase()
             col_name_with_variation = col_name_with_variation + word + random_variation
@@ -407,7 +408,7 @@ for comb in data_combinations:
 logger.info("-----------Evaluating Table pairs that are logical copies--------")
 column_similarity_with_variation_ideal_labels = {}
 column_similarity_with_variation_predicted_labels = {}
-wrong_preds ={}
+wrong_preds = {}
 
 for data in public_data_list.keys():
     dataset_name_1 = data
@@ -439,7 +440,9 @@ for data in public_data_list.keys():
                 column_similarity_with_variation_predicted_labels[
                     (col_1_true_name, col_2_changed_name)
                 ] = "not_similar"
-                wrong_preds[(col_1_true_name, col_2_changed_name)] = column_similarity_scores[col_pair]
+                wrong_preds[
+                    (col_1_true_name, col_2_changed_name)
+                ] = column_similarity_scores[col_pair]
         else:
             if ideal_infotypes[dataset_name_1].get(
                 col_1_true_name, None
@@ -459,7 +462,9 @@ for data in public_data_list.keys():
                         column_similarity_with_variation_predicted_labels[
                             (col_1_true_name, col_2_changed_name)
                         ] = "not_similar"
-                        wrong_preds[(col_1_true_name, col_2_changed_name)] = column_similarity_scores[col_pair]
+                        wrong_preds[
+                            (col_1_true_name, col_2_changed_name)
+                        ] = column_similarity_scores[col_pair]
                 else:
                     column_similarity_with_variation_ideal_labels[
                         (col_1_true_name, col_2_changed_name)
@@ -468,12 +473,13 @@ for data in public_data_list.keys():
                         column_similarity_with_variation_predicted_labels[
                             (col_1_true_name, col_2_changed_name)
                         ] = "similar"
-                        wrong_preds[(col_1_true_name, col_2_changed_name)] = column_similarity_scores[col_pair]
+                        wrong_preds[
+                            (col_1_true_name, col_2_changed_name)
+                        ] = column_similarity_scores[col_pair]
                     else:
                         column_similarity_with_variation_predicted_labels[
                             (col_1_true_name, col_2_changed_name)
                         ] = "not_similar"
-
 
     comb = (dataset_name_1, dataset_name_1 + "_LOGICAL_COPY")
     (
@@ -500,10 +506,8 @@ for data in public_data_list.keys():
     )
 
 with open(
-        os.path.join(
-            input_jsons_dir, "column_name_variations_wrong_preds.pkl"
-        ),
-        "wb") as filename:
+    os.path.join(input_jsons_dir, "column_name_variations_wrong_preds.pkl"), "wb"
+) as filename:
     pickle.dump(wrong_preds, filename)
 #  Display prediction statistics ###
 logger.info("-------Test Statistics-------------")

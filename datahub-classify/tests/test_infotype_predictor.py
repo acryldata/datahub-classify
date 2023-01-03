@@ -70,7 +70,7 @@ def populate_column_info_list(public_data_list):
                 values = data[col].dropna().values[:1000]
             else:
                 values = data[col].dropna().values
-            col_info = ColumnInfo(metadata, values)
+            col_info = ColumnInfo(metadata=metadata, values=values)
             column_info_list.append(col_info)
             actual_labels.append(col)
     return column_info_list
