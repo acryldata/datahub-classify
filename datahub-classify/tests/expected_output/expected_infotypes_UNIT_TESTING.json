@@ -1,30 +1,30 @@
 {
-    "data1": {
+    "UCI_Credit_Card": {
         "SEX": "Gender",
         "AGE": "Age"
     },
-    "data2": {
+    "Age2_address1_credit_card3": {
         "Person": "Full_Name",
         "Current Age": "Age",
         "Retirement Age": "Age",
         "gender": "Gender",
         "Address": "Street_Address"
     },
-    "data3": {
+    "list_of_real_usa_addresses": {
         "address": "Street_Address"
     },
-    "data4": {
+    "CardBase": {
         "Card_Number": "Credit_Debit_Card_Number"
     },
-    "data5": {
+    "Credit_Card2": {
         "Card Number": "Credit_Debit_Card_Number"
     },
-    "data6": {},
-    "data7": {
+    "catalog": {},
+    "iban": {
         "IBAN_Number": "IBAN"
     },
-    "data8": {"vin": "Vehicle_Identification_Number"},
-    "data9": {
+    "USA_cars_datasets": {"vin": "Vehicle_Identification_Number"},
+    "email_1": {
         "TEL": "Phone_Number",
         "FAX": "Phone_Number",
         "E_MAIL": "Email_Address",
@@ -33,7 +33,7 @@
         "CEO_MD": "Full_Name",
         "G_MANAGER": "Full_Name"
     },
-    "data10": {
+    "email_2": {
         "ADD1": "Street_Address",
         "ADD2": "Street_Address",
         "TEL": "Phone_Number",
@@ -42,7 +42,7 @@
         "CEO_MD": "Full_Name",
         "G_MANAGER": "Full_Name"
     },
-    "data11": {
+    "email_3": {
         "ADD1": "Street_Address",
         "ADD2": "Street_Address",
         "Telephone": "Phone_Number",
@@ -51,75 +51,75 @@
         "CEO & Managing Director": "Full_Name",
         "General Manager": "Full_Name"
     },
-    "data12": {
+    "2018-seattle-business-districts": {
         "Address": "Street_Address",
         "E-mail": "Email_Address"
     },
-    "data13": {
+    "Customer_Segmentation": {
         "gender": "Gender",
         "email": "Email_Address",
         "phone": "Phone_Number",
         "street_address": "Street_Address",
         "ip_address": "IP_Address_v4"
     },
-    "data14": {
+    "application_record": {
         "CODE_GENDER": "Gender"
     },
-    "data15": {"NAME": "Full_Name"},
-    "data16": {
+    "Airbnb_Open_Data": {"NAME": "Full_Name"},
+    "Book1.xlsx-credit-card-number": {
         "credit card": "Credit_Debit_Card_Number"
     },
-    "data17": {},
-    "data18": {
+    "Aliases": {},
+    "athletes": {
         "name": "Full_Name",
         "gender": "Gender"
     },
-    "data19": {
+    "coaches": {
         "name": "Full_Name",
         "gender": "Gender"
     },
-    "data20": {
+    "curling_results": {
         "sex": "Gender"
     },
-    "data21": {
+    "Emails": {
         "MetadataFrom": "no_infotype",
         "RawText": "no_infotype"
     },
-    "data22": {
+    "hockey_players_stats": {
         "Name": "Full_Name"
     },
-    "data23": {
+    "hockey_results": {
         "sex": "Gender"
     },
-    "data24": {
+    "medals": {
         "athlete_name": "no_infotype",
         "athlete_sex": "Gender"
     },
-    "data25": {
+    "Persons": {
         "Name": "Full_Name"
     },
-    "data26": {
+    "technical_officials": {
         "name": "Full_Name",
         "gender": "Gender"
     },
-    "data27": {
+    "Bachelor_Degree_Majors": {
         "Sex": "Gender",
         "Age Group": "Age"
     },
-    "data28": {
+    "CrabAgePrediction": {
         "Sex": "Gender",
         "Age": "Age"
     },
-    "data29": {
+    "Salary_Data": {
         "Age": "Age"
     },
-    "data30": {
+    "drug-use-by-age": {
         "age": "Age"
     },
-    "data31": {
+    "Book1.xlsx-us-social-security-22-cvs": {
         "SSN": "US_Social_Security_Number"
     },
-    "data32": {
+    "sample-data": {
         "SSN": "US_Social_Security_Number",
         "gender": "Gender",
         "address": "Street_Address",
@@ -128,96 +128,96 @@
         "CCN": "Credit_Debit_Card_Number",
         "Full_Name": "Full_Name"
     },
-    "data33": {
+    "1-MB-Test": {
         "First and Last Name": "no_infotype",
         "SSN" :"US_Social_Security_Number",
         "Credit Card Number" : "Credit_Debit_Card_Number"
     },
-    "data34": {
+    "random_ibans": {
         "Random_IBAN": "IBAN"
     },
-    "data35": {
+    "used_cars_data": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data36": {
+    "train": {
         "Name": "Full_Name",
         "Age": "Age",
         "SSN": "US_Social_Security_Number",
         "Credit_History_Age": "Age"
     },
-    "data37": {
+    "test": {
         "Name": "Full_Name",
         "Age": "Age",
         "SSN": "US_Social_Security_Number",
         "Credit_History_Age": "Age"
     },
-    "data38": {
+    "vehicles_1": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data39": {
+    "vehicles_2": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data40": {
+    "vehicles_3": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data41": {
+    "Dataset-Unicauca-Version2-87Atts_1": {
         "Source.IP": "IP_Address_v4",
         "Destination.IP": "IP_Address_v4"
     },
-    "data42": {
+    "Dataset-Unicauca-Version2-87Atts_2": {
         "Source.IP": "IP_Address_v4",
         "Destination.IP": "IP_Address_v4"
     },
-    "data43": {
+    "Dataset-Unicauca-Version2-87Atts_3": {
         "Source.IP": "IP_Address_v4",
         "Destination.IP": "IP_Address_v4"
     },
-    "data44": {
+    "Dataset-Unicauca-Version2-87Atts_4": {
         "Source.IP": "IP_Address_v4",
         "Destination.IP": "IP_Address_v4"
     },
-    "data45": {
+    "Dataset-Unicauca-Version2-87Atts_5": {
         "Source.IP": "IP_Address_v4",
         "Destination.IP": "IP_Address_v4"
     },
-    "data46": {
+    "visitor-interests": {
         "IP": "IP_Address_v4"
     },
-    "data47": {
+    "Darknet_": {
         "Src IP": "IP_Address_v4",
         "Dst IP": "IP_Address_v4"
     },
-    "data48": {
+    "vehicles_4": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data49": {
+    "vehicles_5": {
         "VIN": "Vehicle_Identification_Number"
     },
-    "data50": {
+    "Device Report - BU175-VPC2021-03-21_11-00-03": {
         "IPv4": "IP_Address_v4",
         "IPv6": "IP_Address_v6"
     }, 
-    "data51": {
+    "2021-04-23_honeypot-cloud-digitalocean-geo-1_netflow-extended": {
         "SrcAddr": "IP_Address_v4",
         "DstAddr": "IP_Address_v4"
     },
-    "data52": {
+    "ipv6_random_generated": {
         "ipv6": "IP_Address_v6",
         "srcaddr": "IP_Address_v6"
     },
-    "data53": {
+    "score-banks-updated-sep2022": {
         "BRANCH BIC (BIC8)": "Swift_Code",
         "PARENT BIC": "Swift_Code"
     }, 
-    "data54": {
+    "blz-aktuell-xlsx-data": {
         "BIC": "Swift_Code"
     },
-    "data55": {
+    "automotive_service_data": {
         "Service Advisor": "no_infotype",
         "VIN": "Vehicle_Identification_Number",
         "Name": "no_infotype"
     }, 
-    "data56": {
+    "US_Driving_License": {
         "License Number Alabama": "US_Driving_License_Number",
         "Driver License Georgia": "US_Driving_License_Number",
         "DL No Michigan": "US_Driving_License_Number", 
@@ -228,5 +228,4 @@
         "lic_num_New Hampshire": "US_Driving_License_Number",
         "dl_number_Ohio": "US_Driving_License_Number"    
     }
-
 }
