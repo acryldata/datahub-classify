@@ -11,7 +11,7 @@ class InfotypeProposal:
 
 @dataclass
 class ColumnMetadata:
-    meta_info: dict
+    meta_info: Dict[str, Any]
     name: str = field(init=False)
     description: str = field(init=False)
     datatype: str = field(init=False)
@@ -29,9 +29,9 @@ class ColumnMetadata:
 @dataclass
 class ColumnInfo:
     metadata: ColumnMetadata
-    parent_columns: List = field(default_factory=list)
     values: List = field(default_factory=list)
     infotype_proposals: Optional[List[InfotypeProposal]] = None
+    parent_columns: List = field(default_factory=list)
 
 
 @dataclass
@@ -54,3 +54,10 @@ class TableInfo:
     metadata: TableMetadata
     column_infos: List
     parent_tables: List = field(default_factory=list)
+
+
+class DebugInfo:
+    name: Optional[float] = None
+    description: Optional[float] = None
+    datatype: Optional[float] = None
+    values: Optional[float] = None

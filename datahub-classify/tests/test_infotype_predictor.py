@@ -22,7 +22,6 @@ confidence_threshold = 0.6
 update_confidence_slabs_json = False
 logging_directory = os.path.join(current_wdr, "logs", "logs.log")
 
-
 infotypes_to_use = [
     "Street_Address",
     "Gender",
