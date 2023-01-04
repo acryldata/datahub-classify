@@ -4,7 +4,12 @@ from typing import Any, List, Tuple
 
 import numpy as np
 
-from datahub_classify.helper_classes import ColumnInfo, TableInfo
+from datahub_classify.helper_classes import (
+    ColumnInfo,
+    DebugInfo,
+    SimilarityInfo,
+    TableInfo,
+)
 from datahub_classify.utils import compute_string_similarity, read_glove_vector
 
 logger = logging.getLogger(__name__)
@@ -159,7 +164,7 @@ def compute_column_overall_similarity_score(
 
 def compute_table_similarity(
     table_info1: TableInfo, table_info2: TableInfo, word_vec_map: dict
-) -> float:
+) -> Tuple[float, DebugInfo]:
     table1_id = table_info1.metadata.table_id
     table1_name = table_info1.metadata.name
     table1_desc = table_info1.metadata.description
@@ -203,13 +208,13 @@ def compute_table_similarity(
         word_vec_map=word_vec_map,
     )
 
-    # print("name score: ", table_name_score)
-    # print("desc score: " ,table_desc_score)
-    # print("platforms: ", table1_platform, table2_platform)
-    # print("platform score: ", table_platform_score)
-    # print("lineae score: ", table_lineage_score)
-    # print("schema score: ", table_schema_score)
-    # print("======================================")
+    table_prediction_factor_confidence = DebugInfo(
+        name=table_name_score,
+        description=table_desc_score,
+        platform=table_platform_score,
+        lineage=table_lineage_score,
+        table_schema=table_schema_score,
+    )
 
     overall_table_similarity_score = compute_table_overall_similarity_score(
         table_name_score,
@@ -219,7 +224,7 @@ def compute_table_similarity(
         table_schema_score,
         desc_present,
     )
-    return overall_table_similarity_score
+    return overall_table_similarity_score, table_prediction_factor_confidence
 
 
 def compute_column_similarity(
@@ -227,7 +232,7 @@ def compute_column_similarity(
     col_info2: ColumnInfo,
     overall_table_similarity_score: float,
     word_vec_map: dict,
-) -> float:
+) -> Tuple[float, DebugInfo]:
     column1_id = col_info1.metadata.column_id
     column1_name = col_info1.metadata.name
     column1_desc = col_info1.metadata.description
@@ -261,6 +266,15 @@ def compute_column_similarity(
     column_lineage_score = compute_lineage_score(
         column1_parents, column2_parents, column1_id, column2_id
     )
+
+    col_prediction_factor_confidence = DebugInfo(
+        name=column_name_score,
+        description=column_desc_score,
+        datatype=column_dtype_score,
+        lineage=column_lineage_score,
+        table_schema=overall_table_similarity_score,
+    )
+
     overall_column_similarity_score = compute_column_overall_similarity_score(
         column_name_score,
         column_dtype_score,
@@ -270,19 +284,7 @@ def compute_column_similarity(
         desc_present,
     )
 
-    # print("pair: ", (col_info1.metadata.column_id, col_info2.metadata.column_id ))
-    # print("name score: ", column_name_score)
-    # print("-------------")
-    # print(column1_desc)
-    # print(column2_desc)
-    # print("-------------")
-    # print("desc score: ", column_desc_score)
-    # print("dtype score: ", column_dtype_score)
-    # print("lineage score: ", column_lineage_score)
-    # print("overall score: ", overall_column_similarity_score)
-    # print("****************************")
-    # print("schema score: ", table_schema_score)
-    return overall_column_similarity_score
+    return overall_column_similarity_score, col_prediction_factor_confidence
 
 
 def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
@@ -293,17 +295,24 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
     if not word_to_vec_map:
         logger.info("Loading Glove Embeddings..")
         word_to_vec_map = read_glove_vector(glove_vec)
-    overall_table_similarity_score = 0.0
     try:
-        overall_table_similarity_score = compute_table_similarity(
-            table_info1, table_info2, word_to_vec_map
-        )
+        (
+            overall_table_similarity_score,
+            table_prediction_factor_confidence,
+        ) = compute_table_similarity(table_info1, table_info2, word_to_vec_map)
     except Exception as e:
         logger.error(
             f"Failed to compute table similarity between Table "
             f"{table_info1.metadata.table_id} and {table_info2.metadata.table_id}",
             exc_info=e,
         )
+        overall_table_similarity_score = 0.0
+        table_prediction_factor_confidence = None
+
+    table_similarity_info = SimilarityInfo(
+        score=overall_table_similarity_score,
+        prediction_factor_confidence=table_prediction_factor_confidence,
+    )
 
     column_similarity_scores = {}
     logger.info("** Finding column similarities **")
@@ -315,9 +324,11 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
             logger.debug(
                 f"Processing pair: {(col_info1.metadata.name, col_info2.metadata.name)}"
             )
-            overall_column_similarity_score = None
             try:
-                overall_column_similarity_score = compute_column_similarity(
+                (
+                    overall_column_similarity_score,
+                    col_prediction_factor_confidence,
+                ) = compute_column_similarity(
                     col_info1,
                     col_info2,
                     overall_table_similarity_score,
@@ -329,10 +340,15 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
                     f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
                     exc_info=e,
                 )
+                overall_column_similarity_score = None
+                col_prediction_factor_confidence = None
+
             column1_id = col_info1.metadata.column_id
             column2_id = col_info2.metadata.column_id
-            column_similarity_scores[
-                (column1_id, column2_id)
-            ] = overall_column_similarity_score
+            col_similarity_info = SimilarityInfo(
+                score=overall_column_similarity_score,
+                prediction_factor_confidence=col_prediction_factor_confidence,
+            )
+            column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
     logger.info("===============================================")
-    return overall_table_similarity_score, column_similarity_scores
+    return table_similarity_info, column_similarity_scores

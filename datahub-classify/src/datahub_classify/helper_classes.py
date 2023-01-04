@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+from pydantic import BaseModel, Field
+
 
 @dataclass
 class InfotypeProposal:
@@ -56,8 +58,35 @@ class TableInfo:
     parent_tables: List = field(default_factory=list)
 
 
-class DebugInfo:
-    name: Optional[float] = None
-    description: Optional[float] = None
-    datatype: Optional[float] = None
-    values: Optional[float] = None
+class DebugInfo(BaseModel):
+    name: Optional[float] = Field(
+        default=None, description="confidence score using name"
+    )
+    description: Optional[float] = Field(
+        default=None, description="confidence score using description"
+    )
+    datatype: Optional[float] = Field(
+        default=None,
+        description="confidence score using datatype. For tables, it is None",
+    )
+    values: Optional[float] = Field(
+        default=None,
+        description="confidence score using values. For tables, it is None",
+    )
+    platform: Optional[float] = Field(
+        default=None,
+        description="confidence score using platform. For columns, it is None",
+    )
+    table_schema: Optional[float] = Field(
+        default=None,
+        description="For tables, it is confidence score using table schema. For columns, it is table_similarity_score",
+    )
+    lineage: Optional[float] = Field(
+        default=None, description="confidence score using lineage"
+    )
+
+
+@dataclass
+class SimilarityInfo:
+    score: Optional[float]
+    prediction_factor_confidence: Optional[DebugInfo]

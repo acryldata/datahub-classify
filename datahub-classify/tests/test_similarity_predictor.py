@@ -377,9 +377,13 @@ for comb in data_combinations:
     dataset_name_2 = comb[1]
     table_info_1 = populate_tableinfo_object(dataset_name=dataset_name_1)
     table_info_2 = populate_tableinfo_object(dataset_name=dataset_name_2)
-    overall_table_similarity_score, column_similarity_scores = check_similarity(
+    table_similarity_info, column_similarity_info = check_similarity(
         table_info_1, table_info_2
     )
+    overall_table_similarity_score = table_similarity_info.score
+    column_similarity_scores = {}
+    for key, value in column_similarity_info.items():
+        column_similarity_scores[key] = value.score
 
     (
         tables_predicted_scores,
@@ -419,9 +423,13 @@ for data in public_data_list.keys():
         true_name = col_info.metadata.column_id.split("_SPLITTER_", 1)[1]
         changed_name = col_info.metadata.name
         column_truename_changedname_mapping[true_name] = changed_name
-    overall_table_similarity_score, column_similarity_scores = check_similarity(
+    table_similarity_info, column_similarity_info = check_similarity(
         table_info_1, table_info_2
     )
+    overall_table_similarity_score = table_similarity_info.score
+    column_similarity_scores = {}
+    for key, value in column_similarity_info.items():
+        column_similarity_scores[key] = value.score
 
     for col_pair in column_similarity_scores.keys():
         col_1_true_name = col_pair[0].split("_SPLITTER_", 1)[1]
