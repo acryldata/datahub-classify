@@ -309,7 +309,7 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
         overall_table_similarity_score = 0.0
         table_prediction_factor_confidence = None
 
-    table_similarity_info = SimilarityInfo(
+    table_similarity_score = SimilarityInfo(
         score=overall_table_similarity_score,
         prediction_factor_confidence=table_prediction_factor_confidence,
     )
@@ -351,4 +351,4 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
             )
             column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
     logger.info("===============================================")
-    return table_similarity_info, column_similarity_scores
+    return table_similarity_score, column_similarity_scores

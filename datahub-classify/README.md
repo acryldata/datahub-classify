@@ -127,8 +127,19 @@ API expects following parameters in the input
 
 ### API Output
 API returns two objects:
-- `overall_table_similarity_score` - This is the overall semantic similarity score of the two input tables 
-- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs, with key being a tuple of column IDs of the column pair and value being the similarity score between the two columns
+- `table_similarity_score` - This is a instance of SimilarityInfo which contains 'score' and 'prediction_factor_confidence'. 'score' is the overall semantic similarity score of the two input tables and 'prediction_factor_confidence' is the instance of DebugInfo describing confidence of each prediction factor.  
+- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs. Key being a tuple of column IDs of the column pair and value being the instance of SimilarityInfo, it contains the semantic similarity score between two columns and confidence of each prediction factor.
+
+### Usage of the API
+Find usage of the "check_similarity()" API at following link
+https://github.com/mardikark-gslab/datahub-classify/blob/stage_2_dev/datahub-classify/tests/demo_similarity_check.py
+
+### Assumptions
+Following are the assumptions about input parameters 
+- table_name, table_platform & table_schema are the required parameters in TableInfo object.
+- table_description & table_lineage are optional.
+- col_name, col_datatype are the required parameters in ColumnInfo object.
+- col_description & col_lineage are optional.
 
 # Development
 
