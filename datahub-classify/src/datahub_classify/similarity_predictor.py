@@ -218,14 +218,17 @@ def compute_table_similarity(
         model=model,
         stop_words=stop_words,
     )
-    table_desc_score = compute_string_similarity(
-        table1_desc,
-        table2_desc,
-        text_type="desc",
-        word_to_vec_map=word_vec_map,
-        model=model,
-        stop_words=stop_words,
-    )
+    if desc_present:
+        table_desc_score = compute_string_similarity(
+            table1_desc,
+            table2_desc,
+            text_type="desc",
+            word_to_vec_map=word_vec_map,
+            model=model,
+            stop_words=stop_words,
+        )
+    else:
+        table_desc_score = None
     table_platform_score = table_platform_similarity(table1_platform, table2_platform)
     table_lineage_score = compute_lineage_score(
         table1_parents, table2_parents, table1_id, table2_id
