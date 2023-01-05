@@ -3,18 +3,27 @@ import os
 from typing import Any, List, Tuple
 
 import numpy as np
+from sentence_transformers import SentenceTransformer
 
+import datahub_classify.similarity_numeric_constants as config
 from datahub_classify.helper_classes import (
     ColumnInfo,
     DebugInfo,
     SimilarityInfo,
     TableInfo,
 )
-from datahub_classify.utils import compute_string_similarity, read_glove_vector
+from datahub_classify.utils import (
+    compute_string_similarity,
+    load_stopwords,
+    read_glove_vector,
+)
 
 logger = logging.getLogger(__name__)
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
+model = SentenceTransformer("all-MiniLM-L6-v2")
+stop_words = load_stopwords()
+
 
 if not os.path.isfile(glove_vec):
     from datahub_classify.utils import download_glove_embeddings
@@ -23,13 +32,13 @@ if not os.path.isfile(glove_vec):
     download_glove_embeddings(glove_vec)
 
 word_to_vec_map = None
-column_desc_threshold = 0.65
-column_weighted_score_threshold = 0.7
-column_lineage_threshold = 0.7
-table_similarity_threshold = 0.7
-
-table_desc_threshold = 0.65
-table_weighted_score_threshold = 0.7
+# column_desc_threshold = 0.65
+# column_weighted_score_threshold = 0.7
+# column_lineage_threshold = 0.7
+# table_similarity_threshold = 0.7
+#
+# table_desc_threshold = 0.65
+# table_weighted_score_threshold = 0.7
 
 
 def column_dtype_similarity(column_1_dtype: str, column_2_dtype: str) -> int:
@@ -77,7 +86,7 @@ def table_schema_similarity(
     table_1_cols_name_dtypes: List[Tuple[Any, Any]],
     table_2_cols_names_dtypes: List[Tuple[Any, Any]],
     word_vec_map: dict,
-    pair_score_threshold: float = 0.7,
+    pair_score_threshold: float = config.schema_col_pair_score_threshold,
 ) -> float:
     try:
         matched_pairs = []
@@ -94,9 +103,14 @@ def table_schema_similarity(
                     col2_name,
                     text_type="name",
                     word_to_vec_map=word_vec_map,
+                    model=model,
+                    stop_words=stop_words,
                 )
                 col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
-                pair_score = 0.8 * col_name_score + 0.2 * col_dtype_score
+                pair_score = (
+                    config.schema_col_name_weight * col_name_score
+                    + config.schema_col_dtype_weight * col_dtype_score
+                )
 
                 if pair_score > pair_score_threshold:
                     matched_pairs.append((col1, col2))
@@ -118,16 +132,20 @@ def compute_table_overall_similarity_score(
     schema_score: float,
     desc_present: bool,
 ) -> float:
-    weighted_score = 0.3 * name_score + 0.1 * platform_score + 0.6 * schema_score
+    weighted_score = (
+        config.overall_name_score_weight * name_score
+        + config.overall_platform_score_weight * platform_score
+        + config.overall_schema_score_weight * schema_score
+    )
     # TODO: can we think of something like, if platform_score is 1 then boost by x% and if 0 then boost by y%
     # TODO: here x < y, i.e. if platform_score 0 means less probability of having two tables as similar
     if desc_present:
-        if desc_score >= table_desc_threshold:
-            weighted_score = np.minimum(1.2 * weighted_score, 1)
-        if desc_score < 0.5:
-            weighted_score = 0.9 * weighted_score
+        if desc_score >= config.table_desc_threshold:
+            weighted_score = np.minimum(config.overall_desc_boost * weighted_score, 1)
+        if desc_score < config.overall_desc_score_threshold:
+            weighted_score = config.overall_desc_penalty * weighted_score
     overall_table_similarity_score = weighted_score
-    if weighted_score >= table_weighted_score_threshold and lineage_score == 1:
+    if weighted_score >= config.table_weighted_score_threshold and lineage_score == 1:
         overall_table_similarity_score = 1
     return np.round(overall_table_similarity_score, 2)
 
@@ -142,21 +160,21 @@ def compute_column_overall_similarity_score(
 ) -> float:
     weighted_score = name_score
     if dtype_score == 1:
-        weighted_score = 1.2 * weighted_score
+        weighted_score = config.column_dtype_boost * weighted_score
     else:
-        weighted_score = 0.95 * weighted_score
+        weighted_score = config.column_dtype_penalty * weighted_score
 
     if desc_present:
-        if desc_score >= column_desc_threshold:
-            weighted_score = 1.2 * weighted_score
+        if desc_score >= config.column_desc_threshold:
+            weighted_score = config.column_desc_boost * weighted_score
         if desc_score < 0.5:
-            weighted_score = 0.9 * weighted_score
+            weighted_score = config.column_desc_penalty * weighted_score
 
-    if weighted_score > column_weighted_score_threshold:
-        if table_similarity_score > table_similarity_threshold:
-            weighted_score = 1.2 * weighted_score
+    if weighted_score > config.column_weighted_score_threshold:
+        if table_similarity_score > config.table_similarity_threshold:
+            weighted_score = config.column_table_similarity_boost * weighted_score
         if lineage_score == 1:
-            weighted_score = 1.2 * weighted_score
+            weighted_score = config.column_lineage_boost * weighted_score
 
     overall_column_similarity_score = np.minimum(weighted_score, 1)
     return np.round(overall_column_similarity_score, 2)
@@ -193,10 +211,20 @@ def compute_table_similarity(
         desc_present = False
 
     table_name_score = compute_string_similarity(
-        table1_name, table2_name, text_type="name", word_to_vec_map=word_vec_map
+        table1_name,
+        table2_name,
+        text_type="name",
+        word_to_vec_map=word_vec_map,
+        model=model,
+        stop_words=stop_words,
     )
     table_desc_score = compute_string_similarity(
-        table1_desc, table2_desc, text_type="desc", word_to_vec_map=word_vec_map
+        table1_desc,
+        table2_desc,
+        text_type="desc",
+        word_to_vec_map=word_vec_map,
+        model=model,
+        stop_words=stop_words,
     )
     table_platform_score = table_platform_similarity(table1_platform, table2_platform)
     table_lineage_score = compute_lineage_score(
@@ -251,7 +279,12 @@ def compute_column_similarity(
         desc_present = False
 
     column_name_score = compute_string_similarity(
-        column1_name, column2_name, text_type="name", word_to_vec_map=word_vec_map
+        column1_name,
+        column2_name,
+        text_type="name",
+        word_to_vec_map=word_vec_map,
+        model=model,
+        stop_words=stop_words,
     )
     if desc_present:
         column_desc_score = compute_string_similarity(
@@ -259,6 +292,8 @@ def compute_column_similarity(
             column2_desc,
             text_type="desc",
             word_to_vec_map=word_vec_map,
+            model=model,
+            stop_words=stop_words,
         )
     else:
         column_desc_score = 0.0

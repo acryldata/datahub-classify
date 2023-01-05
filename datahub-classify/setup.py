@@ -27,7 +27,12 @@ base_requirements = {
     "requests>=2.28.1"
 }
 
+mypy_stubs = {
+    "types-requests>=2.28.11.6"
+}
+
 dev_requirements = {
+    *mypy_stubs,
     *base_requirements,
     "black>=22.1.0",
     "coverage>=5.1",

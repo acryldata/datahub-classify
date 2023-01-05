@@ -15,20 +15,26 @@ from datahub_classify.helper_classes import ColumnMetadata
 logger = logging.getLogger(__name__)
 GLOVE_URL = "https://nlp.stanford.edu/data/glove.6B.zip"
 
-try:
-    logger.debug("Loading Stopwords............")
-    from nltk.corpus import stopwords
 
-    stop_words = set(stopwords.words("english"))
+# Load Stopwords
+def load_stopwords():
+    try:
+        from nltk.corpus import stopwords
 
-except Exception as e:
-    logger.debug(f"Could not Load Stopwords due to {e}: Downloading Stopwords.......")
-    nltk.download("stopwords")
-    from nltk.corpus import stopwords
+        stop_words = set(stopwords.words("english"))
 
-    stop_words = set(stopwords.words("english"))
+    except Exception as e:
+        logger.debug(
+            f"Could not Load Stopwords due to {e}: Downloading Stopwords......."
+        )
+        nltk.download("stopwords")
+        from nltk.corpus import stopwords
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+        stop_words = set(stopwords.words("english"))
+    return stop_words
+
+
+# model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
 # TODO: Exception handling
@@ -140,7 +146,12 @@ def read_glove_vector(glove_vector: str) -> dict:
 
 
 def compute_string_similarity(
-    text_1: str, text_2: str, text_type: str, word_to_vec_map: dict
+    text_1: str,
+    text_2: str,
+    text_type: str,
+    word_to_vec_map: dict,
+    stop_words: set,
+    model: SentenceTransformer,
 ) -> float:
     try:
         text_1 = text_1.lower().strip()
