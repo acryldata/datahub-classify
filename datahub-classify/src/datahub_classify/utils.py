@@ -197,17 +197,13 @@ def compute_string_similarity(
             emb_match_score = cosine_similarity_score(emb_1, emb_2)
             score = np.maximum(fuzzy_match_score, emb_match_score)
         else:
-            score = 0
+            score = None
     except Exception as e:
         logger.error(
             f"Failed to find name / description similarity for texts: '{text_1}' and '{text_2}'",
             exc_info=e,
         )
-
-        # print(text_1)
-        # print(text_2)
-        # print("fuzzy score: ", fuzzy_match_score)
-        # print("glove score: ", emb_match_score)
+        score = None
     return score
 
 
