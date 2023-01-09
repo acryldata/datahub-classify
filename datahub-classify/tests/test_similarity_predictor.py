@@ -43,13 +43,15 @@ def get_public_data(input_data_path):
     logger.info(f"==============={input_data_path}=================")
     dataset_dict = {}
     for root, dirs, files in os.walk(input_data_path):
-        for i, filename in enumerate(files):
-            if filename.endswith(".csv"):
-                dataset_name = filename.replace(".csv", "")
-                dataset_dict[dataset_name] = pd.read_csv(os.path.join(root, filename))
-            elif filename.endswith(".xlsx"):
-                dataset_name = filename.replace(".xlsx", "")
-                dataset_dict[dataset_name] = pd.read_excel(os.path.join(root, filename))
+        for i, filename_ in enumerate(files):
+            if filename_.endswith(".csv"):
+                dataset_name = filename_.replace(".csv", "")
+                dataset_dict[dataset_name] = pd.read_csv(os.path.join(root, filename_))
+            elif filename_.endswith(".xlsx"):
+                dataset_name = filename_.replace(".xlsx", "")
+                dataset_dict[dataset_name] = pd.read_excel(
+                    os.path.join(root, filename_)
+                )
             # if i > 3:
             #     break
     return dataset_dict
@@ -76,8 +78,8 @@ def populate_tableinfo_object(dataset_name):
         }
         metadata_col = ColumnMetadata(fields)
         # parent_cols = list()
-        col_info = ColumnInfo(metadata_col)
-        col_infos.append(col_info)
+        col_info_ = ColumnInfo(metadata_col)
+        col_infos.append(col_info_)
 
     metadata_table = TableMetadata(table_meta_info)
     # parent_tables = list()
@@ -163,9 +165,9 @@ def populate_similar_tableinfo_object(dataset_name):
         }
         metadata_col = ColumnMetadata(fields)
         parent_cols = [col if col in df.columns else None]
-        col_info = ColumnInfo(metadata_col)
-        col_info.parent_columns = parent_cols
-        col_infos.append(col_info)
+        col_info_ = ColumnInfo(metadata_col)
+        col_info_.parent_columns = parent_cols
+        col_infos.append(col_info_)
     metadata_table = TableMetadata(table_meta_info)
     parent_tables = [dataset_name]
     table_info = TableInfo(metadata_table, col_infos, parent_tables)
@@ -181,31 +183,31 @@ def load_json_files(input_jsons_path):
         os.path.join(
             input_jsons_path, "expected_columns_similarity_scores_UNIT_TESTING.json"
         )
-    ) as filename:
-        expected_columns_similarity_scores_unit_testing = json.load(filename)
+    ) as filename_:
+        expected_columns_similarity_scores_unit_testing_ = json.load(filename_)
 
     with open(
         os.path.join(
             input_jsons_path, "expected_tables_similarity_scores_UNIT_TESTING.json"
         )
-    ) as filename:
-        expected_tables_similarity_scores_unit_testing = json.load(filename)
+    ) as filename_:
+        expected_tables_similarity_scores_unit_testing_ = json.load(filename_)
 
     with open(
         os.path.join(input_jsons_path, "expected_tables_similarity_labels_IDEAL.json")
-    ) as filename:
-        expected_tables_similarity_labels_ideal = json.load(filename)
+    ) as filename_:
+        expected_tables_similarity_labels_ideal_ = json.load(filename_)
 
     with open(
         os.path.join(input_jsons_path, "expected_infotypes_IDEAL.json")
-    ) as filename:
-        ideal_infotypes = json.load(filename)
+    ) as filename_:
+        ideal_infotypes_ = json.load(filename_)
 
     return (
-        expected_tables_similarity_scores_unit_testing,
-        expected_tables_similarity_labels_ideal,
-        expected_columns_similarity_scores_unit_testing,
-        ideal_infotypes,
+        expected_tables_similarity_scores_unit_testing_,
+        expected_tables_similarity_labels_ideal_,
+        expected_columns_similarity_scores_unit_testing_,
+        ideal_infotypes_,
     )
 
 
@@ -239,78 +241,78 @@ def get_predicted_expected_similarity_scores_mapping(
 
 def update_scores_and_labels_dicts(
     combination,
-    overall_table_similarity_score,
-    column_similarity_scores,
-    columns_predicted_scores,
-    columns_predicted_labels,
-    columns_actual_labels,
-    columns_correct_preds,
-    columns_wrong_preds,
-    tables_predicted_scores,
-    tables_predicted_labels,
-    tables_actual_labels,
+    overall_table_similarity_score_,
+    column_similarity_scores_,
+    columns_predicted_scores_,
+    columns_predicted_labels_,
+    columns_actual_labels_,
+    columns_correct_preds_,
+    columns_wrong_preds_,
+    tables_predicted_scores_,
+    tables_predicted_labels_,
+    tables_actual_labels_,
 ):
     """update dictionaries with predicted scores, labels and actual labels"""
 
-    dataset_key_1 = combination[0]
-    dataset_key_2 = combination[1]
-    tables_predicted_scores[
-        (dataset_key_1, dataset_key_2)
-    ] = overall_table_similarity_score
-    tables_actual_labels[
-        (dataset_key_1, dataset_key_2)
-    ] = expected_tables_similarity_labels_ideal[dataset_key_1 + "-" + dataset_key_2]
-    if overall_table_similarity_score > similar_threshold:
-        tables_predicted_labels[(dataset_key_1, dataset_key_2)] = "similar"
+    dataset_key_1_ = combination[0]
+    dataset_key_2_ = combination[1]
+    tables_predicted_scores_[
+        (dataset_key_1_, dataset_key_2_)
+    ] = overall_table_similarity_score_
+    tables_actual_labels_[
+        (dataset_key_1_, dataset_key_2_)
+    ] = expected_tables_similarity_labels_ideal[dataset_key_1_ + "-" + dataset_key_2_]
+    if overall_table_similarity_score_ > similar_threshold:
+        tables_predicted_labels_[(dataset_key_1_, dataset_key_2_)] = "similar"
     else:
-        tables_predicted_labels[(dataset_key_1, dataset_key_2)] = "not_similar"
-    for col_pair in column_similarity_scores.keys():
-        columns_predicted_scores[col_pair] = column_similarity_scores[col_pair]
-        col_1 = col_pair[0].split("_SPLITTER_", 1)[1]
-        col_2 = col_pair[1].split("_SPLITTER_", 1)[1]
-        if ideal_infotypes.get(dataset_key_1, None) and ideal_infotypes.get(
-            dataset_key_2, None
+        tables_predicted_labels_[(dataset_key_1_, dataset_key_2_)] = "not_similar"
+    for col_pair_ in column_similarity_scores_.keys():
+        columns_predicted_scores_[col_pair_] = column_similarity_scores_[col_pair_]
+        col_1_ = col_pair_[0].split("_SPLITTER_", 1)[1]
+        col_2_ = col_pair_[1].split("_SPLITTER_", 1)[1]
+        if ideal_infotypes.get(dataset_key_1_, None) and ideal_infotypes.get(
+            dataset_key_2_, None
         ):
-            if ideal_infotypes[dataset_key_1].get(col_1, None) and ideal_infotypes[
-                dataset_key_2
-            ].get(col_2, None):
+            if ideal_infotypes[dataset_key_1_].get(col_1_, None) and ideal_infotypes[
+                dataset_key_2_
+            ].get(col_2_, None):
                 if (
-                    ideal_infotypes[dataset_key_1][col_1]
-                    == ideal_infotypes[dataset_key_2][col_2]
+                    ideal_infotypes[dataset_key_1_][col_1_]
+                    == ideal_infotypes[dataset_key_2_][col_2_]
                 ):
-                    columns_actual_labels[col_pair] = "similar"
-                    if column_similarity_scores[col_pair] >= similar_threshold:
-                        columns_predicted_labels[col_pair] = "similar"
-                        columns_correct_preds.append(
-                            (col_pair, column_similarity_scores[col_pair])
+                    columns_actual_labels_[col_pair_] = "similar"
+                    if column_similarity_scores_[col_pair_] >= similar_threshold:
+                        columns_predicted_labels_[col_pair_] = "similar"
+                        columns_correct_preds_.append(
+                            (col_pair_, column_similarity_scores_[col_pair_])
                         )
                     else:
-                        columns_predicted_labels[col_pair] = "not_similar"
-                        columns_wrong_preds.append(
-                            (col_pair, column_similarity_scores[col_pair])
+                        columns_predicted_labels_[col_pair_] = "not_similar"
+                        columns_wrong_preds_.append(
+                            (col_pair_, column_similarity_scores_[col_pair_])
                         )
                 else:
-                    columns_actual_labels[col_pair] = "not_similar"
-                    if column_similarity_scores[col_pair] >= similar_threshold:
-                        columns_predicted_labels[col_pair] = "similar"
-                        columns_wrong_preds.append(
-                            (col_pair, column_similarity_scores[col_pair])
+                    columns_actual_labels_[col_pair_] = "not_similar"
+                    if column_similarity_scores_[col_pair_] >= similar_threshold:
+                        columns_predicted_labels_[col_pair_] = "similar"
+                        columns_wrong_preds_.append(
+                            (col_pair_, column_similarity_scores_[col_pair_])
                         )
                     else:
-                        columns_predicted_labels[col_pair] = "not_similar"
-                        columns_correct_preds.append(
-                            (col_pair, column_similarity_scores[col_pair])
+                        columns_predicted_labels_[col_pair_] = "not_similar"
+                        columns_correct_preds_.append(
+                            (col_pair_, column_similarity_scores_[col_pair_])
                         )
 
     return (
-        tables_predicted_scores,
-        tables_predicted_labels,
-        tables_actual_labels,
-        columns_predicted_scores,
-        columns_predicted_labels,
-        columns_actual_labels,
-        columns_correct_preds,
-        columns_wrong_preds,
+        tables_predicted_scores_,
+        tables_predicted_labels_,
+        tables_actual_labels_,
+        columns_predicted_scores_,
+        columns_predicted_labels_,
+        columns_actual_labels_,
+        columns_correct_preds_,
+        columns_wrong_preds_,
     )
 
 
@@ -559,8 +561,8 @@ if update_columns_expected_similarity_scores_UNIT_TESTING:
             input_jsons_dir, "expected_columns_similarity_scores_UNIT_TESTING.json"
         ),
         "w",
-    ) as filename:
-        json.dump(expected_columns_similarity_scores, filename, indent=4)
+    ) as jsonfile:
+        json.dump(expected_columns_similarity_scores, jsonfile, indent=4)
 
 if update_tables_expected_similarity_scores_UNIT_TESTING:
     expected_tables_similarity_scores = {}
@@ -574,8 +576,8 @@ if update_tables_expected_similarity_scores_UNIT_TESTING:
             input_jsons_dir, "expected_tables_similarity_scores_UNIT_TESTING.json"
         ),
         "w",
-    ) as filename:
-        json.dump(expected_tables_similarity_scores, filename, indent=4)
+    ) as jsonfile:
+        json.dump(expected_tables_similarity_scores, jsonfile, indent=4)
 
 
 if update_tables_expected_similarity_labels_IDEAL:
@@ -589,8 +591,8 @@ if update_tables_expected_similarity_labels_IDEAL:
     with open(
         os.path.join(input_jsons_dir, "expected_tables_similarity_labels_IDEAL.json"),
         "w",
-    ) as filename:
-        json.dump(expected_tables_similarity_labels, filename, indent=4)
+    ) as jsonfile:
+        json.dump(expected_tables_similarity_labels, jsonfile, indent=4)
 
 
 # obtain mappings for unit testing
