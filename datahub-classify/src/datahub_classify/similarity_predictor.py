@@ -30,16 +30,7 @@ if not os.path.isfile(glove_vec):
     logger.debug("Downloading GLOVE Embeddings.............")
     download_glove_embeddings(glove_vec)
 
-word_to_vec_map = None
-
-
-# column_desc_threshold = 0.65
-# column_weighted_score_threshold = 0.7
-# column_lineage_threshold = 0.7
-# table_similarity_threshold = 0.7
-#
-# table_desc_threshold = 0.65
-# table_weighted_score_threshold = 0.7
+word_to_vec_map = read_glove_vector(glove_vec)
 
 
 def column_dtype_similarity(column_1_dtype: str, column_2_dtype: str) -> Optional[int]:
@@ -58,7 +49,7 @@ def column_dtype_similarity(column_1_dtype: str, column_2_dtype: str) -> Optiona
 
 
 def table_platform_similarity(
-    platform_1_name: str, platform_2_name: str
+        platform_1_name: str, platform_2_name: str
 ) -> Optional[int]:
     try:
         if platform_1_name != platform_2_name:
@@ -72,7 +63,7 @@ def table_platform_similarity(
 
 
 def compute_lineage_score(
-    entity_1_parents: List, entity_2_parents: List, entity_1_id: str, entity_2_id: str
+        entity_1_parents: List, entity_2_parents: List, entity_1_id: str, entity_2_id: str
 ) -> Optional[int]:
     try:
         if (entity_1_id in entity_2_parents) or (entity_2_id in entity_1_parents):
@@ -89,41 +80,40 @@ def compute_lineage_score(
 
 
 def table_schema_similarity(
-    table_1_cols_name_dtypes: List[Tuple[Any, Any]],
-    table_2_cols_names_dtypes: List[Tuple[Any, Any]],
-    word_vec_map: dict,
-    pair_score_threshold: float = config.schema_col_pair_score_threshold,
+        col_infos1: List[ColumnInfo],
+        col_infos2: List[ColumnInfo],
+        word_vec_map: dict,
+        pair_score_threshold: float = config.schema_col_pair_score_threshold,
 ) -> Optional[float]:
     try:
         matched_pairs = []
-        num_cols_table1 = len(table_1_cols_name_dtypes)
-        num_cols_table2 = len(table_2_cols_names_dtypes)
-        for col1 in table_1_cols_name_dtypes:
-            for col2 in table_2_cols_names_dtypes:
-                col1_name = col1[0]
-                col2_name = col2[0]
-                col1_dtype = col1[1]
-                col2_dtype = col2[1]
+        num_cols_table1 = len(col_infos1)
+        num_cols_table2 = len(col_infos2)
+        columns_to_remove = []
+        for col1 in col_infos1:
+            for col2 in col_infos2:
+                if col2.metadata.column_id in columns_to_remove:
+                    continue
                 col_name_score = compute_string_similarity(
-                    col1_name,
-                    col2_name,
+                    col1.metadata.name,
+                    col2.metadata.name,
                     text_type="name",
                     word_to_vec_map=word_vec_map,
                     model=model,
                     stop_words=stop_words,
                 )
-                col_dtype_score = column_dtype_similarity(col1_dtype, col2_dtype)
+                col_dtype_score = column_dtype_similarity(col1.metadata.datatype, col2.metadata.datatype)
                 if col_name_score is not None and col_dtype_score is not None:
                     pair_score = (
-                        config.schema_col_name_weight * col_name_score
-                        + config.schema_col_dtype_weight * col_dtype_score
+                            config.schema_col_name_weight * col_name_score
+                            + config.schema_col_dtype_weight * col_dtype_score
                     )
 
                     if pair_score > pair_score_threshold:
-                        matched_pairs.append((col1, col2))
+                        matched_pairs.append((col1.metadata.column_id, col2.metadata.column_id))
                         # TODO: table_2_cols_names_dtypes dict is getting used in the for loop and modified at runtime
                         # TODO: verify: it will not create any problem
-                        table_2_cols_names_dtypes.remove(col2)
+                        columns_to_remove.append(col2.metadata.column_id)
                         break
         schema_score = 2 * len(matched_pairs) / (num_cols_table1 + num_cols_table2)
     except Exception as e:
@@ -133,23 +123,23 @@ def table_schema_similarity(
 
 
 def compute_table_overall_similarity_score(
-    name_score: float,
-    desc_score: Optional[float],
-    platform_score: Optional[int],
-    lineage_score: Optional[int],
-    schema_score: float,
-    # desc_present: bool,
+        name_score: float,
+        desc_score: Optional[float],
+        platform_score: Optional[int],
+        lineage_score: Optional[int],
+        schema_score: float,
+        # desc_present: bool,
 ) -> float:
     if platform_score is None:
         weighted_score = (
-            config.overall_name_score_weight * name_score
-            + config.overall_schema_score_weight * schema_score
+                config.overall_name_score_weight * name_score
+                + config.overall_schema_score_weight * schema_score
         )
     else:
         weighted_score = (
-            config.overall_name_score_weight * name_score
-            + config.overall_platform_score_weight * platform_score
-            + config.overall_schema_score_weight * schema_score
+                config.overall_name_score_weight * name_score
+                + config.overall_platform_score_weight * platform_score
+                + config.overall_schema_score_weight * schema_score
         )
     # TODO: can we think of something like, if platform_score is 1 then boost by x% and if 0 then boost by y%
     # TODO: here x < y, i.e. if platform_score 0 means less probability of having two tables as similar
@@ -160,21 +150,21 @@ def compute_table_overall_similarity_score(
             weighted_score = config.overall_desc_penalty * weighted_score
     overall_table_similarity_score = weighted_score
     if (
-        weighted_score >= config.table_weighted_score_threshold
-        and lineage_score is not None
-        and lineage_score == 1
+            weighted_score >= config.table_weighted_score_threshold
+            and lineage_score is not None
+            and lineage_score == 1
     ):
         overall_table_similarity_score = 1
     return np.round(overall_table_similarity_score, 2)
 
 
 def compute_column_overall_similarity_score(
-    name_score: float,
-    dtype_score: int,
-    desc_score: Optional[float],
-    table_similarity_score: Optional[float],
-    lineage_score: Optional[int],
-    # desc_present: bool,
+        name_score: float,
+        dtype_score: int,
+        desc_score: Optional[float],
+        table_similarity_score: Optional[float],
+        lineage_score: Optional[int],
+        # desc_present: bool,
 ) -> float:
     weighted_score = name_score
     if dtype_score == 1:
@@ -190,8 +180,8 @@ def compute_column_overall_similarity_score(
 
     if weighted_score > config.column_weighted_score_threshold:
         if (
-            table_similarity_score is not None
-            and table_similarity_score > config.table_similarity_threshold
+                table_similarity_score is not None
+                and table_similarity_score > config.table_similarity_threshold
         ):
             weighted_score = config.column_table_similarity_boost * weighted_score
         if lineage_score is not None and lineage_score == 1:
@@ -202,38 +192,28 @@ def compute_column_overall_similarity_score(
 
 
 def compute_table_similarity(
-    table_info1: TableInfo, table_info2: TableInfo, word_vec_map: dict
+        table_info1: TableInfo, table_info2: TableInfo, word_vec_map: dict
 ) -> Tuple[Optional[float], DebugInfo]:
-    table1_id = table_info1.metadata.table_id
-    table1_name = table_info1.metadata.name
-    table1_desc = table_info1.metadata.description
-    table1_platform = table_info1.metadata.platform
-    table1_parents = table_info1.parent_tables
-    table_1_cols_name_dtypes = list()
-    for col_info in table_info1.column_infos:
-        table_1_cols_name_dtypes.append(
-            (col_info.metadata.name, col_info.metadata.datatype)
-        )
+    # table_1_cols_name_dtypes = list()
+    # for col_info in table_info1.column_infos:
+    #     table_1_cols_name_dtypes.append(
+    #         (col_info.metadata.name, col_info.metadata.datatype)
+    #     )
+    #
+    # table_2_cols_name_dtypes = list()
+    # for col_info in table_info2.column_infos:
+    #     table_2_cols_name_dtypes.append(
+    #         (col_info.metadata.name, col_info.metadata.datatype)
+    #     )
 
-    table2_id = table_info2.metadata.table_id
-    table2_name = table_info2.metadata.name
-    table2_desc = table_info2.metadata.description
-    table2_platform = table_info2.metadata.platform
-    table2_parents = table_info2.parent_tables
-    table_2_cols_name_dtypes = list()
-    for col_info in table_info2.column_infos:
-        table_2_cols_name_dtypes.append(
-            (col_info.metadata.name, col_info.metadata.datatype)
-        )
-
-    if table1_desc and table2_desc:
+    if table_info1.metadata.description and table_info2.metadata.description:
         desc_present = True
     else:
         desc_present = False
 
     table_name_score = compute_string_similarity(
-        table1_name,
-        table2_name,
+        table_info1.metadata.name,
+        table_info2.metadata.name,
         text_type="name",
         word_to_vec_map=word_vec_map,
         model=model,
@@ -241,8 +221,8 @@ def compute_table_similarity(
     )
     if desc_present:
         table_desc_score = compute_string_similarity(
-            table1_desc,
-            table2_desc,
+            table_info1.metadata.description,
+            table_info2.metadata.description,
             text_type="desc",
             word_to_vec_map=word_vec_map,
             model=model,
@@ -250,13 +230,15 @@ def compute_table_similarity(
         )
     else:
         table_desc_score = None
-    table_platform_score = table_platform_similarity(table1_platform, table2_platform)
+    table_platform_score = table_platform_similarity(
+        table_info1.metadata.platform, table_info2.metadata.platform)
     table_lineage_score = compute_lineage_score(
-        table1_parents, table2_parents, table1_id, table2_id
+        table_info1.parent_tables, table_info2.parent_tables,
+        table_info1.metadata.table_id, table_info2.metadata.table_id
     )
     table_schema_score = table_schema_similarity(
-        table_1_cols_name_dtypes,
-        table_2_cols_name_dtypes,
+        table_info1.column_infos,
+        table_info2.column_infos,
         word_vec_map=word_vec_map,
     )
 
@@ -283,31 +265,19 @@ def compute_table_similarity(
 
 
 def compute_column_similarity(
-    col_info1: ColumnInfo,
-    col_info2: ColumnInfo,
-    overall_table_similarity_score: Optional[float],
-    word_vec_map: dict,
+        col_info1: ColumnInfo,
+        col_info2: ColumnInfo,
+        overall_table_similarity_score: Optional[float],
+        word_vec_map: dict,
 ) -> Tuple[Optional[float], DebugInfo]:
-    column1_id = col_info1.metadata.column_id
-    column1_name = col_info1.metadata.name
-    column1_desc = col_info1.metadata.description
-    column1_dtype = col_info1.metadata.datatype
-    column1_parents = col_info1.parent_columns
-
-    column2_id = col_info2.metadata.column_id
-    column2_name = col_info2.metadata.name
-    column2_desc = col_info2.metadata.description
-    column2_dtype = col_info2.metadata.datatype
-    column2_parents = col_info2.parent_columns
-
-    if column1_desc and column2_desc:
+    if col_info1.metadata.description and col_info2.metadata.description:
         desc_present = True
     else:
         desc_present = False
 
     column_name_score = compute_string_similarity(
-        column1_name,
-        column2_name,
+        col_info1.metadata.name,
+        col_info2.metadata.name,
         text_type="name",
         word_to_vec_map=word_vec_map,
         model=model,
@@ -315,8 +285,8 @@ def compute_column_similarity(
     )
     if desc_present:
         column_desc_score = compute_string_similarity(
-            column1_desc,
-            column2_desc,
+            col_info1.metadata.description,
+            col_info2.metadata.description,
             text_type="desc",
             word_to_vec_map=word_vec_map,
             model=model,
@@ -324,9 +294,11 @@ def compute_column_similarity(
         )
     else:
         column_desc_score = None
-    column_dtype_score = column_dtype_similarity(column1_dtype, column2_dtype)
+    column_dtype_score = column_dtype_similarity(
+        col_info1.metadata.datatype, col_info2.metadata.datatype)
     column_lineage_score = compute_lineage_score(
-        column1_parents, column2_parents, column1_id, column2_id
+        col_info1.parent_columns, col_info2.parent_columns,
+        col_info1.metadata.column_id, col_info2.metadata.column_id
     )
 
     col_prediction_factor_confidence = DebugInfo(
@@ -356,10 +328,6 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
     logger.info(
         f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
     )
-    global word_to_vec_map
-    if not word_to_vec_map:
-        logger.info("Loading Glove Embeddings..")
-        word_to_vec_map = read_glove_vector(glove_vec)
     try:
         (
             overall_table_similarity_score,
@@ -387,7 +355,7 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
     for col_info1 in table_info1.column_infos:
         for col_info2 in table_info2.column_infos:
             logger.debug(
-                f"Processing pair: {(col_info1.metadata.name, col_info2.metadata.name)}"
+                f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
             )
             try:
                 (
