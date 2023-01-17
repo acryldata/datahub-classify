@@ -6,11 +6,11 @@ from typing import Any, Dict, List, Optional
 import nltk
 import numpy as np
 from numpy.linalg import norm
-from sentence_transformers import SentenceTransformer
+# from sentence_transformers import SentenceTransformer
 from thefuzz import fuzz
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
-from datahub_classify.helper_classes import ColumnMetadata, TextEmbeddings, TableInfo
+from datahub_classify.helper_classes import ColumnMetadata, TextEmbeddings
 
 logger = logging.getLogger(__name__)
 GLOVE_URL = "https://nlp.stanford.edu/data/glove.6B.zip"
@@ -50,7 +50,7 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
-                    re.fullmatch(pattern, original_text)
+                re.fullmatch(pattern, original_text)
             ):
                 match_score = 1
                 break
@@ -98,7 +98,7 @@ def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
 
 
 def detect_named_entity_spacy(
-        spacy_models_list: List, entities_of_interest: List[str], value: str
+    spacy_models_list: List, entities_of_interest: List[str], value: str
 ) -> bool:
     for spacy_model in spacy_models_list:
         doc = spacy_model(value)
@@ -109,16 +109,16 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-        metadata: ColumnMetadata,
-        values: List[Any],
-        config_dict: Dict[str, Dict],
-        infotype: Optional[str] = None,
+    metadata: ColumnMetadata,
+    values: List[Any],
+    config_dict: Dict[str, Dict],
+    infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
     if (
-            config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
-            and len(values) < minimum_values_threshold
+        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+        and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
     # TODO: Add more basic checks
@@ -150,14 +150,14 @@ def fuzzy_score_calculation():
 
 
 def compute_string_similarity(
-        text_1: str,
-        text_2: str,
-        text_1_emb: List[TextEmbeddings],
-        text_2_emb: List[TextEmbeddings],
-        text_type: str,
-        word_to_vec_map: dict,
-        stop_words: set,
-        use_embeddings: bool
+    text_1: str,
+    text_2: str,
+    text_1_emb: List[TextEmbeddings],
+    text_2_emb: List[TextEmbeddings],
+    text_type: str,
+    word_to_vec_map: dict,
+    stop_words: set,
+    use_embeddings: bool,
 ) -> float:
     try:
         emb_match_score = 0
@@ -178,11 +178,11 @@ def compute_string_similarity(
                 emb_1 = None
                 emb_2 = None
                 for text_emb in text_1_emb:
-                    if text_emb.emb_type == 'sentence_transformer':
+                    if text_emb.emb_type == "sentence_transformer":
                         emb_1 = text_emb.embedding
                         break
                 for text_emb in text_2_emb:
-                    if text_emb.emb_type == 'sentence_transformer':
+                    if text_emb.emb_type == "sentence_transformer":
                         emb_2 = text_emb.embedding
                         break
                 if len(text_1_words) == 1 and len(text_2_words) == 1:
@@ -236,6 +236,3 @@ def download_glove_embeddings(glove_vec):
         logger.debug("Successfully Downloaded GLOVE Embeddings!!")
     except Exception as e:
         logger.error(f"Unable To Download GLOVE Embeddings due to {e}", exc_info=e)
-
-
-

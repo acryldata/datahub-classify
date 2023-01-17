@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
+
 import numpy
 from pydantic import BaseModel, Field
 
