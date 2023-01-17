@@ -10,7 +10,7 @@ from sentence_transformers import SentenceTransformer
 from thefuzz import fuzz
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
-from datahub_classify.helper_classes import ColumnMetadata
+from datahub_classify.helper_classes import ColumnMetadata, TextEmbeddings, TableInfo
 
 logger = logging.getLogger(__name__)
 GLOVE_URL = "https://nlp.stanford.edu/data/glove.6B.zip"
@@ -50,7 +50,7 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
-                re.fullmatch(pattern, original_text)
+                    re.fullmatch(pattern, original_text)
             ):
                 match_score = 1
                 break
@@ -98,7 +98,7 @@ def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
 
 
 def detect_named_entity_spacy(
-    spacy_models_list: List, entities_of_interest: List[str], value: str
+        spacy_models_list: List, entities_of_interest: List[str], value: str
 ) -> bool:
     for spacy_model in spacy_models_list:
         doc = spacy_model(value)
@@ -109,16 +109,16 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-    metadata: ColumnMetadata,
-    values: List[Any],
-    config_dict: Dict[str, Dict],
-    infotype: Optional[str] = None,
+        metadata: ColumnMetadata,
+        values: List[Any],
+        config_dict: Dict[str, Dict],
+        infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
     if (
-        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
-        and len(values) < minimum_values_threshold
+            config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+            and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
     # TODO: Add more basic checks
@@ -145,23 +145,26 @@ def read_glove_vector(glove_vector: str) -> dict:
     return word_to_vec_map
 
 
+def fuzzy_score_calculation():
+    pass
+
+
 def compute_string_similarity(
-    text_1: str,
-    text_2: str,
-    text_type: str,
-    word_to_vec_map: dict,
-    stop_words: set,
-    model: SentenceTransformer,
+        text_1: str,
+        text_2: str,
+        text_1_emb: List[TextEmbeddings],
+        text_2_emb: List[TextEmbeddings],
+        text_type: str,
+        word_to_vec_map: dict,
+        stop_words: set,
+        use_embeddings: bool
 ) -> float:
     try:
-        text_1 = text_1.lower().strip()
-        text_2 = text_2.lower().strip()
-
+        emb_match_score = 0
         if (text_1 not in ([None, ""])) and (text_2 not in ([None, ""])):
-            fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
-            if fuzzy_match_score <= 0.5:
-                fuzzy_match_score = 0.8 * fuzzy_match_score
-
+            # Text pre Processing
+            text_1 = text_1.lower().strip()
+            text_2 = text_2.lower().strip()
             text_1_cleaned = re.sub(r"[^a-z]", " ", text_1.lower()).strip()
             text_2_cleaned = re.sub(r"[^a-z]", " ", text_2.lower()).strip()
             text_1_words = [
@@ -170,7 +173,33 @@ def compute_string_similarity(
             text_2_words = [
                 word for word in text_2_cleaned.split() if word not in stop_words
             ]
+            # Calculate Embedding Score
+            if use_embeddings and text_1_emb is not None and text_2_emb is not None:
+                emb_1 = None
+                emb_2 = None
+                for text_emb in text_1_emb:
+                    if text_emb.emb_type == 'sentence_transformer':
+                        emb_1 = text_emb.embedding
+                        break
+                for text_emb in text_2_emb:
+                    if text_emb.emb_type == 'sentence_transformer':
+                        emb_2 = text_emb.embedding
+                        break
+                if len(text_1_words) == 1 and len(text_2_words) == 1:
+                    glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
+                    glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
 
+                    if glove_emb_1 is not None or glove_emb_2 is not None:
+                        emb_1 = glove_emb_1
+                        emb_2 = glove_emb_2
+                if emb_1 is None or emb_2 is None:
+                    raise Exception("Embeddings not found!!!")
+                emb_match_score = cosine_similarity_score(emb_1, emb_2)
+
+            # Calculate fuzzy score
+            fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
+            if fuzzy_match_score <= 0.5:
+                fuzzy_match_score = 0.8 * fuzzy_match_score
             max_fuzz_score = 0
             if text_type == "name":
                 if len(text_1_words) == 1 or len(text_2_words) == 1:
@@ -179,22 +208,7 @@ def compute_string_similarity(
                             fuzz_score = fuzz.token_set_ratio(word_1, word_2) / 100
                             if fuzz_score > max_fuzz_score:
                                 max_fuzz_score = fuzz_score
-
             fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
-
-            if len(text_1_words) == 1 and len(text_2_words) == 1:
-                emb_1 = word_to_vec_map.get(text_1_words[0], "nan")
-                emb_2 = word_to_vec_map.get(text_2_words[0], "nan")
-
-                if str(emb_1) == "nan" or str(emb_2) == "nan":
-                    embeddings = model.encode([text_1, text_2], show_progress_bar=False)
-                    emb_1 = embeddings[0]
-                    emb_2 = embeddings[1]
-            else:
-                embeddings = model.encode([text_1, text_2], show_progress_bar=False)
-                emb_1 = embeddings[0]
-                emb_2 = embeddings[1]
-            emb_match_score = cosine_similarity_score(emb_1, emb_2)
             score = np.maximum(fuzzy_match_score, emb_match_score)
         else:
             score = None
@@ -221,4 +235,7 @@ def download_glove_embeddings(glove_vec):
         zip_object.extract(glove_file, path=destination_path)
         logger.debug("Successfully Downloaded GLOVE Embeddings!!")
     except Exception as e:
-        logger.error(f"Unable To Download GLOVE Embeddings due to {e}")
+        logger.error(f"Unable To Download GLOVE Embeddings due to {e}", exc_info=e)
+
+
+

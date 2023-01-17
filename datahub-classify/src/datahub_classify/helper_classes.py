@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
-
+import numpy
 from pydantic import BaseModel, Field
 
 
@@ -12,6 +12,12 @@ class InfotypeProposal:
 
 
 @dataclass
+class TextEmbeddings:
+    emb_type: str
+    embedding: numpy.ndarray
+
+
+@dataclass
 class ColumnMetadata:
     meta_info: Dict[str, Any]
     name: str = field(init=False)
@@ -19,6 +25,8 @@ class ColumnMetadata:
     datatype: str = field(init=False)
     dataset_name: str = field(init=False)
     column_id: str = field(init=False)
+    name_embedding: List[TextEmbeddings] = field(init=False)
+    desc_embedding: List[TextEmbeddings] = field(init=False)
 
     def __post_init__(self):
         self.name = self.meta_info.get("Name", None)
@@ -26,6 +34,8 @@ class ColumnMetadata:
         self.datatype = self.meta_info.get("Datatype", None)
         self.dataset_name = self.meta_info.get("Dataset_Name", None)
         self.column_id = self.meta_info.get("Column_Id", None)
+        self.name_embedding = self.meta_info.get("name_embedding", [])
+        self.desc_embedding = self.meta_info.get("desc_embedding", [])
 
 
 @dataclass
@@ -43,12 +53,16 @@ class TableMetadata:
     description: str = field(init=False)
     platform: str = field(init=False)
     table_id: str = field(init=False)
+    name_embedding: List[TextEmbeddings] = field(init=False)
+    desc_embedding: List[TextEmbeddings] = field(init=False)
 
     def __post_init__(self):
         self.name = self.meta_info.get("Name", None)
         self.description = self.meta_info.get("Description", None)
         self.platform = self.meta_info.get("Platform", None)
         self.table_id = self.meta_info.get("Table_Id", None)
+        self.name_embedding = self.meta_info.get("name_embedding", [])
+        self.desc_embedding = self.meta_info.get("desc_embedding", [])
 
 
 @dataclass
