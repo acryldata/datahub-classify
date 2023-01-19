@@ -51,7 +51,7 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
-                re.fullmatch(pattern, original_text)
+                    re.fullmatch(pattern, original_text)
             ):
                 match_score = 1
                 break
@@ -99,7 +99,7 @@ def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
 
 
 def detect_named_entity_spacy(
-    spacy_models_list: List, entities_of_interest: List[str], value: str
+        spacy_models_list: List, entities_of_interest: List[str], value: str
 ) -> bool:
     for spacy_model in spacy_models_list:
         doc = spacy_model(value)
@@ -110,16 +110,16 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-    metadata: ColumnMetadata,
-    values: List[Any],
-    config_dict: Dict[str, Dict],
-    infotype: Optional[str] = None,
+        metadata: ColumnMetadata,
+        values: List[Any],
+        config_dict: Dict[str, Dict],
+        infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
     if (
-        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
-        and len(values) < minimum_values_threshold
+            config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+            and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
     # TODO: Add more basic checks
@@ -157,14 +157,14 @@ def embedding_score_calculation():
 
 
 def compute_string_similarity(
-    text_1: Optional[str],
-    text_2: Optional[str],
-    text_1_emb: List[TextEmbeddings],
-    text_2_emb: List[TextEmbeddings],
-    text_type: str,
-    word_to_vec_map: dict,
-    stop_words: set,
-    use_embeddings: bool,
+        text_1: Optional[str],
+        text_2: Optional[str],
+        text_1_emb: List[TextEmbeddings],
+        text_2_emb: List[TextEmbeddings],
+        text_type: str,
+        word_to_vec_map: dict,
+        stop_words: set,
+        use_embeddings: bool,
 ) -> Optional[float]:
     try:
         emb_match_score = 0.0
@@ -183,7 +183,8 @@ def compute_string_similarity(
             col1_emb_type: str = "None"
             col2_emb_type: str = "None"
             # Calculate Embedding Score
-            if use_embeddings and text_1_emb is not None and text_2_emb is not None:
+            # if use_embeddings and text_1_emb is not None and text_2_emb is not None:
+            if use_embeddings and len(text_1_emb) > 0 and len(text_2_emb) > 0:
                 emb_1 = None
                 emb_2 = None
                 for text_emb in text_1_emb:
@@ -206,9 +207,10 @@ def compute_string_similarity(
                         col1_emb_type = "GLOVE"
                         col2_emb_type = "GLOVE"
                 if emb_1 is None or emb_2 is None:
-                    raise Exception("Embeddings not found!!!")
+                    logger.error("Embeddings not found!!!")
                 emb_match_score = cosine_similarity_score(emb_1, emb_2)
-
+            else:
+                raise Exception("Embeddings must be provided when 'use_embeddings = True'")
             assigned_embedding = [col1_emb_type, col2_emb_type]
             logger.debug(
                 f"Found Embeddings: {assigned_embedding} for pair {text_1} and {text_2}"
