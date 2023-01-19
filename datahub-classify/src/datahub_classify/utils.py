@@ -6,6 +6,7 @@ from typing import Any, Dict, List, Optional
 import nltk
 import numpy as np
 from numpy.linalg import norm
+
 # from sentence_transformers import SentenceTransformer
 from thefuzz import fuzz
 
@@ -145,23 +146,29 @@ def read_glove_vector(glove_vector: str) -> dict:
     return word_to_vec_map
 
 
+# TODO:
 def fuzzy_score_calculation():
     pass
 
 
+# TODO:
+def embedding_score_calculation():
+    pass
+
+
 def compute_string_similarity(
-    text_1: str,
-    text_2: str,
+    text_1: Optional[str],
+    text_2: Optional[str],
     text_1_emb: List[TextEmbeddings],
     text_2_emb: List[TextEmbeddings],
     text_type: str,
     word_to_vec_map: dict,
     stop_words: set,
     use_embeddings: bool,
-) -> float:
+) -> Optional[float]:
     try:
-        emb_match_score = 0
-        if (text_1 not in ([None, ""])) and (text_2 not in ([None, ""])):
+        emb_match_score = 0.0
+        if text_1 is not None and text_1 != "" and text_2 is not None and text_2 != "":
             # Text pre Processing
             text_1 = text_1.lower().strip()
             text_2 = text_2.lower().strip()
@@ -173,6 +180,8 @@ def compute_string_similarity(
             text_2_words = [
                 word for word in text_2_cleaned.split() if word not in stop_words
             ]
+            col1_emb_type: str = "None"
+            col2_emb_type: str = "None"
             # Calculate Embedding Score
             if use_embeddings and text_1_emb is not None and text_2_emb is not None:
                 emb_1 = None
@@ -180,23 +189,32 @@ def compute_string_similarity(
                 for text_emb in text_1_emb:
                     if text_emb.emb_type == "sentence_transformer":
                         emb_1 = text_emb.embedding
+                        col1_emb_type = "SENTENCE"
                         break
                 for text_emb in text_2_emb:
                     if text_emb.emb_type == "sentence_transformer":
                         emb_2 = text_emb.embedding
+                        col2_emb_type = "SENTENCE"
                         break
                 if len(text_1_words) == 1 and len(text_2_words) == 1:
                     glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
                     glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
 
-                    if glove_emb_1 is not None or glove_emb_2 is not None:
+                    if glove_emb_1 is not None and glove_emb_2 is not None:
                         emb_1 = glove_emb_1
                         emb_2 = glove_emb_2
+                        col1_emb_type = "GLOVE"
+                        col2_emb_type = "GLOVE"
                 if emb_1 is None or emb_2 is None:
                     raise Exception("Embeddings not found!!!")
                 emb_match_score = cosine_similarity_score(emb_1, emb_2)
 
+            assigned_embedding = [col1_emb_type, col2_emb_type]
+            logger.debug(
+                f"Found Embeddings: {assigned_embedding} for pair {text_1} and {text_2}"
+            )
             # Calculate fuzzy score
+            # TODO: Use function to calculate fuzzy score for cleanliness of the script
             fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
             if fuzzy_match_score <= 0.5:
                 fuzzy_match_score = 0.8 * fuzzy_match_score

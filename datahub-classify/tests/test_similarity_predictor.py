@@ -19,7 +19,7 @@ from datahub_classify.helper_classes import (
     TableInfo,
     TableMetadata,
 )
-from datahub_classify.similarity_predictor import check_similarity
+from datahub_classify.similarity_predictor import check_similarity, generate_embeddings
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -379,8 +379,9 @@ for comb in data_combinations:
     dataset_name_2 = comb[1]
     table_info_1 = populate_tableinfo_object(dataset_name=dataset_name_1)
     table_info_2 = populate_tableinfo_object(dataset_name=dataset_name_2)
+    table_info_list = generate_embeddings([table_info_1, table_info_2])
     table_similarity_info, column_similarity_info = check_similarity(
-        table_info_1, table_info_2
+        table_info_list[0], table_info_list[1]
     )
     overall_table_similarity_score = table_similarity_info.score
     column_similarity_scores = {}
@@ -425,8 +426,9 @@ for data in public_data_list.keys():
         true_name = col_info.metadata.column_id.split("_SPLITTER_", 1)[1]
         changed_name = col_info.metadata.name
         column_truename_changedname_mapping[true_name] = changed_name
+    table_info_list = generate_embeddings([table_info_1, table_info_2])
     table_similarity_info, column_similarity_info = check_similarity(
-        table_info_1, table_info_2
+        table_info_list[0], table_info_list[1]
     )
     overall_table_similarity_score = table_similarity_info.score
     column_similarity_scores = {}

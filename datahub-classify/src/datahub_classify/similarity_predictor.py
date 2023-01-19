@@ -24,7 +24,6 @@ current_wdr = os.path.dirname(os.path.abspath(__file__))
 glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
 model = SentenceTransformer("all-MiniLM-L6-v2")
 stop_words = load_stopwords()
-use_embeddings = True
 
 if not os.path.isfile(glove_vec):
     from datahub_classify.utils import download_glove_embeddings
@@ -85,6 +84,7 @@ def table_schema_similarity(
     col_infos1: List[ColumnInfo],
     col_infos2: List[ColumnInfo],
     word_vec_map: dict,
+    use_embeddings: bool,
     pair_score_threshold: float = config.schema_col_pair_score_threshold,
 ) -> Optional[float]:
     try:
@@ -136,7 +136,6 @@ def compute_table_overall_similarity_score(
     platform_score: Optional[int],
     lineage_score: Optional[int],
     schema_score: float,
-    # desc_present: bool,
 ) -> float:
     if platform_score is None:
         weighted_score = (
@@ -172,7 +171,6 @@ def compute_column_overall_similarity_score(
     desc_score: Optional[float],
     table_similarity_score: Optional[float],
     lineage_score: Optional[int],
-    # desc_present: bool,
 ) -> float:
     weighted_score = name_score
     if dtype_score == 1:
@@ -200,20 +198,11 @@ def compute_column_overall_similarity_score(
 
 
 def compute_table_similarity(
-    table_info1: TableInfo, table_info2: TableInfo, word_vec_map: dict
+    table_info1: TableInfo,
+    table_info2: TableInfo,
+    word_vec_map: dict,
+    use_embeddings: bool,
 ) -> Tuple[Optional[float], DebugInfo]:
-    # table_1_cols_name_dtypes = list()
-    # for col_info in table_info1.column_infos:
-    #     table_1_cols_name_dtypes.append(
-    #         (col_info.metadata.name, col_info.metadata.datatype)
-    #     )
-    #
-    # table_2_cols_name_dtypes = list()
-    # for col_info in table_info2.column_infos:
-    #     table_2_cols_name_dtypes.append(
-    #         (col_info.metadata.name, col_info.metadata.datatype)
-    #     )
-
     if table_info1.metadata.description and table_info2.metadata.description:
         desc_present = True
     else:
@@ -255,6 +244,7 @@ def compute_table_similarity(
         table_info1.column_infos,
         table_info2.column_infos,
         word_vec_map=word_vec_map,
+        use_embeddings=use_embeddings,
     )
 
     table_prediction_factor_confidence = DebugInfo(
@@ -283,6 +273,7 @@ def compute_column_similarity(
     col_info2: ColumnInfo,
     overall_table_similarity_score: Optional[float],
     word_vec_map: dict,
+    use_embeddings: bool,
 ) -> Tuple[Optional[float], DebugInfo]:
     if col_info1.metadata.description and col_info2.metadata.description:
         desc_present = True
@@ -345,7 +336,9 @@ def compute_column_similarity(
     return overall_column_similarity_score, col_prediction_factor_confidence
 
 
-def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
+def check_similarity(
+    table_info1: TableInfo, table_info2: TableInfo, use_embeddings: bool = True
+) -> tuple:
     logger.info(
         f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
     )
@@ -353,7 +346,9 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
         (
             overall_table_similarity_score,
             table_prediction_factor_confidence,
-        ) = compute_table_similarity(table_info1, table_info2, word_to_vec_map)
+        ) = compute_table_similarity(
+            table_info1, table_info2, word_to_vec_map, use_embeddings
+        )
     except Exception as e:
         logger.error(
             f"Failed to compute table similarity between Table "
@@ -387,6 +382,7 @@ def check_similarity(table_info1: TableInfo, table_info2: TableInfo) -> tuple:
                     col_info2,
                     overall_table_similarity_score,
                     word_to_vec_map,
+                    use_embeddings,
                 )
             except Exception as e:
                 logger.error(
@@ -413,7 +409,9 @@ def generate_embeddings(table_info_list: List[TableInfo]) -> List[TableInfo]:
     try:
         all_strings = []
         for table_info in table_info_list:
-            logger.info(f"** Generating Embeddings for {table_info.metadata.table_id}")
+            logger.info(
+                f"** Generating Embeddings for {table_info.metadata.table_id} **"
+            )
             if table_info.metadata.name:
                 all_strings.append(table_info.metadata.name.lower().strip())
             if table_info.metadata.description:
