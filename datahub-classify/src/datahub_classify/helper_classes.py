@@ -35,8 +35,8 @@ class ColumnMetadata:
         self.datatype = self.meta_info.get("Datatype", None)
         self.dataset_name = self.meta_info.get("Dataset_Name", None)
         self.column_id = self.meta_info.get("Column_Id", None)
-        # self.name_embedding = self.meta_info.get("name_embedding", [])
-        # self.desc_embedding = self.meta_info.get("desc_embedding", [])
+        self.name_embedding = self.meta_info.get("name_embedding", [])
+        self.desc_embedding = self.meta_info.get("desc_embedding", [])
 
 
 @dataclass
@@ -62,8 +62,8 @@ class TableMetadata:
         self.description = self.meta_info.get("Description", None)
         self.platform = self.meta_info.get("Platform", None)
         self.table_id = self.meta_info.get("Table_Id", None)
-        # self.name_embedding = self.meta_info.get("name_embedding", [])
-        # self.desc_embedding = self.meta_info.get("desc_embedding", [])
+        self.name_embedding = self.meta_info.get("name_embedding", [])
+        self.desc_embedding = self.meta_info.get("desc_embedding", [])
 
 
 @dataclass

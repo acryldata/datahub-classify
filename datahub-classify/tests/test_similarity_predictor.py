@@ -13,13 +13,14 @@ import pandas as pd
 import pytest
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
 
+from datahub_classify.embedding_generator import generate_embeddings
 from datahub_classify.helper_classes import (
     ColumnInfo,
     ColumnMetadata,
     TableInfo,
     TableMetadata,
 )
-from datahub_classify.similarity_predictor import check_similarity, generate_embeddings
+from datahub_classify.similarity_predictor import check_similarity
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

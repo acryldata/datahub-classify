@@ -51,7 +51,7 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
-                    re.fullmatch(pattern, original_text)
+                re.fullmatch(pattern, original_text)
             ):
                 match_score = 1
                 break
@@ -99,7 +99,7 @@ def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
 
 
 def detect_named_entity_spacy(
-        spacy_models_list: List, entities_of_interest: List[str], value: str
+    spacy_models_list: List, entities_of_interest: List[str], value: str
 ) -> bool:
     for spacy_model in spacy_models_list:
         doc = spacy_model(value)
@@ -110,16 +110,16 @@ def detect_named_entity_spacy(
 
 
 def perform_basic_checks(
-        metadata: ColumnMetadata,
-        values: List[Any],
-        config_dict: Dict[str, Dict],
-        infotype: Optional[str] = None,
+    metadata: ColumnMetadata,
+    values: List[Any],
+    config_dict: Dict[str, Dict],
+    infotype: Optional[str] = None,
 ) -> bool:
     basic_checks_status = True
     minimum_values_threshold = 50
     if (
-            config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
-            and len(values) < minimum_values_threshold
+        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+        and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
     # TODO: Add more basic checks
@@ -131,7 +131,8 @@ def cosine_similarity_score(vec1, vec2):
         cos_sim = np.dot(vec1, vec2) / (norm(vec1) * norm(vec2))
     except ValueError as e:
         logger.error(f"Failed to get cosine similarity - \n {str(e)}")
-    if cos_sim <= 0:
+        cos_sim = None
+    if cos_sim is not None and cos_sim <= 0:
         cos_sim = 0
     return cos_sim
 
@@ -147,28 +148,76 @@ def read_glove_vector(glove_vector: str) -> dict:
 
 
 # TODO:
-def fuzzy_score_calculation():
-    pass
+def get_fuzzy_score(
+    text_1: str,
+    text_2: str,
+    text_type: str,
+    text_1_words: List[str],
+    text_2_words: List[str],
+) -> Optional[float]:
+    try:
+        fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
+        if fuzzy_match_score <= 0.5:
+            fuzzy_match_score = 0.8 * fuzzy_match_score
+        max_fuzz_score = 0
+        if text_type == "name":
+            if len(text_1_words) == 1 or len(text_2_words) == 1:
+                for word_1 in text_1_words:
+                    for word_2 in text_2_words:
+                        fuzz_score = fuzz.token_set_ratio(word_1, word_2) / 100
+                        if fuzz_score > max_fuzz_score:
+                            max_fuzz_score = fuzz_score
+        fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
+    except Exception as e:
+        logger.error(f"Fuzzy Score Not calculated {e}")
+        fuzzy_match_score = None
+    return fuzzy_match_score
 
 
 # TODO:
-def embedding_score_calculation():
-    pass
+def get_embedding_score(
+    text_1_emb: List[TextEmbeddings],
+    text_2_emb: List[TextEmbeddings],
+    text_1_words: List[str],
+    text_2_words: List[str],
+    word_to_vec_map: dict,
+) -> Optional[float]:
+    emb_1 = None
+    emb_2 = None
+    for text_emb in text_1_emb:
+        if text_emb.emb_type == "sentence_transformer":
+            emb_1 = text_emb.embedding
+            break
+    for text_emb in text_2_emb:
+        if text_emb.emb_type == "sentence_transformer":
+            emb_2 = text_emb.embedding
+            break
+    if len(text_1_words) == 1 and len(text_2_words) == 1:
+        glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
+        glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
+
+        if glove_emb_1 is not None and glove_emb_2 is not None:
+            emb_1 = glove_emb_1
+            emb_2 = glove_emb_2
+    if emb_1 is None or emb_2 is None:
+        raise Exception("Embeddings Not Found!!!")
+    emb_match_score = cosine_similarity_score(emb_1, emb_2)
+    return emb_match_score
 
 
 def compute_string_similarity(
-        text_1: Optional[str],
-        text_2: Optional[str],
-        text_1_emb: List[TextEmbeddings],
-        text_2_emb: List[TextEmbeddings],
-        text_type: str,
-        word_to_vec_map: dict,
-        stop_words: set,
-        use_embeddings: bool,
+    text_1: Optional[str],
+    text_2: Optional[str],
+    text_1_emb: List[TextEmbeddings],
+    text_2_emb: List[TextEmbeddings],
+    text_type: str,
+    word_to_vec_map: dict,
+    stop_words: set,
+    use_embeddings: bool,
 ) -> Optional[float]:
     try:
-        emb_match_score = 0.0
         if text_1 is not None and text_1 != "" and text_2 is not None and text_2 != "":
+            emb_match_score = None
             # Text pre Processing
             text_1 = text_1.lower().strip()
             text_2 = text_2.lower().strip()
@@ -180,56 +229,34 @@ def compute_string_similarity(
             text_2_words = [
                 word for word in text_2_cleaned.split() if word not in stop_words
             ]
-            col1_emb_type: str = "None"
-            col2_emb_type: str = "None"
             # Calculate Embedding Score
-            # if use_embeddings and text_1_emb is not None and text_2_emb is not None:
-            if use_embeddings and len(text_1_emb) > 0 and len(text_2_emb) > 0:
-                emb_1 = None
-                emb_2 = None
-                for text_emb in text_1_emb:
-                    if text_emb.emb_type == "sentence_transformer":
-                        emb_1 = text_emb.embedding
-                        col1_emb_type = "SENTENCE"
-                        break
-                for text_emb in text_2_emb:
-                    if text_emb.emb_type == "sentence_transformer":
-                        emb_2 = text_emb.embedding
-                        col2_emb_type = "SENTENCE"
-                        break
-                if len(text_1_words) == 1 and len(text_2_words) == 1:
-                    glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
-                    glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
-
-                    if glove_emb_1 is not None and glove_emb_2 is not None:
-                        emb_1 = glove_emb_1
-                        emb_2 = glove_emb_2
-                        col1_emb_type = "GLOVE"
-                        col2_emb_type = "GLOVE"
-                if emb_1 is None or emb_2 is None:
-                    logger.error("Embeddings not found!!!")
-                emb_match_score = cosine_similarity_score(emb_1, emb_2)
-            else:
-                raise Exception("Embeddings must be provided when 'use_embeddings = True'")
-            assigned_embedding = [col1_emb_type, col2_emb_type]
-            logger.debug(
-                f"Found Embeddings: {assigned_embedding} for pair {text_1} and {text_2}"
-            )
+            if use_embeddings:
+                if len(text_1_emb) > 0 and len(text_2_emb) > 0:
+                    emb_match_score = get_embedding_score(
+                        text_1_emb=text_1_emb,
+                        text_2_emb=text_2_emb,
+                        text_1_words=text_1_words,
+                        text_2_words=text_2_words,
+                        word_to_vec_map=word_to_vec_map,
+                    )
+                else:
+                    raise Exception(
+                        "Embeddings must be provided when 'use_embeddings = True'"
+                    )
             # Calculate fuzzy score
-            # TODO: Use function to calculate fuzzy score for cleanliness of the script
-            fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
-            if fuzzy_match_score <= 0.5:
-                fuzzy_match_score = 0.8 * fuzzy_match_score
-            max_fuzz_score = 0
-            if text_type == "name":
-                if len(text_1_words) == 1 or len(text_2_words) == 1:
-                    for word_1 in text_1_words:
-                        for word_2 in text_2_words:
-                            fuzz_score = fuzz.token_set_ratio(word_1, word_2) / 100
-                            if fuzz_score > max_fuzz_score:
-                                max_fuzz_score = fuzz_score
-            fuzzy_match_score = np.maximum(fuzzy_match_score, max_fuzz_score)
-            score = np.maximum(fuzzy_match_score, emb_match_score)
+            fuzzy_match_score = get_fuzzy_score(
+                text_1=text_1,
+                text_2=text_2,
+                text_type=text_type,
+                text_1_words=text_1_words,
+                text_2_words=text_2_words,
+            )
+            if emb_match_score is None:
+                emb_match_score = 0.0
+            if fuzzy_match_score is not None:
+                score = np.maximum(fuzzy_match_score, emb_match_score)
+            else:
+                score = None
         else:
             score = None
     except Exception as e:

@@ -3,7 +3,6 @@ import os
 from typing import List, Optional, Tuple
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
 import datahub_classify.similarity_numeric_constants as config
 from datahub_classify.helper_classes import (
@@ -11,7 +10,6 @@ from datahub_classify.helper_classes import (
     DebugInfo,
     SimilarityInfo,
     TableInfo,
-    TextEmbeddings,
 )
 from datahub_classify.utils import (
     compute_string_similarity,
@@ -22,7 +20,6 @@ from datahub_classify.utils import (
 logger = logging.getLogger(__name__)
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
-model = SentenceTransformer("all-MiniLM-L6-v2")
 stop_words = load_stopwords()
 
 if not os.path.isfile(glove_vec):
@@ -330,7 +327,6 @@ def compute_column_similarity(
             column_desc_score,
             overall_table_similarity_score,
             column_lineage_score,
-            # desc_present,
         )
 
     return overall_column_similarity_score, col_prediction_factor_confidence
@@ -370,9 +366,9 @@ def check_similarity(
     )
     for col_info1 in table_info1.column_infos:
         for col_info2 in table_info2.column_infos:
-            logger.debug(
-                f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
-            )
+            # logger.debug(
+            #     f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
+            # )
             try:
                 (
                     overall_column_similarity_score,
@@ -402,68 +398,3 @@ def check_similarity(
             column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
     logger.info("===============================================")
     return table_similarity_score, column_similarity_scores
-
-
-def generate_embeddings(table_info_list: List[TableInfo]) -> List[TableInfo]:
-    logger.info("** Generating Embeddings **")
-    try:
-        all_strings = []
-        for table_info in table_info_list:
-            logger.info(
-                f"** Generating Embeddings for {table_info.metadata.table_id} **"
-            )
-            if table_info.metadata.name:
-                all_strings.append(table_info.metadata.name.lower().strip())
-            if table_info.metadata.description:
-                all_strings.append(table_info.metadata.description.lower().strip())
-            for col_info in table_info.column_infos:
-                if col_info.metadata.name:
-                    all_strings.append(col_info.metadata.name.lower().strip())
-                if col_info.metadata.description:
-                    all_strings.append(col_info.metadata.description.lower().strip())
-        all_embeddings = model.encode(all_strings)
-        all_strings_with_embeddings = {
-            key: value for key, value in zip(all_strings, all_embeddings)
-        }
-
-        for table_info in table_info_list:
-            if table_info.metadata.name:
-                table_info.metadata.name_embedding.append(
-                    TextEmbeddings(
-                        "sentence_transformer",
-                        all_strings_with_embeddings[
-                            table_info.metadata.name.lower().strip()
-                        ],
-                    )
-                )
-            if table_info.metadata.description:
-                table_info.metadata.desc_embedding.append(
-                    TextEmbeddings(
-                        "sentence_transformer",
-                        all_strings_with_embeddings[
-                            table_info.metadata.description.lower().strip()
-                        ],
-                    )
-                )
-            for col_info in table_info.column_infos:
-                if col_info.metadata.name:
-                    col_info.metadata.name_embedding.append(
-                        TextEmbeddings(
-                            "sentence_transformer",
-                            all_strings_with_embeddings[
-                                col_info.metadata.name.lower().strip()
-                            ],
-                        )
-                    )
-                if col_info.metadata.description:
-                    col_info.metadata.desc_embedding.append(
-                        TextEmbeddings(
-                            "sentence_transformer",
-                            all_strings_with_embeddings[
-                                col_info.metadata.description.lower().strip()
-                            ],
-                        )
-                    )
-    except Exception as e:
-        logger.error("Failed to Generate Embeddings", exc_info=e)
-    return table_info_list
