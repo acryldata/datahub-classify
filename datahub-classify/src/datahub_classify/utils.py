@@ -184,24 +184,38 @@ def get_embedding_score(
 ) -> Optional[float]:
     emb_1 = None
     emb_2 = None
-    for text_emb in text_1_emb:
-        if text_emb.emb_type == "sentence_transformer":
-            emb_1 = text_emb.embedding
-            break
-    for text_emb in text_2_emb:
-        if text_emb.emb_type == "sentence_transformer":
-            emb_2 = text_emb.embedding
-            break
-    if len(text_1_words) == 1 and len(text_2_words) == 1:
-        glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
-        glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
+    try:
+        if len(text_1_words) == 1 and len(text_2_words) == 1:
+            glove_emb_1 = word_to_vec_map.get(text_1_words[0], None)
+            glove_emb_2 = word_to_vec_map.get(text_2_words[0], None)
 
-        if glove_emb_1 is not None and glove_emb_2 is not None:
-            emb_1 = glove_emb_1
-            emb_2 = glove_emb_2
-    if emb_1 is None or emb_2 is None:
-        raise Exception("Embeddings Not Found!!!")
-    emb_match_score = cosine_similarity_score(emb_1, emb_2)
+            if glove_emb_1 is not None and glove_emb_2 is not None:
+                emb_1 = glove_emb_1
+                emb_2 = glove_emb_2
+            else:
+                for text_emb in text_1_emb:
+                    if text_emb.emb_type == "sentence_transformer":
+                        emb_1 = text_emb.embedding
+                        break
+                for text_emb in text_2_emb:
+                    if text_emb.emb_type == "sentence_transformer":
+                        emb_2 = text_emb.embedding
+                        break
+        else:
+            for text_emb in text_1_emb:
+                if text_emb.emb_type == "sentence_transformer":
+                    emb_1 = text_emb.embedding
+                    break
+            for text_emb in text_2_emb:
+                if text_emb.emb_type == "sentence_transformer":
+                    emb_2 = text_emb.embedding
+                    break
+        if emb_1 is None or emb_2 is None:
+            raise Exception("Embeddings Not Found!!!")
+        emb_match_score = cosine_similarity_score(emb_1, emb_2)
+    except Exception as e:
+        logger.error(f"Failed to calculate cosine similarity {e}")
+        emb_match_score = None
     return emb_match_score
 
 
@@ -216,8 +230,12 @@ def compute_string_similarity(
     use_embeddings: bool,
 ) -> Optional[float]:
     try:
-        if text_1 is not None and text_1 != "" and text_2 is not None and text_2 != "":
-            emb_match_score = None
+        if (
+            text_1 is not None
+            and text_1.strip() != ""
+            and text_2 is not None
+            and text_2.strip() != ""
+        ):
             # Text pre Processing
             text_1 = text_1.lower().strip()
             text_2 = text_2.lower().strip()
@@ -243,6 +261,8 @@ def compute_string_similarity(
                     raise Exception(
                         "Embeddings must be provided when 'use_embeddings = True'"
                     )
+            else:
+                emb_match_score = 0.0
             # Calculate fuzzy score
             fuzzy_match_score = get_fuzzy_score(
                 text_1=text_1,
@@ -251,12 +271,15 @@ def compute_string_similarity(
                 text_1_words=text_1_words,
                 text_2_words=text_2_words,
             )
-            if emb_match_score is None:
-                emb_match_score = 0.0
-            if fuzzy_match_score is not None:
-                score = np.maximum(fuzzy_match_score, emb_match_score)
-            else:
+
+            if emb_match_score is None and fuzzy_match_score is None:
                 score = None
+            else:
+                if emb_match_score is None:
+                    emb_match_score = 0.0
+                if fuzzy_match_score is None:
+                    fuzzy_match_score = 0.0
+                score = np.maximum(fuzzy_match_score, emb_match_score)
         else:
             score = None
     except Exception as e:

@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import InitVar, dataclass, field
 from typing import Any, Dict, List, Optional
 
 import numpy
@@ -6,71 +6,9 @@ from pydantic import BaseModel, Field
 
 
 @dataclass
-class InfotypeProposal:
-    infotype: str
-    confidence_level: float
-    debug_info: Dict[str, Any]
-
-
-@dataclass
-class TextEmbeddings:
-    emb_type: str
-    embedding: numpy.ndarray
-
-
-@dataclass
-class ColumnMetadata:
-    meta_info: Dict[str, Any]
-    name: str = field(init=False)
-    description: str = field(init=False)
-    datatype: str = field(init=False)
-    dataset_name: str = field(init=False)
-    column_id: str = field(init=False)
-    name_embedding: List[TextEmbeddings] = field(default_factory=list)
-    desc_embedding: List[TextEmbeddings] = field(default_factory=list)
-
-    def __post_init__(self):
-        self.name = self.meta_info.get("Name", None)
-        self.description = self.meta_info.get("Description", None)
-        self.datatype = self.meta_info.get("Datatype", None)
-        self.dataset_name = self.meta_info.get("Dataset_Name", None)
-        self.column_id = self.meta_info.get("Column_Id", None)
-        self.name_embedding = self.meta_info.get("name_embedding", [])
-        self.desc_embedding = self.meta_info.get("desc_embedding", [])
-
-
-@dataclass
-class ColumnInfo:
-    metadata: ColumnMetadata
-    values: List = field(default_factory=list)
-    infotype_proposals: Optional[List[InfotypeProposal]] = None
-    parent_columns: List = field(default_factory=list)
-
-
-@dataclass
-class TableMetadata:
-    meta_info: Dict[str, Any]
-    name: str = field(init=False)
-    description: str = field(init=False)
-    platform: str = field(init=False)
-    table_id: str = field(init=False)
-    name_embedding: List[TextEmbeddings] = field(default_factory=list)
-    desc_embedding: List[TextEmbeddings] = field(default_factory=list)
-
-    def __post_init__(self):
-        self.name = self.meta_info.get("Name", None)
-        self.description = self.meta_info.get("Description", None)
-        self.platform = self.meta_info.get("Platform", None)
-        self.table_id = self.meta_info.get("Table_Id", None)
-        self.name_embedding = self.meta_info.get("name_embedding", [])
-        self.desc_embedding = self.meta_info.get("desc_embedding", [])
-
-
-@dataclass
-class TableInfo:
-    metadata: TableMetadata
-    column_infos: List
-    parent_tables: List = field(default_factory=list)
+class FactorDebugInfo:
+    confidence: Optional[float] = field(default=None)
+    weighted_score: Optional[float] = field(default=None)
 
 
 class DebugInfo(BaseModel):
@@ -101,7 +39,147 @@ class DebugInfo(BaseModel):
     )
 
 
+class SimilarityDebugInfo(BaseModel):
+    name: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using name",
+    )
+    description: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using description",
+    )
+    datatype: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using datatype. For tables, it is None",
+    )
+    values: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using values. For tables, it is None",
+    )
+    platform: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using platform. For columns, it is None",
+    )
+    table_schema: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="For tables, it is confidence score and weighted score contribution using table schema. For columns, it is table_similarity_score",
+    )
+    lineage: Optional[FactorDebugInfo] = Field(
+        default=None,
+        description="confidence score and weighted score contribution using lineage",
+    )
+
+
+@dataclass
+class InfotypeProposal:
+    infotype: str
+    confidence_level: float
+    debug_info: DebugInfo
+
+
+@dataclass
+class TextEmbeddings:
+    emb_type: str
+    embedding: numpy.ndarray
+
+
+# @dataclass
+# class ColumnMetadata:
+#     meta_info: Dict[str, Any]
+#     name: str = field(init=False)
+#     description: str = field(init=False)
+#     datatype: str = field(init=False)
+#     dataset_name: str = field(init=False)
+#     column_id: str = field(init=False)
+#     name_embedding: List[TextEmbeddings] = field(default_factory=list)
+#     desc_embedding: List[TextEmbeddings] = field(default_factory=list)
+#
+#     def __post_init__(self):
+#         self.name = self.meta_info.get("Name", None)
+#         self.description = self.meta_info.get("Description", None)
+#         self.datatype = self.meta_info.get("Datatype", None)
+#         self.dataset_name = self.meta_info.get("Dataset_Name", None)
+#         self.column_id = self.meta_info.get("Column_Id", None)
+#         self.name_embedding = self.meta_info.get("name_embedding", [])
+#         self.desc_embedding = self.meta_info.get("desc_embedding", [])
+
+
+@dataclass
+class ColumnMetadata:
+    meta_info: InitVar[Optional[Dict[str, Any]]] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    datatype: Optional[str] = None
+    dataset_name: Optional[str] = None
+    column_id: Optional[str] = None
+    name_embedding: List[TextEmbeddings] = field(default_factory=list)
+    desc_embedding: List[TextEmbeddings] = field(default_factory=list)
+
+    def __post_init__(self, meta_info):
+        if meta_info is not None:
+            self.name = meta_info.get("Name", None)
+            self.description = meta_info.get("Description", None)
+            self.datatype = meta_info.get("Datatype", None)
+            self.dataset_name = meta_info.get("Dataset_Name", None)
+            self.column_id = meta_info.get("Column_Id", None)
+            self.name_embedding = meta_info.get("name_embedding", [])
+            self.desc_embedding = meta_info.get("desc_embedding", [])
+
+
+@dataclass
+class ColumnInfo:
+    metadata: ColumnMetadata
+    values: List = field(default_factory=list)
+    infotype_proposals: Optional[List[InfotypeProposal]] = None
+    parent_columns: List = field(default_factory=list)
+
+
+@dataclass
+class TableMetadata:
+    meta_info: InitVar[Optional[Dict[str, Any]]] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    platform: Optional[str] = None
+    table_id: Optional[str] = None
+    name_embedding: List[TextEmbeddings] = field(default_factory=list)
+    desc_embedding: List[TextEmbeddings] = field(default_factory=list)
+
+    def __post_init__(self, meta_info):
+        self.name = meta_info.get("Name", None)
+        self.description = meta_info.get("Description", None)
+        self.platform = meta_info.get("Platform", None)
+        self.table_id = meta_info.get("Table_Id", None)
+        self.name_embedding = meta_info.get("name_embedding", [])
+        self.desc_embedding = meta_info.get("desc_embedding", [])
+
+
+# @dataclass
+# class TableMetadata:
+#     meta_info: Dict[str, Any]
+#     name: str = field(init=False)
+#     description: str = field(init=False)
+#     platform: str = field(init=False)
+#     table_id: str = field(init=False)
+#     name_embedding: List[TextEmbeddings] = field(default_factory=list)
+#     desc_embedding: List[TextEmbeddings] = field(default_factory=list)
+#
+#     def __post_init__(self):
+#         self.name = self.meta_info.get("Name", None)
+#         self.description = self.meta_info.get("Description", None)
+#         self.platform = self.meta_info.get("Platform", None)
+#         self.table_id = self.meta_info.get("Table_Id", None)
+#         self.name_embedding = self.meta_info.get("name_embedding", [])
+#         self.desc_embedding = self.meta_info.get("desc_embedding", [])
+
+
+@dataclass
+class TableInfo:
+    metadata: TableMetadata
+    column_infos: List
+    parent_tables: List = field(default_factory=list)
+
+
 @dataclass
 class SimilarityInfo:
     score: Optional[float]
-    prediction_factor_confidence: Optional[DebugInfo]
+    prediction_factor_confidence: Optional[SimilarityDebugInfo]
