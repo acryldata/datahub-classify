@@ -442,7 +442,7 @@ def check_similarity(
 
     table_similarity_score = SimilarityInfo(
         score=overall_table_similarity_score,
-        prediction_factor_confidence=table_prediction_factor_confidence,
+        prediction_factors_scores=table_prediction_factor_confidence,
     )
 
     column_similarity_scores = {}
@@ -477,7 +477,7 @@ def check_similarity(
             column2_id = col_info2.metadata.column_id
             col_similarity_info = SimilarityInfo(
                 score=overall_column_similarity_score,
-                prediction_factor_confidence=col_prediction_factor_confidence,
+                prediction_factors_scores=col_prediction_factor_confidence,
             )
             column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
     logger.info("===============================================")

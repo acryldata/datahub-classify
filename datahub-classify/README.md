@@ -127,8 +127,8 @@ API expects following parameters in the input
 
 ### API Output
 API returns two objects:
-- `table_similarity_score` - This is a instance of SimilarityInfo which contains 'score' and 'prediction_factor_confidence'. 'score' is the overall semantic similarity score of the two input tables and 'prediction_factor_confidence' is the instance of DebugInfo describing confidence of each prediction factor.  
-- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs. Key being a tuple of column IDs of the column pair and value being the instance of SimilarityInfo, it contains the semantic similarity score between two columns and confidence of each prediction factor.
+- `table_similarity_score` - This is a instance of SimilarityInfo which contains 'score' and 'prediction_factors_scores'. 'score' is the overall semantic similarity score of the two input tables and 'prediction_factors_scores' is the instance of SimilarityDebugInfo class describing the confidence score and weighted score of each prediction factor.  
+- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs. Key being a tuple of column IDs of the column pair and value being the instance of SimilarityInfo, it contains the semantic similarity score between two columns and confidence & weighted score of each prediction factor.
 
 ### Usage of the API
 Find usage of the "check_similarity()" API at following link
@@ -140,6 +140,16 @@ Following are the assumptions about input parameters
 - table_description & table_lineage are optional.
 - col_name, col_datatype are the required parameters in ColumnInfo object.
 - col_description & col_lineage are optional.
+
+# API 'preprocess_tables'
+This API generates the embedding for tables (i.e. for name and description of the table and columns)
+### API Input
+API expects following parameter in the input
+- `table_info_list` - This list contains a batch of tables (i.e. instance of TableInfo) for which embedding needs to be populated
+
+### API Output
+API returns following parameter
+- `table_info_list` - This is a list of TableInfo objects of same length as input. This API populates the embedding of name $ description of the table (and included columns) and updates the same TableInfo and ColumnInfo objects with "name_embedding" and "desc_embedding". Value of "name_embedding" and "desc_embedding" is a list of 'TextEmbeddings' instances.
 
 # Development
 
