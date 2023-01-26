@@ -423,7 +423,7 @@ def compute_column_similarity(
 def check_similarity(
     table_info1: TableInfo, table_info2: TableInfo, use_embeddings: bool = True
 ) -> tuple:
-    logger.info(
+    logger.debug(
         f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
     )
     try:
@@ -446,7 +446,6 @@ def check_similarity(
     )
 
     column_similarity_scores = {}
-    logger.info("** Finding column similarities **")
     logger.debug(
         f"Total pairs --> {len(table_info1.column_infos) * len(table_info2.column_infos)}"
     )
@@ -486,13 +485,12 @@ def check_similarity(
 
 
 def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
-    logger.info("** Generating Embeddings **")
     try:
         all_strings = []
         for table_info in table_info_list:
-            logger.info(
-                f"** Generating Embeddings for {table_info.metadata.table_id} **"
-            )
+            # logger.debug(
+            #     f"** Generating Embeddings for {table_info.metadata.table_id} **"
+            # )
             if table_info.metadata.name:
                 all_strings.append(table_info.metadata.name.lower().strip())
             if table_info.metadata.description:
