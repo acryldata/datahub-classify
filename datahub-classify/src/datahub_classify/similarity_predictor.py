@@ -1,5 +1,6 @@
 import logging
 import os
+import re
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -16,6 +17,7 @@ from datahub_classify.helper_classes import (
 )
 from datahub_classify.utils import (
     compute_string_similarity,
+    get_fuzzy_score,
     load_stopwords,
     read_glove_vector,
 )
@@ -127,6 +129,55 @@ def table_schema_similarity(
                         columns_to_remove.append(col2.metadata.column_id)
                         break
         schema_score = 2 * num_matched_pairs / (num_cols_table1 + num_cols_table2)
+    except Exception as e:
+        logger.error("Failed to compute table schema similarity ", exc_info=e)
+        schema_score = None
+    return schema_score
+
+
+def table_schema_similarity_pruning(
+    col_infos1: List[ColumnInfo],
+    col_infos2: List[ColumnInfo],
+) -> Optional[float]:
+    try:
+        text_1 = ""
+        text_2 = ""
+
+        assert col_infos1 and col_infos2
+        assert len(col_infos1) > 0 and len(col_infos2) > 0
+
+        for col in col_infos1:
+            dtype = col.metadata.datatype
+            name = col.metadata.name
+            if (
+                name is not None
+                and dtype is not None
+                and name.strip() != ""
+                and dtype.strip() != ""
+            ):
+                name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
+                dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
+                text_1 = text_1 + " " + f"{name}_{dtype}"
+
+        for col in col_infos2:
+            dtype = col.metadata.datatype
+            name = col.metadata.name
+            if (
+                name is not None
+                and dtype is not None
+                and name.strip() != ""
+                and dtype.strip() != ""
+            ):
+                name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
+                dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
+                text_2 = text_2 + " " + f"{name}_{dtype}"
+
+        if text_1 != "" and text_2 != "":
+            schema_score = get_fuzzy_score(
+                text_1=text_1, text_2=text_2, text_type="schema"
+            )
+        else:
+            schema_score = None
     except Exception as e:
         logger.error("Failed to compute table schema similarity ", exc_info=e)
         schema_score = None
@@ -250,6 +301,7 @@ def compute_table_similarity(
     table_info1: TableInfo,
     table_info2: TableInfo,
     use_embeddings: bool,
+    pruning_mode: bool,
 ) -> Tuple[Optional[float], Optional[SimilarityDebugInfo]]:
     table_name_score = compute_string_similarity(
         table_info1.metadata.name,
@@ -289,11 +341,17 @@ def compute_table_similarity(
         table_info1.metadata.table_id,
         table_info2.metadata.table_id,
     )
-    table_schema_score = table_schema_similarity(
-        table_info1.column_infos,
-        table_info2.column_infos,
-        use_embeddings=use_embeddings,
-    )
+    if pruning_mode:
+        table_schema_score = table_schema_similarity_pruning(
+            table_info1.column_infos,
+            table_info2.column_infos,
+        )
+    else:
+        table_schema_score = table_schema_similarity(
+            table_info1.column_infos,
+            table_info2.column_infos,
+            use_embeddings=use_embeddings,
+        )
 
     if table_name_score is None or table_schema_score is None:
         overall_table_similarity_score = None
@@ -421,7 +479,10 @@ def compute_column_similarity(
 
 
 def check_similarity(
-    table_info1: TableInfo, table_info2: TableInfo, use_embeddings: bool = True
+    table_info1: TableInfo,
+    table_info2: TableInfo,
+    use_embeddings: bool = True,
+    pruning_mode: bool = True,
 ) -> tuple:
     logger.debug(
         f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
@@ -430,7 +491,9 @@ def check_similarity(
         (
             overall_table_similarity_score,
             table_prediction_factor_confidence,
-        ) = compute_table_similarity(table_info1, table_info2, use_embeddings)
+        ) = compute_table_similarity(
+            table_info1, table_info2, use_embeddings, pruning_mode
+        )
     except Exception as e:
         logger.error(
             f"Failed to compute table similarity between Table "
@@ -445,41 +508,43 @@ def check_similarity(
         prediction_factors_scores=table_prediction_factor_confidence,
     )
 
-    column_similarity_scores = {}
-    logger.debug(
-        f"Total pairs --> {len(table_info1.column_infos) * len(table_info2.column_infos)}"
-    )
-    for col_info1 in table_info1.column_infos:
-        for col_info2 in table_info2.column_infos:
-            # logger.debug(
-            #     f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
-            # )
-            try:
-                (
-                    overall_column_similarity_score,
-                    col_prediction_factor_confidence,
-                ) = compute_column_similarity(
-                    col_info1,
-                    col_info2,
-                    overall_table_similarity_score,
-                    use_embeddings,
-                )
-            except Exception as e:
-                logger.error(
-                    f"Failed to compute column similarity between Column "
-                    f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
-                    exc_info=e,
-                )
-                overall_column_similarity_score = None
-                col_prediction_factor_confidence = None
+    column_similarity_scores: Dict[tuple, SimilarityInfo] = {}
 
-            column1_id = col_info1.metadata.column_id
-            column2_id = col_info2.metadata.column_id
-            col_similarity_info = SimilarityInfo(
-                score=overall_column_similarity_score,
-                prediction_factors_scores=col_prediction_factor_confidence,
-            )
-            column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
+    if not pruning_mode:
+        logger.debug(
+            f"Total pairs --> {len(table_info1.column_infos) * len(table_info2.column_infos)}"
+        )
+        for col_info1 in table_info1.column_infos:
+            for col_info2 in table_info2.column_infos:
+                # logger.debug(
+                #     f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
+                # )
+                try:
+                    (
+                        overall_column_similarity_score,
+                        col_prediction_factor_confidence,
+                    ) = compute_column_similarity(
+                        col_info1,
+                        col_info2,
+                        overall_table_similarity_score,
+                        use_embeddings,
+                    )
+                except Exception as e:
+                    logger.error(
+                        f"Failed to compute column similarity between Column "
+                        f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
+                        exc_info=e,
+                    )
+                    overall_column_similarity_score = None
+                    col_prediction_factor_confidence = None
+
+                column1_id = col_info1.metadata.column_id
+                column2_id = col_info2.metadata.column_id
+                col_similarity_info = SimilarityInfo(
+                    score=overall_column_similarity_score,
+                    prediction_factors_scores=col_prediction_factor_confidence,
+                )
+                column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
     logger.info("===============================================")
     return table_similarity_score, column_similarity_scores
 

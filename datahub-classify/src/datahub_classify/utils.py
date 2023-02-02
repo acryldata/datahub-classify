@@ -152,8 +152,8 @@ def get_fuzzy_score(
     text_1: str,
     text_2: str,
     text_type: str,
-    text_1_words: List[str],
-    text_2_words: List[str],
+    text_1_words: List[str] = [],
+    text_2_words: List[str] = [],
 ) -> Optional[float]:
     try:
         fuzzy_match_score = fuzz.token_set_ratio(text_1, text_2) / 100
