@@ -38,7 +38,7 @@ word_to_vec_map = read_glove_vector(glove_vec)
 
 
 def column_dtype_similarity(
-    column_1_dtype: Optional[str], column_2_dtype: Optional[str]
+        column_1_dtype: Optional[str], column_2_dtype: Optional[str]
 ) -> Optional[int]:
     try:
         if column_1_dtype == column_2_dtype:
@@ -55,7 +55,7 @@ def column_dtype_similarity(
 
 
 def table_platform_similarity(
-    platform_1_name: Optional[str], platform_2_name: Optional[str]
+        platform_1_name: Optional[str], platform_2_name: Optional[str]
 ) -> Optional[int]:
     try:
         if platform_1_name != platform_2_name:
@@ -69,10 +69,10 @@ def table_platform_similarity(
 
 
 def compute_lineage_score(
-    entity_1_parents: List,
-    entity_2_parents: List,
-    entity_1_id: Optional[str],
-    entity_2_id: Optional[str],
+        entity_1_parents: List,
+        entity_2_parents: List,
+        entity_1_id: Optional[str],
+        entity_2_id: Optional[str],
 ) -> Optional[int]:
     try:
         if (entity_1_id in entity_2_parents) or (entity_2_id in entity_1_parents):
@@ -89,10 +89,10 @@ def compute_lineage_score(
 
 
 def table_schema_similarity(
-    col_infos1: List[ColumnInfo],
-    col_infos2: List[ColumnInfo],
-    use_embeddings: bool,
-    pair_score_threshold: float = config.schema_col_pair_score_threshold,
+        col_infos1: List[ColumnInfo],
+        col_infos2: List[ColumnInfo],
+        use_embeddings: bool,
+        pair_score_threshold: float = config.schema_col_pair_score_threshold,
 ) -> Optional[float]:
     try:
         num_matched_pairs = 0
@@ -118,8 +118,8 @@ def table_schema_similarity(
                 )
                 if col_name_score is not None and col_dtype_score is not None:
                     pair_score = (
-                        config.schema_col_name_weight * col_name_score
-                        + config.schema_col_dtype_weight * col_dtype_score
+                            config.schema_col_name_weight * col_name_score
+                            + config.schema_col_dtype_weight * col_dtype_score
                     )
 
                     if pair_score > pair_score_threshold:
@@ -136,8 +136,8 @@ def table_schema_similarity(
 
 
 def table_schema_similarity_pruning(
-    col_infos1: List[ColumnInfo],
-    col_infos2: List[ColumnInfo],
+        col_infos1: List[ColumnInfo],
+        col_infos2: List[ColumnInfo],
 ) -> Optional[float]:
     try:
         text_1 = ""
@@ -150,28 +150,39 @@ def table_schema_similarity_pruning(
             dtype = col.metadata.datatype
             name = col.metadata.name
             if (
-                name is not None
-                and dtype is not None
-                and name.strip() != ""
-                and dtype.strip() != ""
+                    name is not None
+                    and dtype is not None
+                    and name.strip() != ""
+                    and dtype.strip() != ""
             ):
-                name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
-                dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
+                if not name.isdigit():
+                    name = re.sub(
+                        r"[^a-zA-Z0-9]+",
+                        "_",
+                        re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
+                    )
+                # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
+                dtype = re.sub("[^a-z0-9]", "_", dtype.lower())
                 text_1 = text_1 + " " + f"{name}_{dtype}"
 
         for col in col_infos2:
-            dtype = col.metadata.datatype
+            dtype = str(col.metadata.datatype)
             name = col.metadata.name
             if (
-                name is not None
-                and dtype is not None
-                and name.strip() != ""
-                and dtype.strip() != ""
+                    name is not None
+                    and dtype is not None
+                    and name.strip() != ""
+                    and dtype.strip() != ""
             ):
-                name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
+                if not name.isdigit():
+                    name = re.sub(
+                        r"[^a-zA-Z0-9]+",
+                        "_",
+                        re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
+                    )
+                # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
                 dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
                 text_2 = text_2 + " " + f"{name}_{dtype}"
-
         if text_1 != "" and text_2 != "":
             schema_score = get_fuzzy_score(
                 text_1=text_1, text_2=text_2, text_type="schema"
@@ -185,11 +196,11 @@ def table_schema_similarity_pruning(
 
 
 def compute_table_overall_similarity_score(
-    name_score: float,
-    desc_score: Optional[float],
-    platform_score: Optional[int],
-    lineage_score: Optional[int],
-    schema_score: float,
+        name_score: float,
+        desc_score: Optional[float],
+        platform_score: Optional[int],
+        lineage_score: Optional[int],
+        schema_score: float,
 ) -> Tuple[float, Dict[str, Optional[float]]]:
     weighted_factor_scores: Dict[str, Optional[float]] = dict()
 
@@ -197,7 +208,7 @@ def compute_table_overall_similarity_score(
     weighted_factor_scores["name"] = config.overall_name_score_weight * name_score
     # Schema Score
     weighted_factor_scores["table_schema"] = (
-        config.overall_schema_score_weight * schema_score
+            config.overall_schema_score_weight * schema_score
     )
 
     # Platform Score
@@ -205,7 +216,7 @@ def compute_table_overall_similarity_score(
         weighted_factor_scores["platform"] = None
     else:
         weighted_factor_scores["platform"] = (
-            config.overall_platform_score_weight * platform_score
+                config.overall_platform_score_weight * platform_score
         )
 
     weighted_score = sum(filter(None, weighted_factor_scores.values()))
@@ -228,9 +239,9 @@ def compute_table_overall_similarity_score(
 
     # Lineage Score
     if (
-        weighted_score >= config.table_weighted_score_threshold
-        and lineage_score is not None
-        and lineage_score == 1
+            weighted_score >= config.table_weighted_score_threshold
+            and lineage_score is not None
+            and lineage_score == 1
     ):
         overall_table_similarity_score = 1
         weighted_factor_scores["lineage"] = 1.0
@@ -240,11 +251,11 @@ def compute_table_overall_similarity_score(
 
 
 def compute_column_overall_similarity_score(
-    name_score: float,
-    dtype_score: int,
-    desc_score: Optional[float],
-    table_similarity_score: Optional[float],
-    lineage_score: Optional[int],
+        name_score: float,
+        dtype_score: int,
+        desc_score: Optional[float],
+        table_similarity_score: Optional[float],
+        lineage_score: Optional[int],
 ) -> Tuple[float, Dict[str, Optional[float]]]:
     weighted_factor_scores: Dict[str, Optional[float]] = dict()
     # TODO: Should we have weightage for name
@@ -273,8 +284,8 @@ def compute_column_overall_similarity_score(
     # Schema Score & Lineage Score
     if weighted_score > config.column_weighted_score_threshold:
         if (
-            table_similarity_score is not None
-            and table_similarity_score > config.table_similarity_threshold
+                table_similarity_score is not None
+                and table_similarity_score > config.table_similarity_threshold
         ):
             weighted_score = config.column_table_similarity_boost * weighted_score
             weighted_factor_scores["table_schema"] = weighted_score - sum(
@@ -298,10 +309,10 @@ def compute_column_overall_similarity_score(
 
 
 def compute_table_similarity(
-    table_info1: TableInfo,
-    table_info2: TableInfo,
-    use_embeddings: bool,
-    pruning_mode: bool,
+        table_info1: TableInfo,
+        table_info2: TableInfo,
+        use_embeddings: bool,
+        pruning_mode: bool,
 ) -> Tuple[Optional[float], Optional[SimilarityDebugInfo]]:
     table_name_score = compute_string_similarity(
         table_info1.metadata.name,
@@ -314,10 +325,10 @@ def compute_table_similarity(
         stop_words=stop_words,
     )
     if (
-        table_info1.metadata.description
-        and table_info2.metadata.description
-        and table_info1.metadata.description.strip() != ""
-        and table_info2.metadata.description.strip() != ""
+            table_info1.metadata.description
+            and table_info2.metadata.description
+            and table_info1.metadata.description.strip() != ""
+            and table_info2.metadata.description.strip() != ""
     ):
         table_desc_score = compute_string_similarity(
             table_info1.metadata.description,
@@ -394,10 +405,10 @@ def compute_table_similarity(
 
 
 def compute_column_similarity(
-    col_info1: ColumnInfo,
-    col_info2: ColumnInfo,
-    overall_table_similarity_score: Optional[float],
-    use_embeddings: bool,
+        col_info1: ColumnInfo,
+        col_info2: ColumnInfo,
+        overall_table_similarity_score: Optional[float],
+        use_embeddings: bool,
 ) -> Tuple[Optional[float], Optional[SimilarityDebugInfo]]:
     column_name_score = compute_string_similarity(
         col_info1.metadata.name,
@@ -411,10 +422,10 @@ def compute_column_similarity(
     )
 
     if (
-        col_info1.metadata.description
-        and col_info2.metadata.description
-        and col_info1.metadata.description.strip() != ""
-        and col_info2.metadata.description.strip() != ""
+            col_info1.metadata.description
+            and col_info2.metadata.description
+            and col_info1.metadata.description.strip() != ""
+            and col_info2.metadata.description.strip() != ""
     ):
         column_desc_score = compute_string_similarity(
             col_info1.metadata.description,
@@ -479,10 +490,10 @@ def compute_column_similarity(
 
 
 def check_similarity(
-    table_info1: TableInfo,
-    table_info2: TableInfo,
-    use_embeddings: bool = True,
-    pruning_mode: bool = True,
+        table_info1: TableInfo,
+        table_info2: TableInfo,
+        pruning_mode: bool = False,
+        use_embeddings: bool = True,
 ) -> tuple:
     logger.debug(
         f"** Finding table similarity between Table '{table_info1.metadata.table_id}' and '{table_info2.metadata.table_id}' **"
@@ -520,15 +531,27 @@ def check_similarity(
                 #     f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
                 # )
                 try:
-                    (
-                        overall_column_similarity_score,
-                        col_prediction_factor_confidence,
-                    ) = compute_column_similarity(
-                        col_info1,
-                        col_info2,
-                        overall_table_similarity_score,
-                        use_embeddings,
-                    )
+                    if (
+                            overall_table_similarity_score is not None
+                            and overall_table_similarity_score
+                            > config.overall_table_similarity_threshold
+                    ):
+                        if col_info1.metadata.datatype == col_info2.metadata.datatype:
+                            (
+                                overall_column_similarity_score,
+                                col_prediction_factor_confidence,
+                            ) = compute_column_similarity(
+                                col_info1,
+                                col_info2,
+                                overall_table_similarity_score,
+                                use_embeddings,
+                            )
+                        else:
+                            overall_column_similarity_score = 0
+                            col_prediction_factor_confidence = 0
+                    else:
+                        overall_column_similarity_score = None
+                        col_prediction_factor_confidence = None
                 except Exception as e:
                     logger.error(
                         f"Failed to compute column similarity between Column "
