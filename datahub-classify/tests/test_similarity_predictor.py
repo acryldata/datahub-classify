@@ -72,7 +72,7 @@ def populate_tableinfo_object(dataset_name):
         fields = {
             "Name": col,
             "Description": f" {col}",
-            "Datatype": public_data_list[dataset_name][col].dropna().dtype,
+            "Datatype": str(public_data_list[dataset_name][col].dropna().dtype),
             "Dataset_Name": dataset_name,
             "Column_Id": dataset_name + "_SPLITTER_" + col,
         }
@@ -156,7 +156,7 @@ def populate_similar_tableinfo_object(dataset_name):
         fields = {
             "Name": col_name_with_variation,
             "Description": f'{col.split("_", 1)[1]}',
-            "Datatype": second_df[col].dropna().dtype,
+            "Datatype": str(second_df[col].dropna().dtype),
             "Dataset_Name": dataset_name + "_LOGICAL_COPY",
             "Column_Id": dataset_name
             + "_LOGICAL_COPY_"
