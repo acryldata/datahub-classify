@@ -153,7 +153,7 @@ def table_schema_similarity_pruning(
                     name is not None
                     and dtype is not None
                     and name.strip() != ""
-                    and dtype.strip() != ""
+                    # and dtype.strip() != ""
             ):
                 if not name.isdigit():
                     name = re.sub(
@@ -162,7 +162,7 @@ def table_schema_similarity_pruning(
                         re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
                     )
                 # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
-                dtype = re.sub("[^a-z0-9]", "_", dtype.lower())
+                # dtype = re.sub("[^a-z0-9]", "_", dtype.lower())
                 text_1 = text_1 + " " + f"{name}_{dtype}"
 
         for col in col_infos2:
@@ -172,7 +172,7 @@ def table_schema_similarity_pruning(
                     name is not None
                     and dtype is not None
                     and name.strip() != ""
-                    and dtype.strip() != ""
+                    # and dtype.strip() != ""
             ):
                 if not name.isdigit():
                     name = re.sub(
@@ -181,7 +181,7 @@ def table_schema_similarity_pruning(
                         re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
                     )
                 # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
-                dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
+                # dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
                 text_2 = text_2 + " " + f"{name}_{dtype}"
         if text_1 != "" and text_2 != "":
             schema_score = get_fuzzy_score(
