@@ -153,7 +153,7 @@ def table_schema_similarity_pruning(
                     name is not None
                     and dtype is not None
                     and name.strip() != ""
-                    # and dtype.strip() != ""
+                    and dtype != ""
             ):
                 if not name.isdigit():
                     name = re.sub(
@@ -172,7 +172,7 @@ def table_schema_similarity_pruning(
                     name is not None
                     and dtype is not None
                     and name.strip() != ""
-                    # and dtype.strip() != ""
+                    and dtype != ""
             ):
                 if not name.isdigit():
                     name = re.sub(
