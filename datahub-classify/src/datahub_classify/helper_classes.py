@@ -124,12 +124,13 @@ class TableMetadata:
     desc_embedding: List[TextEmbeddings] = field(default_factory=list)
 
     def __post_init__(self, meta_info):
-        self.name = meta_info.get("Name", None)
-        self.description = meta_info.get("Description", None)
-        self.platform = meta_info.get("Platform", None)
-        self.table_id = meta_info.get("Table_Id", None)
-        self.name_embedding = meta_info.get("name_embedding", [])
-        self.desc_embedding = meta_info.get("desc_embedding", [])
+        if meta_info is not None:
+            self.name = meta_info.get("Name", None)
+            self.description = meta_info.get("Description", None)
+            self.platform = meta_info.get("Platform", None)
+            self.table_id = meta_info.get("Table_Id", None)
+            self.name_embedding = meta_info.get("name_embedding", [])
+            self.desc_embedding = meta_info.get("desc_embedding", [])
 
 
 @dataclass

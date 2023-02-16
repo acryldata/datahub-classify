@@ -16,7 +16,7 @@ overall_schema_score_weight = 0.6
 overall_desc_boost = 1.2
 overall_desc_penalty = 0.9
 overall_desc_score_threshold = 0.5
-overall_table_similarity_threshold = 0.0
+overall_table_similarity_threshold = 0.6
 
 column_dtype_boost = 1.2
 column_dtype_penalty = 0.95
