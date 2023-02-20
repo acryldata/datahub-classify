@@ -10,7 +10,6 @@ from typing import Dict, List, Tuple
 import numpy as np
 import pandas as pd
 import pytest
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics import classification_report, confusion_matrix
 
 from datahub_classify.helper_classes import (
@@ -336,7 +335,6 @@ all_datasets_paths = {
     for file in glob.glob(f"{input_dir}/*")
 }
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
 pruning_mode_output_PREDICTED: Dict[str, str] = dict()
 post_pruning_mode_output_PREDICTED: Dict[str, str] = dict()
 pruning_mode_results: Dict[str, Tuple] = dict()

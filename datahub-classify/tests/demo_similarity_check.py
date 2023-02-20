@@ -3,7 +3,6 @@ import os
 
 import numpy as np
 import pandas as pd
-from sentence_transformers import SentenceTransformer
 
 from datahub_classify.helper_classes import (
     ColumnInfo,
@@ -48,8 +47,6 @@ def populate_tableinfo_object(df, dataset_name):
     table_info = TableInfo(metadata_table, col_infos)
     return table_info
 
-
-model = SentenceTransformer("all-MiniLM-L6-v2")
 
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(current_wdr, "datasets")
