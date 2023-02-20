@@ -4,7 +4,6 @@ import re
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
-from sentence_transformers import SentenceTransformer
 
 import datahub_classify.similarity_numeric_constants as config
 from datahub_classify.helper_classes import (
@@ -26,7 +25,15 @@ logger = logging.getLogger(__name__)
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
 stop_words = load_stopwords()
-model = SentenceTransformer("all-MiniLM-L6-v2")
+
+try:
+    from sentence_transformers import SentenceTransformer
+
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+except Exception as e:
+    print(e)
+    model = None
+
 
 if not os.path.isfile(glove_vec):
     from datahub_classify.utils import download_glove_embeddings

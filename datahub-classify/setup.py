@@ -20,7 +20,6 @@ base_requirements = {
     "ipaddress>=1.0.23",
     "spacy>=3.4.1,<=3.4.3",
     "phonenumbers>=8.12.56,<=8.13.0",
-    "sentence-transformers>=2.2.2",
     "python-Levenshtein>=0.20.8",
     "nltk>=3.7",
     "thefuzz>=0.19.0",
@@ -48,6 +47,9 @@ dev_requirements = {
     "openpyxl"
 }
 
+semantic_similarity_requirements = {
+    "sentence-transformers>=2.2.2",
+}
 
 setuptools.setup(
     # Package metadata.
@@ -88,5 +90,5 @@ setuptools.setup(
     packages=setuptools.find_namespace_packages(where="./src"),
     # Dependencies.
     install_requires=list(base_requirements),
-    extras_require={"dev": dev_requirements},
+    extras_require={"dev": dev_requirements, "semantic_similarity": semantic_similarity_requirements},
 )
