@@ -157,25 +157,6 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
     return mapping
 
 
-logger.info("libraries Imported..................")
-SEED = 100
-platforms = ["A", "B", "C", "D", "E"]
-
-input_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/datasets"
-# output_jsons_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/temp_jsons"
-input_jsons_path = "c:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/expected_output"
-
-# table_similarity_labels_pruning_expected: dict(Tuple, str) = {}
-# table_similarity_labels_pruning_actual: dict(Tuple, str) = {}
-# column_similarity_labels_non_pruning_expected: dict(Tuple, str) = {}
-# column_similarity_labels_non_pruning_actual: dict(Tuple, str) = {}
-
-all_datasets_paths = {
-    os.path.basename(file).rsplit(".", 1)[0]: file
-    for file in glob.glob(f"{input_dir}/*")
-}
-
-
 def generate_report_for_table_similarity(true_labels, predicted_labels, threshold=None):
     keys = list(predicted_labels.keys())
     # print(keys[:5])
@@ -342,6 +323,19 @@ def populate_similar_tableinfo_object(dataset_name):
     return table_info
 
 
+logger.info("libraries Imported..................")
+SEED = 100
+platforms = ["A", "B", "C", "D", "E"]
+
+current_wdr = os.path.dirname(os.path.abspath(__file__))
+input_dir = os.path.join(current_wdr, "datasets")
+input_jsons_path = os.path.join(current_wdr, "expected_output")
+
+all_datasets_paths = {
+    os.path.basename(file).rsplit(".", 1)[0]: file
+    for file in glob.glob(f"{input_dir}/*")
+}
+
 model = SentenceTransformer("all-MiniLM-L6-v2")
 pruning_mode_output_PREDICTED: Dict[str, str] = dict()
 post_pruning_mode_output_PREDICTED: Dict[str, str] = dict()
@@ -371,10 +365,12 @@ for key in all_datasets_paths.keys():
 
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
-for pair in table_pairs:
-    pruning_mode_results[f"{pair[0]}_SPLITTER_{pair[1]}"] = check_similarity(
-        table_infos[pair[0]],
-        table_infos[pair[1]],
+for table_pair in table_pairs:
+    pruning_mode_results[
+        f"{table_pair[0]}_SPLITTER_{table_pair[1]}"
+    ] = check_similarity(
+        table_infos[table_pair[0]],
+        table_infos[table_pair[1]],
         pruning_mode=True,
         use_embeddings=False,
     )
@@ -384,8 +380,6 @@ pruning_mode_output_PREDICTED = {
     for key, value in pruning_mode_results.items()
 }
 
-# post_pruning_mode_combinations = [key for key in pruning_mode_results.keys() if
-#                                   pruning_mode_results[key][0].score > PRUNING_THRESHOLD]
 post_pruning_mode_combinations = [
     key for key, value in pruning_mode_output_PREDICTED.items() if value == "similar"
 ]
@@ -413,11 +407,10 @@ pruning_tables_similarity_mapping_unit_testing = (
         pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
     )
 )
-# print(pruning_mode_results["test_SPLITTER_train_COPY"])
+
 columns_correct_preds: List[Tuple] = list()
 columns_wrong_preds: List[Tuple] = list()
 columns_predicted_scores: Dict[str, float] = dict()
-# column_similarity_scores: Dict[Tuple, float] = dict()
 columns_predicted_labels: Dict[Tuple, str] = dict()
 columns_actual_labels: Dict[Tuple, str] = dict()
 

@@ -577,7 +577,7 @@ def check_similarity(
                     prediction_factors_scores=col_prediction_factor_confidence,
                 )
                 column_similarity_scores[(column1_id, column2_id)] = col_similarity_info
-    logger.info("===============================================")
+    # logger.info("===============================================")
     return table_similarity_score, column_similarity_scores
 
 
