@@ -115,20 +115,22 @@ A debug information is associated with each infotype proposal, it provides detai
 - If value prediction factor weight is non-zero (indicating values should be used for infotype inspection) then a minimum 50 non-null column values should be present.
 
 # API 'check_similarity'
-This API computes the  semantic similarity score between a pair of tables and also between all possible pairs of their constituent columns. Following are the input and output contract:
+This API computes the similarity score between a pair of tables and also between all possible pairs of their constituent columns. Following are the input and output contract:
 ### API Input
 API expects following parameters in the input
 - `table_info1` & `table_info2` -  These are instances of TableInfo object. Each TableInfo object contains following class variables:
-  - `metadata` - Instance of TableMetadata class containing name, description, platform and table ID of the table 
+  - `metadata` - Instance of TableMetadata class containing name, description, platform, table-ID, name_embedding(optional) & desc_embedding(optional) of the table 
   - `parent_tables` - List of table IDs of parent tables of the input table 
-  - `column_infos` - List of instances of ColumnInfo object for each constituent column of the table. Each ColumnInfo object has following class variables 
-    - `metadata` - Instance of ColumnMetadata class containing name, description, datatype, dataset_name and column id of the column 
+  - `column_infos` - List of instances of ColumnInfo object for each constituent column of the table. Each ColumnInfo object has following the class variables 
+    - `metadata` - Instance of ColumnMetadata class containing name, description, datatype, dataset_name, column-id, name_embedding(optional) & desc_embedding(optional) of the column 
     - `parent_columns` - List of column IDs of parent columns of the column
+- `pruning_mode` - This is a boolean flag, it indicates whether API will run the pruning or non-pruning model. Default value is False (non-pruning mode)
+- `use_embeddings` - This is a boolean flag, this tells whether to use meaning based similarity for tables and columns. Default value is False. If this flag is set to True then table/column name and description embeddings needs to be passed in the TableInfo object to API (name/description embeddings can be generated using `preprocess_tables()` API).
 
 ### API Output
 API returns two objects:
-- `table_similarity_score` - This is a instance of SimilarityInfo which contains 'score' and 'prediction_factors_scores'. 'score' is the overall semantic similarity score of the two input tables and 'prediction_factors_scores' is the instance of SimilarityDebugInfo class describing the confidence score and weighted score of each prediction factor.  
-- `column_similarity_scores` - This is a dictionary of semantic similarity scores of all column pairs. Key being a tuple of column IDs of the column pair and value being the instance of SimilarityInfo, it contains the semantic similarity score between two columns and confidence & weighted score of each prediction factor.
+- `table_similarity_score` - This is an instance of SimilarityInfo which contains 'score' and 'prediction_factors_scores'. 'score' is the overall similarity score of the input pair and 'prediction_factors_scores' is the instance of SimilarityDebugInfo class describing the confidence and weighted score of each prediction factor.  
+- `column_similarity_scores` - This is a dictionary of similarity scores of all column pairs. Key being a tuple of column IDs of the column pair and value being the instance of SimilarityInfo, it contains the semantic similarity score between two columns and confidence & weighted score of each prediction factor.
 
 ### Usage of the API
 Find usage of the "check_similarity()" API at following link
@@ -137,9 +139,8 @@ https://github.com/mardikark-gslab/datahub-classify/blob/stage_2_dev/datahub-cla
 ### Assumptions
 Following are the assumptions about input parameters 
 - table_name, table_platform & table_schema are the required parameters in TableInfo object.
-- table_description & table_lineage are optional.
 - col_name, col_datatype are the required parameters in ColumnInfo object.
-- col_description & col_lineage are optional.
+
 
 # API 'preprocess_tables'
 This API generates the embedding for tables (i.e. for name and description of the table and columns)
@@ -157,7 +158,7 @@ API returns following parameter
 
 ```sh
 cd datahub-classify
-../gradlew :datahub-classify:installDev # OR pip install -e ".[dev]"
+../gradlew :datahub-classify:installDev # OR pip install -e ".[dev, semantic_similarity]"
 source venv/bin/activate
 ```
 
