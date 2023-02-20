@@ -361,7 +361,6 @@ def inspect_for_full_name(
             and prediction_factors_weights.get(VALUES, 0) > 0
             and 0.5 > cast(float, debug_info.values) > 0.1
         ):
-
             debug_info.values = 0.8
     except Exception as e:
         logger.error(f"Column {metadata.name} failed due to {e}")
