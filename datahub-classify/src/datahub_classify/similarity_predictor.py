@@ -552,8 +552,8 @@ def check_similarity(
                                 datatype=FactorDebugInfo(confidence=0, weighted_score=0)
                             )
                     else:
-                        overall_column_similarity_score = None
-                        col_prediction_factor_confidence = None
+                        overall_column_similarity_score = 0
+                        col_prediction_factor_confidence = SimilarityDebugInfo()
                 except Exception as e:
                     logger.error(
                         f"Failed to compute column similarity between Column "
