@@ -360,7 +360,7 @@ table_info_copies = {
 }
 
 logger.info("Creating Table Pairs List................")
-table_pairs = list(itertools.combinations(table_infos.keys(), 2))
+table_pairs = list(itertools.combinations(sorted(table_infos.keys()), 2))
 table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
     table_pairs.append((key, f"{key}_LOGICAL_COPY"))
