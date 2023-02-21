@@ -27,18 +27,8 @@ logger.info("libraries Imported..................")
 SEED = 100
 PRUNING_THRESHOLD = 0.8
 FINAL_THRESHOLD = 0.6
-column_similar_threshold = 0.8
-column_similarity_predicted_labels: Dict[str, str] = dict()
-platforms = ["A", "B", "C", "D", "E"]
-
-input_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/datasets"
-input_jsons_path = "c:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/expected_output"
-
-columns_predicted_scores: Dict[str, float] = dict()
-all_datasets_paths = {
-    os.path.basename(file).rsplit(".", 1)[0]: file
-    for file in glob.glob(f"{input_dir}/*")
-}
+COLUMN_SIMILARITY_THRESHOLD = 0.8
+PLATFORMS = ["A", "B", "C", "D", "E"]
 
 
 def load_df(dataset_name):
@@ -54,27 +44,27 @@ def load_df(dataset_name):
 
 def load_jsons(input_jsons_dir):
     with open(
-        os.path.join(input_jsons_dir, "table_similarity_labels_IDEAL.json")
+            os.path.join(input_jsons_dir, "table_similarity_labels_IDEAL.json")
     ) as filename:
         table_similarity_labels_ideal_ = json.load(filename)
     with open(
-        os.path.join(input_jsons_dir, "pruning_table_similarity_labels_EXPECTED.json")
+            os.path.join(input_jsons_dir, "pruning_table_similarity_labels_EXPECTED.json")
     ) as filename:
         pruning_table_similarity_labels_expected_ = json.load(filename)
     with open(
-        os.path.join(
-            input_jsons_dir, "post_pruning_table_similarity_labels_EXPECTED.json"
-        )
+            os.path.join(
+                input_jsons_dir, "post_pruning_table_similarity_labels_EXPECTED.json"
+            )
     ) as filename:
         post_pruning_table_similarity_labels_expected_ = json.load(filename)
 
     with open(
-        os.path.join(input_jsons_path, "column_similarity_scores_EXPECTED.json")
+            os.path.join(input_jsons_path, "column_similarity_scores_EXPECTED.json")
     ) as filename_:
         column_similarity_scores_expected_ = json.load(filename_)
 
     with open(
-        os.path.join(input_jsons_path, "column_similarity_labels_IDEAL.json")
+            os.path.join(input_jsons_path, "column_similarity_labels_IDEAL.json")
     ) as filename_:
         column_similarity_labels_ideal_ = json.load(filename_)
 
@@ -88,8 +78,8 @@ def load_jsons(input_jsons_dir):
 
 
 def get_predicted_expected_similarity_scores_mapping_for_tables(
-    predicted_similarity_labels_unit_testing,
-    expected_similarity_labels_unit_testing,
+        predicted_similarity_labels_unit_testing,
+        expected_similarity_labels_unit_testing,
 ):
     """generate mapping of predicted - expected similarity scores, required for unit testing"""
 
@@ -112,8 +102,8 @@ def get_predicted_expected_similarity_scores_mapping_for_tables(
 
 
 def get_predicted_expected_similarity_scores_mapping_for_columns(
-    predicted_similarity_scores_unit_testing,
-    expected_similarity_scores_unit_testing,
+        predicted_similarity_scores_unit_testing,
+        expected_similarity_scores_unit_testing,
 ):
     """generate mapping of predicted - expected similarity scores, required for unit testing"""
 
@@ -125,8 +115,8 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
                 expected_similarity_label = "not_similar"
                 expected_similarity_score = 0
             elif (
-                expected_similarity_scores_unit_testing[key_]
-                >= column_similar_threshold
+                    expected_similarity_scores_unit_testing[key_]
+                    >= COLUMN_SIMILARITY_THRESHOLD
             ):
                 expected_similarity_label = "similar"
                 expected_similarity_score = expected_similarity_scores_unit_testing[
@@ -142,8 +132,8 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
                 predicted_similarity_label = "not_similar"
                 predicted_similarity_score = 0
             elif (
-                predicted_similarity_scores_unit_testing[pair]
-                >= column_similar_threshold
+                    predicted_similarity_scores_unit_testing[pair]
+                    >= COLUMN_SIMILARITY_THRESHOLD
             ):
                 predicted_similarity_label = "similar"
                 predicted_similarity_score = predicted_similarity_scores_unit_testing[
@@ -170,13 +160,8 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
 
 def generate_report_for_table_similarity(true_labels, predicted_labels, threshold=None):
     keys = list(predicted_labels.keys())
-    # print(keys[:5])
-    # print(list(true_labels.keys())[:5])
     y_pred = [0 if predicted_labels[key] == "not_similar" else 1 for key in keys]
-    y_true = [
-        0 if true_labels["-".join(key.split("_SPLITTER_"))] == "not_similar" else 1
-        for key in keys
-    ]
+    y_true = [0 if true_labels[key] == "not_similar" else 1 for key in keys]
     target_names = ["not_similar", "similar"]
     misclassification_report: Dict[str, list] = {"tp": [], "fp": [], "tn": [], "fn": []}
     for i in range(len(keys)):
@@ -196,7 +181,7 @@ def generate_report_for_table_similarity(true_labels, predicted_labels, threshol
 
 
 def generate_report_for_column_similarity(
-    true_labels, predicted_labels, threshold=None
+        true_labels, predicted_labels
 ):
     keys = list(predicted_labels.keys())
     y_pred_labels = []
@@ -235,7 +220,7 @@ def populate_tableinfo_object(dataset_name):
     table_meta_info = {
         "Name": dataset_name,
         "Description": f"This table contains description of {dataset_name}",
-        "Platform": platforms[np.random.randint(0, 5)],
+        "Platform": PLATFORMS[np.random.randint(0, 5)],
         "Table_Id": dataset_name,
     }
     col_infos = []
@@ -279,7 +264,7 @@ def populate_similar_tableinfo_object(dataset_name):
     table_meta_info = {
         "Name": dataset_name + "_LOGICAL_COPY",
         "Description": f" {dataset_name}",
-        "Platform": platforms[np.random.randint(0, 5)],
+        "Platform": PLATFORMS[np.random.randint(0, 5)],
         "Table_Id": dataset_name + "_LOGICAL_COPY",
     }
     col_infos = []
@@ -309,12 +294,10 @@ def populate_similar_tableinfo_object(dataset_name):
             "Datatype": str(second_df[col].dropna().dtype),
             "Dataset_Name": dataset_name + "_LOGICAL_COPY",
             "Column_Id": dataset_name
-            + "_LOGICAL_COPY_"
-            + "_SPLITTER_"
-            + col.split("_", 1)[1],
+                         + "_LOGICAL_COPY_"
+                         + "_SPLITTER_"
+                         + col.split("_", 1)[1],
         }
-        # key = f"{dataset_name}_SPLITTER_{col.split('_', 1)[1]}_COLSPLITTER_{fields['Column_Id']}"
-
         metadata_col = ColumnMetadata(fields)
         parent_cols = [col if col in df.columns else None]
         col_info_ = ColumnInfo(metadata_col)
@@ -326,10 +309,8 @@ def populate_similar_tableinfo_object(dataset_name):
     return table_info
 
 
-logger.info("libraries Imported..................")
-SEED = 100
-platforms = ["A", "B", "C", "D", "E"]
-
+column_similarity_predicted_labels: Dict[str, str] = dict()
+columns_predicted_scores: Dict[str, float] = dict()
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(current_wdr, "datasets")
 input_jsons_path = os.path.join(current_wdr, "expected_output")
@@ -360,7 +341,7 @@ table_info_copies = {
 }
 
 logger.info("Creating Table Pairs List................")
-table_pairs = list(itertools.combinations(sorted(table_infos.keys()), 2))
+table_pairs = list(itertools.combinations(table_infos.keys(), 2))
 table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
     table_pairs.append((key, f"{key}_LOGICAL_COPY"))
@@ -368,6 +349,7 @@ for key in all_datasets_paths.keys():
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
 for table_pair in table_pairs:
+    table_pair = sorted(table_pair, key=str.lower)
     pruning_mode_results[
         f"{table_pair[0]}_SPLITTER_{table_pair[1]}"
     ] = check_similarity(
@@ -409,7 +391,6 @@ pruning_tables_similarity_mapping_unit_testing = (
         pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
     )
 )
-
 
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
@@ -530,19 +511,19 @@ logger.info("--- Unit Test for Columns Similarity ---")
     ],
 )
 def test_columns_similarity_public_datasets(
-    col_id_1,
-    col_id_2,
-    predicted_score,
-    predicted_label,
-    expected_score,
-    expected_label,
+        col_id_1,
+        col_id_2,
+        predicted_score,
+        predicted_label,
+        expected_score,
+        expected_label,
 ):
     assert (
-        predicted_label == expected_label
+            predicted_label == expected_label
     ), f"Test1 failed for column pair: '{(col_id_1, col_id_2)}'"
     if predicted_score is not None and expected_score is not None:
         assert (
-            predicted_score >= np.floor(expected_score * 10) / 10
+                predicted_score >= np.floor(expected_score * 10) / 10
         ), f"Test2 failed for column pair: '{(col_id_1, col_id_2)}'"
 
 
@@ -552,13 +533,13 @@ def test_columns_similarity_public_datasets(
     [(a, b, c, d) for a, b, c, d in pruning_tables_similarity_mapping_unit_testing],
 )
 def test_pruning_tables_similarity_public_datasets(
-    table_id_1,
-    table_id_2,
-    predicted_label,
-    expected_label,
+        table_id_1,
+        table_id_2,
+        predicted_label,
+        expected_label,
 ):
     assert (
-        predicted_label == expected_label
+            predicted_label == expected_label
     ), f"Pruning mode test failed for table pair: '{(table_id_1, table_id_2)}'"
 
 
@@ -578,11 +559,11 @@ post_pruning_tables_similarity_mapping_unit_testing = (
     ],
 )
 def test_post_pruning_tables_similarity_public_datasets(
-    table_id_1,
-    table_id_2,
-    predicted_label,
-    expected_label,
+        table_id_1,
+        table_id_2,
+        predicted_label,
+        expected_label,
 ):
     assert (
-        predicted_label == expected_label
+            predicted_label == expected_label
     ), f"Non Pruning Mode test failed for table pair: '{(table_id_1, table_id_2)}'"
