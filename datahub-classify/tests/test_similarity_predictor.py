@@ -10,7 +10,6 @@ from typing import Dict, Tuple
 import numpy as np
 import pandas as pd
 import pytest
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics import classification_report, confusion_matrix
 
 from datahub_classify.helper_classes import (
@@ -327,7 +326,19 @@ def populate_similar_tableinfo_object(dataset_name):
     return table_info
 
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+logger.info("libraries Imported..................")
+SEED = 100
+platforms = ["A", "B", "C", "D", "E"]
+
+current_wdr = os.path.dirname(os.path.abspath(__file__))
+input_dir = os.path.join(current_wdr, "datasets")
+input_jsons_path = os.path.join(current_wdr, "expected_output")
+
+all_datasets_paths = {
+    os.path.basename(file).rsplit(".", 1)[0]: file
+    for file in glob.glob(f"{input_dir}/*")
+}
+
 pruning_mode_output_PREDICTED: Dict[str, str] = dict()
 post_pruning_mode_output_PREDICTED: Dict[str, str] = dict()
 pruning_mode_results: Dict[str, Tuple] = dict()
@@ -356,10 +367,12 @@ for key in all_datasets_paths.keys():
 
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
-for pair in table_pairs:
-    pruning_mode_results[f"{pair[0]}_SPLITTER_{pair[1]}"] = check_similarity(
-        table_infos[pair[0]],
-        table_infos[pair[1]],
+for table_pair in table_pairs:
+    pruning_mode_results[
+        f"{table_pair[0]}_SPLITTER_{table_pair[1]}"
+    ] = check_similarity(
+        table_infos[table_pair[0]],
+        table_infos[table_pair[1]],
         pruning_mode=True,
         use_embeddings=False,
     )
@@ -369,8 +382,6 @@ pruning_mode_output_PREDICTED = {
     for key, value in pruning_mode_results.items()
 }
 
-# post_pruning_mode_combinations = [key for key in pruning_mode_results.keys() if
-#                                   pruning_mode_results[key][0].score > PRUNING_THRESHOLD]
 post_pruning_mode_combinations = [
     key for key, value in pruning_mode_output_PREDICTED.items() if value == "similar"
 ]
