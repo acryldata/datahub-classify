@@ -1,0 +1,66 @@
+-------------------------------------------
+PRUNING THRESHOLD: 0.8
+FINAL THRESHOLD: 0.6
+-------------------------------------------
+Number of Tables 64
+Total Pruning Time:  0.42326831817626953 for 528 pairs
+Total Post Pruning Time:  2.1824851036071777 for 45 pairs
+Total Time 2.6057534217834473
+PRUNING MODE CLASSIFICATION REPORT
+ [[482   2]
+ [  1  43]] 
+               precision    recall  f1-score   support
+
+ not_similar       1.00      1.00      1.00       484
+     similar       0.96      0.98      0.97        44
+
+    accuracy                           0.99       528
+   macro avg       0.98      0.99      0.98       528
+weighted avg       0.99      0.99      0.99       528
+ 
+False Negatives ['test_SPLITTER_train'] 
+
+POST PRUNING MODE CLASSIFICATION REPORT
+ [[ 2  0]
+ [ 1 42]] 
+               precision    recall  f1-score   support
+
+ not_similar       0.67      1.00      0.80         2
+     similar       1.00      0.98      0.99        43
+
+    accuracy                           0.98        45
+   macro avg       0.83      0.99      0.89        45
+weighted avg       0.99      0.98      0.98        45
+ 
+False Negatives
+ ['Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_COPY'] 
+
+FINAL CLASSIFICATION REPORT
+ [[484   0]
+ [  2  42]] 
+               precision    recall  f1-score   support
+
+ not_similar       1.00      1.00      1.00       484
+     similar       1.00      0.95      0.98        44
+
+    accuracy                           1.00       528
+   macro avg       1.00      0.98      0.99       528
+weighted avg       1.00      1.00      1.00       528
+ 
+False Negatives
+ ['test_SPLITTER_train', 'Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_COPY'] 
+
+COLUMN SIMILARITY CLASSIFICATION REPORT
+ [[17500   799]
+ [   21   483]] 
+               precision    recall  f1-score   support
+
+ not_similar       1.00      0.96      0.98     18299
+     similar       0.38      0.96      0.54       504
+
+    accuracy                           0.96     18803
+   macro avg       0.69      0.96      0.76     18803
+weighted avg       0.98      0.96      0.97     18803
+ 
+False Negatives ['Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_test_SPLITTER_SSN', 'Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_train_SPLITTER_SSN', 'iban_SPLITTER_IBAN_Number_COLSPLITTER_random_ibans_SPLITTER_Random_IBAN', 'Book1.xlsx-credit-card-number_SPLITTER_Unnamed: 0_COLSPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY__SPLITTER_Unnamed: 0', 'Book1.xlsx-credit-card-number_SPLITTER_credit card_COLSPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY__SPLITTER_credit card', 'catalog_SPLITTER_storm_name_COLSPLITTER_catalog_LOGICAL_COPY__SPLITTER_storm_name', 'Credit_Card2_SPLITTER_Card Brand_COLSPLITTER_Credit_Card2_LOGICAL_COPY__SPLITTER_Card Brand', 'Credit_Card2_SPLITTER_Year PIN last Changed_COLSPLITTER_Credit_Card2_LOGICAL_COPY__SPLITTER_Year PIN last Changed', 'Customer_Segmentation_SPLITTER_street_number_COLSPLITTER_Customer_Segmentation_LOGICAL_COPY__SPLITTER_street_number', 'drug-use-by-age_SPLITTER_marijuana-frequency_COLSPLITTER_drug-use-by-age_LOGICAL_COPY__SPLITTER_marijuana-frequency', 'drug-use-by-age_SPLITTER_inhalant-frequency_COLSPLITTER_drug-use-by-age_LOGICAL_COPY__SPLITTER_inhalant-frequency', 'drug-use-by-age_SPLITTER_stimulant-frequency_COLSPLITTER_drug-use-by-age_LOGICAL_COPY__SPLITTER_stimulant-frequency', 'drug-use-by-age_SPLITTER_sedative-frequency_COLSPLITTER_drug-use-by-age_LOGICAL_COPY__SPLITTER_sedative-frequency', 'test_SPLITTER_Delay_from_due_date_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Delay_from_due_date', 'test_SPLITTER_Monthly_Balance_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Monthly_Balance', 'train_SPLITTER_Delay_from_due_date_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Delay_from_due_date', 'train_SPLITTER_Monthly_Balance_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Monthly_Balance', 'UCI_Credit_Card_SPLITTER_BILL_AMT6_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_BILL_AMT6', 'UCI_Credit_Card_SPLITTER_PAY_AMT2_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT2', 'UCI_Credit_Card_SPLITTER_PAY_AMT3_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT3', 'UCI_Credit_Card_SPLITTER_PAY_AMT6_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT6'] 
+
