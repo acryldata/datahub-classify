@@ -5,7 +5,7 @@ import logging
 import os
 import re
 import time
-from typing import Dict, List, Tuple
+from typing import Dict, Tuple
 
 import numpy as np
 import pandas as pd
@@ -23,11 +23,23 @@ from datahub_classify.similarity_predictor import check_similarity
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+logger.info("libraries Imported..................")
+
+SEED = 100
 PRUNING_THRESHOLD = 0.8
 FINAL_THRESHOLD = 0.6
 column_similar_threshold = 0.8
-column_similarity_of_logical_copies: Dict[str, str] = dict()
 column_similarity_predicted_labels: Dict[str, str] = dict()
+platforms = ["A", "B", "C", "D", "E"]
+
+input_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/datasets"
+input_jsons_path = "c:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/expected_output"
+
+columns_predicted_scores: Dict[str, float] = dict()
+all_datasets_paths = {
+    os.path.basename(file).rsplit(".", 1)[0]: file
+    for file in glob.glob(f"{input_dir}/*")
+}
 
 
 def load_df(dataset_name):
@@ -157,25 +169,6 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
     return mapping
 
 
-logger.info("libraries Imported..................")
-SEED = 100
-platforms = ["A", "B", "C", "D", "E"]
-
-input_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/datasets"
-# output_jsons_dir = "C:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/temp_jsons"
-input_jsons_path = "c:/PROJECTS/Acryl/acryl_git/datahub-classify/tests/expected_output"
-
-# table_similarity_labels_pruning_expected: dict(Tuple, str) = {}
-# table_similarity_labels_pruning_actual: dict(Tuple, str) = {}
-# column_similarity_labels_non_pruning_expected: dict(Tuple, str) = {}
-# column_similarity_labels_non_pruning_actual: dict(Tuple, str) = {}
-
-all_datasets_paths = {
-    os.path.basename(file).rsplit(".", 1)[0]: file
-    for file in glob.glob(f"{input_dir}/*")
-}
-
-
 def generate_report_for_table_similarity(true_labels, predicted_labels, threshold=None):
     keys = list(predicted_labels.keys())
     # print(keys[:5])
@@ -216,14 +209,8 @@ def generate_report_for_column_similarity(
         else:
             y_true_labels.append(true_labels[key])
 
-    y_pred = [
-        0 if label == "not_similar" else (1 if label == "similar" else 2)
-        for label in y_pred_labels
-    ]
-    y_true = [
-        0 if label == "not_similar" else (1 if label == "similar" else 2)
-        for label in y_true_labels
-    ]
+    y_pred = [0 if label == "not_similar" else 1 for label in y_pred_labels]
+    y_true = [0 if label == "not_similar" else 1 for label in y_true_labels]
     target_names = ["not_similar", "similar"]
     misclassification_report: Dict[str, list] = {"tp": [], "fp": [], "tn": [], "fn": []}
     for i in range(len(keys)):
@@ -327,9 +314,7 @@ def populate_similar_tableinfo_object(dataset_name):
             + "_SPLITTER_"
             + col.split("_", 1)[1],
         }
-        # Update the column similarity labels for logical copies:
-        key = f"{dataset_name}_SPLITTER_{col.split('_', 1)[1]}_COLSPLITTER_{fields['Column_Id']}"
-        column_similarity_of_logical_copies[key] = "similar"
+        # key = f"{dataset_name}_SPLITTER_{col.split('_', 1)[1]}_COLSPLITTER_{fields['Column_Id']}"
 
         metadata_col = ColumnMetadata(fields)
         parent_cols = [col if col in df.columns else None]
@@ -359,7 +344,7 @@ post_pruning_mode_results: Dict[str, Tuple] = dict()
 logger.info("Creating Tables Info Objects.............")
 table_infos = {key: populate_tableinfo_object(key) for key in all_datasets_paths.keys()}
 table_info_copies = {
-    f"{key}_COPY": populate_similar_tableinfo_object(key)
+    f"{key}_LOGICAL_COPY": populate_similar_tableinfo_object(key)
     for key in all_datasets_paths.keys()
 }
 
@@ -367,7 +352,7 @@ logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
 table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
-    table_pairs.append((key, f"{key}_COPY"))
+    table_pairs.append((key, f"{key}_LOGICAL_COPY"))
 
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
@@ -413,13 +398,7 @@ pruning_tables_similarity_mapping_unit_testing = (
         pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
     )
 )
-# print(pruning_mode_results["test_SPLITTER_train_COPY"])
-columns_correct_preds: List[Tuple] = list()
-columns_wrong_preds: List[Tuple] = list()
-columns_predicted_scores: Dict[str, float] = dict()
-# column_similarity_scores: Dict[Tuple, float] = dict()
-columns_predicted_labels: Dict[Tuple, str] = dict()
-columns_actual_labels: Dict[Tuple, str] = dict()
+
 
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
