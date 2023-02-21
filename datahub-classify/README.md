@@ -114,7 +114,7 @@ A debug information is associated with each infotype proposal, it provides detai
 
 - If value prediction factor weight is non-zero (indicating values should be used for infotype inspection) then a minimum 50 non-null column values should be present.
 
-# API 'check_similarity'
+# API 'check_similarity()'
 This API computes the similarity score between a pair of tables and also between all possible pairs of their constituent columns. Following are the input and output contract:
 ### API Input
 API expects following parameters in the input
@@ -142,7 +142,7 @@ Following are the assumptions about input parameters
 - col_name, col_datatype are the required parameters in ColumnInfo object.
 
 
-# API 'preprocess_tables'
+# API 'preprocess_tables()'
 This API generates the embedding for tables (i.e. for name and description of the table and columns)
 ### API Input
 API expects following parameter in the input
