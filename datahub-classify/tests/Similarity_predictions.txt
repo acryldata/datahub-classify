@@ -3,9 +3,9 @@ PRUNING THRESHOLD: 0.8
 FINAL THRESHOLD: 0.6
 -------------------------------------------
 Number of Tables 64
-Total Pruning Time:  0.42326831817626953 for 528 pairs
-Total Post Pruning Time:  2.1824851036071777 for 45 pairs
-Total Time 2.6057534217834473
+Total Pruning Time:  0.2690243721008301 for 528 pairs
+Total Post Pruning Time:  3.063674211502075 for 45 pairs
+Total Time 3.3326985836029053
 PRUNING MODE CLASSIFICATION REPORT
  [[482   2]
  [  1  43]] 
@@ -33,7 +33,7 @@ POST PRUNING MODE CLASSIFICATION REPORT
 weighted avg       0.99      0.98      0.98        45
  
 False Negatives
- ['Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_COPY'] 
+ ['Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY'] 
 
 FINAL CLASSIFICATION REPORT
  [[484   0]
@@ -48,7 +48,7 @@ FINAL CLASSIFICATION REPORT
 weighted avg       1.00      1.00      1.00       528
  
 False Negatives
- ['test_SPLITTER_train', 'Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_COPY'] 
+ ['test_SPLITTER_train', 'Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY'] 
 
 COLUMN SIMILARITY CLASSIFICATION REPORT
  [[17500   799]

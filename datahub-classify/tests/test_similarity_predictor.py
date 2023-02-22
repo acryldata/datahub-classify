@@ -127,7 +127,6 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
                 expected_similarity_score = expected_similarity_scores_unit_testing[
                     key_
                 ]
-
             if predicted_similarity_scores_unit_testing[pair] is None:
                 predicted_similarity_label = "not_similar"
                 predicted_similarity_score = 0
@@ -155,6 +154,21 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
                     expected_similarity_label,
                 )
             )
+            if (
+                pair == ("Aliases_SPLITTER_Id", "Aliases_LOGICAL_COPY__SPLITTER_Id")
+            ) or (
+                pair
+                == ("Aliases_SPLITTER_PersonId", "Aliases_LOGICAL_COPY__SPLITTER_Id")
+            ):
+                logger.debug(
+                    pair[0],
+                    pair[1],
+                    predicted_similarity_score,
+                    predicted_similarity_label,
+                    expected_similarity_score,
+                    expected_similarity_label,
+                )
+
     return mapping
 
 
@@ -338,12 +352,19 @@ table_info_copies = {
     for key in all_datasets_paths.keys()
 }
 
+for info in table_infos["Aliases"].column_infos:
+    logger.debug("Aliases", info.metadata.name, " ", info.metadata.datatype)
+
+for info in table_info_copies["Aliases_LOGICAL_COPY"].column_infos:
+    logger.debug(
+        "Aliases_LOGICAL_COPY", info.metadata.name, " ", info.metadata.datatype
+    )
+
 logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
 table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
     table_pairs.append((key, f"{key}_LOGICAL_COPY"))
-
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
 for table_pair in table_pairs:
@@ -385,15 +406,34 @@ post_pruning_mode_output_PREDICTED = {
     for key, value in post_pruning_mode_results.items()
 }
 
+logger.debug(
+    "Table Similariy Info of Aliases_SPLITTER_Aliases_LOGICAL_COPY",
+    post_pruning_mode_results["Aliases_SPLITTER_Aliases_LOGICAL_COPY"][0],
+)
+logger.debug(
+    "Column Similarity Info of 'Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id'",
+    post_pruning_mode_results["Aliases_SPLITTER_Aliases_LOGICAL_COPY"][1][
+        ("Aliases_SPLITTER_Id", "Aliases_LOGICAL_COPY__SPLITTER_Id")
+    ],
+)
+logger.debug(
+    "Column Similarity Info of 'Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id'",
+    post_pruning_mode_results["Aliases_SPLITTER_Aliases_LOGICAL_COPY"][1][
+        ("Aliases_SPLITTER_PersonId", "Aliases_LOGICAL_COPY__SPLITTER_Id")
+    ],
+)
+
 pruning_tables_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_tables(
         pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
     )
 )
-
+# print(post_pruning_mode_results['Aliases_SPLITTER_Aliases_LOGICAL_COPY'][1][('Aliases_SPLITTER_Id',
+# 'Aliases_LOGICAL_COPY__SPLITTER_Id')])
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
         columns_predicted_scores[key] = value.score
+# print(columns_predicted_scores[('Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id')])
 
 columns_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_columns(
