@@ -25,6 +25,7 @@ logging.basicConfig(level=logging.INFO)
 logger.info("libraries Imported..................")
 
 SEED = 100
+np.random.seed(SEED)
 PRUNING_THRESHOLD = 0.8
 FINAL_THRESHOLD = 0.6
 COLUMN_SIMILARITY_THRESHOLD = 0.8
@@ -154,15 +155,6 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
                     expected_similarity_label,
                 )
             )
-            if (
-                pair == ("Aliases_SPLITTER_Id", "Aliases_LOGICAL_COPY__SPLITTER_Id")
-            ) or (
-                pair
-                == ("Aliases_SPLITTER_PersonId", "Aliases_LOGICAL_COPY__SPLITTER_Id")
-            ):
-                logger.debug(
-                    f"{pair[0]} {pair[1]} {predicted_similarity_score}{predicted_similarity_label} {expected_similarity_score} {expected_similarity_label}"
-                )
     return mapping
 
 
@@ -205,7 +197,10 @@ def generate_report_for_column_similarity(true_labels, predicted_labels):
 
     y_pred = [0 if label == "not_similar" else 1 for label in y_pred_labels]
     y_true = [0 if label == "not_similar" else 1 for label in y_true_labels]
-    target_names = ["not_similar", "similar"]
+    target_names = [
+        "not_similar" if label == 0 else "similar"
+        for label in np.unique(y_pred + y_true)
+    ]
     misclassification_report: Dict[str, list] = {"tp": [], "fp": [], "tn": [], "fn": []}
     for i in range(len(keys)):
         if y_true[i] == 0 and y_pred[i] == 0:
@@ -226,7 +221,6 @@ def generate_report_for_column_similarity(true_labels, predicted_labels):
 def populate_tableinfo_object(dataset_name):
     """populate table info object for a dataset"""
     df = load_df(dataset_name)
-    np.random.seed(SEED)
     table_meta_info = {
         "Name": dataset_name,
         "Description": f"This table contains description of {dataset_name}",
@@ -257,20 +251,20 @@ def populate_similar_tableinfo_object(dataset_name):
     """populate table info object for a dataset by randomly adding some additional
     columns to the dataset, thus obtain a logical copy of input dataset"""
     df = load_df(dataset_name)
-    df.columns = ["data1" + "_" + col for col in df.columns]
-    random_df_key = list(all_datasets_paths.keys())[
-        np.random.randint(0, len(all_datasets_paths))
-    ]
-    while random_df_key == dataset_name:
-        random_df_key = list(all_datasets_paths.keys())[
-            np.random.randint(0, len(all_datasets_paths))
-        ]
+    random_df_key = list(
+        key for key in all_datasets_paths.keys() if key != dataset_name
+    )[np.random.randint(0, len(all_datasets_paths) - 1)]
     random_df = load_df(random_df_key).copy()
+    random_df_columns = [col for col in random_df.columns if col not in df.columns]
+    random_df = random_df[random_df_columns]
     random_df.columns = ["data2" + "_" + col for col in random_df.columns]
+    df.columns = ["data1" + "_" + col for col in df.columns]
     second_df = pd.concat([df, random_df], axis=1)
-    cols_to_keep = list(df.columns) + list(random_df.columns[:2])
+    if len(random_df_columns) < 2:
+        cols_to_keep = list(df.columns) + list(random_df.columns)
+    else:
+        cols_to_keep = list(df.columns) + list(random_df.columns[:2])
     second_df = second_df[cols_to_keep]
-    np.random.seed(SEED)
     table_meta_info = {
         "Name": dataset_name + "_LOGICAL_COPY",
         "Description": f" {dataset_name}",
@@ -350,11 +344,14 @@ table_info_copies = {
     for key in all_datasets_paths.keys()
 }
 
-for info in table_infos["Aliases"].column_infos:
-    logger.debug(f"Aliases {info.metadata.name} {info.metadata.datatype}")
-
-for info in table_info_copies["Aliases_LOGICAL_COPY"].column_infos:
-    logger.debug(f"Aliases_LOGICAL_COPY {info.metadata.name} {info.metadata.datatype}")
+with open("debug_report.text", "w") as f:
+    for info in table_infos["1-MB-Test"].column_infos:
+        f.write(f"Aliases {info.metadata.name} {info.metadata.datatype}\n")
+with open("debug_report.text", "a") as file__:
+    for info in table_info_copies["1-MB-Test_LOGICAL_COPY"].column_infos:
+        file__.write(
+            f"Aliases_LOGICAL_COPY {info.metadata.name} {info.metadata.datatype}\n"
+        )
 
 logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
@@ -375,11 +372,11 @@ for table_pair in table_pairs:
         use_embeddings=False,
     )
 pruning_mode_end_time = time.time()
+
 pruning_mode_output_PREDICTED = {
-    key: ("not_similar" if value[0].score <= PRUNING_THRESHOLD else "similar")
+    key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
     for key, value in pruning_mode_results.items()
 }
-
 post_pruning_mode_combinations = [
     key for key, value in pruning_mode_output_PREDICTED.items() if value == "similar"
 ]
@@ -398,31 +395,19 @@ total_pruning_time = pruning_mode_end_time - pruning_mode_start_time
 total_post_pruning_time = post_pruning_mode_end_time - post_pruning_mode_start_time
 
 post_pruning_mode_output_PREDICTED = {
-    key: ("not_similar" if value[0].score <= FINAL_THRESHOLD else "similar")
+    key: ("not_similar" if value[0].score < FINAL_THRESHOLD else "similar")
     for key, value in post_pruning_mode_results.items()
 }
-
-logger.debug(
-    f"TABLE SIMILARITY INFO OF Aliases_SPLITTER_Aliases_LOGICAL_COPY {post_pruning_mode_results['Aliases_SPLITTER_Aliases_LOGICAL_COPY'][0]}"
-)
-logger.debug(
-    f"COLUMN SIMILARITY INFO OF 'Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id {post_pruning_mode_results['Aliases_SPLITTER_Aliases_LOGICAL_COPY'][1][('Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id')]}"
-)
-logger.debug(
-    f"COLUMN SIMILARITY INFO OF 'Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id {post_pruning_mode_results['Aliases_SPLITTER_Aliases_LOGICAL_COPY'][1][('Aliases_SPLITTER_PersonId', 'Aliases_LOGICAL_COPY__SPLITTER_Id')]}"
-)
 
 pruning_tables_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_tables(
         pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
     )
 )
-# print(post_pruning_mode_results['Aliases_SPLITTER_Aliases_LOGICAL_COPY'][1][('Aliases_SPLITTER_Id',
-# 'Aliases_LOGICAL_COPY__SPLITTER_Id')])
+
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
         columns_predicted_scores[key] = value.score
-# print(columns_predicted_scores[('Aliases_SPLITTER_Id', 'Aliases_LOGICAL_COPY__SPLITTER_Id')])
 
 columns_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_columns(
@@ -430,7 +415,7 @@ columns_similarity_mapping_unit_testing = (
         column_similarity_scores_expected,
     )
 )
-
+#
 # ###############################
 # # Generate Performance Report #
 # ###############################
@@ -457,71 +442,37 @@ final_table_report = generate_report_for_table_similarity(
 column_similarity_report = generate_report_for_column_similarity(
     column_similarity_labels_ideal, column_similarity_predicted_labels
 )
-
+#
+#
 with open("Similarity_predictions.txt", "w") as file_:
     # TABLE SIMILARITY REPORT:
-    print("-------------------------------------------", file=file_)
-    print(f"PRUNING THRESHOLD: {PRUNING_THRESHOLD}", file=file_)
-    print(f"FINAL THRESHOLD: {FINAL_THRESHOLD}", file=file_)
-    print("-------------------------------------------", file=file_)
-    print("Number of Tables", len(table_infos), file=file_)
-    print(
-        "Total Pruning Time: ",
-        total_pruning_time,
-        f"for {len(pruning_mode_results)} pairs",
-        file=file_,
-    )
-    print(
-        "Total Post Pruning Time: ",
-        total_post_pruning_time,
-        f"for {len(post_pruning_mode_results)} pairs",
-        file=file_,
-    )
-    print("Total Time", total_post_pruning_time + total_pruning_time, file=file_)
-
-    print(
-        "PRUNING MODE CLASSIFICATION REPORT\n",
-        pruning_report[0],
-        "\n",
-        pruning_report[1],
-        "\nFalse Negatives",
-        pruning_report[2]["fn"],
-        "\n",
-        file=file_,
-    )
-
-    # # print("Total post pruning pairs: ", len(post_pruning_mode_results), file=f)
-    print(
-        "POST PRUNING MODE CLASSIFICATION REPORT\n",
-        post_pruning_report[0],
-        "\n",
-        post_pruning_report[1],
-        "\nFalse Negatives\n",
-        post_pruning_report[2]["fn"],
-        "\n",
-        file=file_,
-    )
-    print(
-        "FINAL CLASSIFICATION REPORT\n",
-        final_table_report[0],
-        "\n",
-        final_table_report[1],
-        "\nFalse Negatives\n",
-        final_table_report[2]["fn"],
-        "\n",
-        file=file_,
-    )
-
-    # COLUMN SIMILARITY REPORT:
-    print(
-        "COLUMN SIMILARITY CLASSIFICATION REPORT\n",
-        column_similarity_report[0],
-        "\n",
-        column_similarity_report[1],
-        "\nFalse Negatives",
-        column_similarity_report[2]["fn"],
-        "\n",
-        file=file_,
+    file_.write(
+        f"-------------------------------------------\n"
+        f"PRUNING THRESHOLD: {PRUNING_THRESHOLD}\n"
+        f"FINAL THRESHOLD: {FINAL_THRESHOLD}\n"
+        f"-------------------------------------------\n"
+        f"Number of Tables {len(table_infos)}\n"
+        f"Total Pruning Time: {total_pruning_time} for {len(pruning_mode_results)} pairs\n"
+        f"Total Post Pruning Time: {total_post_pruning_time} for {len(post_pruning_mode_results)} pairs"
+        f"Total Time {total_post_pruning_time + total_pruning_time}\n"
+        f"PRUNING MODE CLASSIFICATION REPORT\n{pruning_report[0]}\n{pruning_report[1]}\n"
+        f"False Negatives\n"
+        f"{pruning_report[2]['fn']}\n"
+        f"POST PRUNING MODE CLASSIFICATION REPORT\n"
+        f"{post_pruning_report[0]}\n"
+        f"{post_pruning_report[1]}\n"
+        f"False Negatives\n"
+        f"{post_pruning_report[2]['fn']}\n"
+        f"FINAL CLASSIFICATION REPORT\n"
+        f"{final_table_report[0]}\n"
+        f"{final_table_report[1]}\n"
+        f"False Negatives\n"
+        f"{final_table_report[2]['fn']}\n"
+        f"COLUMN SIMILARITY CLASSIFICATION REPORT\n"
+        f"{column_similarity_report[0]}\n"
+        f"{column_similarity_report[1]}\n"
+        f"False Negatives\n"
+        f"{column_similarity_report[2]['fn']}"
     )
 
 ############################
