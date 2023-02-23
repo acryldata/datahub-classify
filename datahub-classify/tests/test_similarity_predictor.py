@@ -364,6 +364,7 @@ table_pairs = list(itertools.combinations(table_infos.keys(), 2))
 table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
     table_pairs.append((key, f"{key}_LOGICAL_COPY"))
+
 logger.info("Starting check similarity.............")
 pruning_mode_start_time = time.time()
 for table_pair in table_pairs:
@@ -379,6 +380,18 @@ for table_pair in table_pairs:
     )
 pruning_mode_end_time = time.time()
 
+for col_info in table_infos["random_ibans"].column_infos:
+    logger.debug(
+        f"RANDOM IBAN Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
+    )
+
+for col_info in table_infos["random_ibans_LOGICAL_COPY"].column_infos:
+    logger.debug(
+        f"RANDOM IBAN LOGICAL COPY Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
+    )
+logger.debug(
+    f"TABLE SIMILARITY SCORE FOR random_ibans_SPLITTER_random_ibans_LOGICAL_COPY: {pruning_mode_results['random_ibans_SPLITTER_random_ibans_LOGICAL_COPY']}"
+)
 pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
     for key, value in pruning_mode_results.items()

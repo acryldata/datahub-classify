@@ -3,8 +3,8 @@ PRUNING THRESHOLD: 0.8
 FINAL THRESHOLD: 0.6
 -------------------------------------------
 Number of Tables 64
-Total Pruning Time: 0.7490320205688477 for 528 pairs
-Total Post Pruning Time: 3.5819664001464844 for 47 pairsTotal Time 4.330998420715332
+Total Pruning Time: 0.6471538543701172 for 528 pairs
+Total Post Pruning Time: 3.4023807048797607 for 47 pairsTotal Time 4.049534559249878
 PRUNING MODE CLASSIFICATION REPORT
 [[480   4]
  [  1  43]]
