@@ -3,7 +3,9 @@ import itertools
 import json
 import logging
 import os
-import re
+import pickle
+
+# import re
 import time
 from typing import Dict, Tuple
 
@@ -248,82 +250,17 @@ def populate_tableinfo_object(dataset_name):
     return table_info
 
 
-def populate_similar_tableinfo_object(dataset_name):
-    """populate table info object for a dataset by randomly adding some additional
-    columns to the dataset, thus obtain a logical copy of input dataset"""
-    df = load_df(dataset_name)
-    np.random.seed(SEED)
-    random_df_key = list(
-        key for key in all_datasets_paths.keys() if key != dataset_name
-    )[np.random.randint(0, len(all_datasets_paths) - 1)]
-    random_df = load_df(random_df_key).copy()
-    random_df_columns = [col for col in random_df.columns if col not in df.columns]
-    random_df = random_df[random_df_columns]
-    random_df.columns = ["data2" + "_" + col for col in random_df.columns]
-    df.columns = ["data1" + "_" + col for col in df.columns]
-    second_df = pd.concat([df, random_df], axis=1)
-    if len(random_df_columns) < 2:
-        cols_to_keep = list(df.columns) + list(random_df.columns)
-    else:
-        cols_to_keep = list(df.columns) + list(random_df.columns[:2])
-    second_df = second_df[cols_to_keep]
-    np.random.seed(SEED)
-    table_meta_info = {
-        "Name": dataset_name + "_LOGICAL_COPY",
-        "Description": f" {dataset_name}",
-        "Platform": PLATFORMS[np.random.randint(0, 5)],
-        "Table_Id": dataset_name + "_LOGICAL_COPY",
-    }
-    col_infos = []
-    swap_case = ["yes", "no"]
-    # fmt:off
-    common_variations = ["#", "$", "%", "&", "*", "-", ".", ":", ";", "?",
-                         "@", "_", "~", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                         ]
-    # fmt:on
-    np.random.seed(SEED)
-    for col in second_df.columns:
-        col_name = col.split("_", 1)[1]
-        col_name_with_variation = str(
-            common_variations[np.random.randint(0, len(common_variations))]
-        )
-        np.random.seed(SEED)
-        for word in re.split("[^A-Za-z]", col_name):
-            random_variation = str(
-                common_variations[np.random.randint(0, len(common_variations))]
-            )
-            np.random.seed(SEED)
-            is_swap_case = swap_case[np.random.randint(0, 2)]
-            if is_swap_case:
-                word = word.swapcase()
-            col_name_with_variation = col_name_with_variation + word + random_variation
-
-        fields = {
-            "Name": col_name_with_variation,
-            "Description": f'{col.split("_", 1)[1]}',
-            "Datatype": str(second_df[col].dropna().dtype),
-            "Dataset_Name": dataset_name + "_LOGICAL_COPY",
-            "Column_Id": dataset_name
-            + "_LOGICAL_COPY_"
-            + "_SPLITTER_"
-            + col.split("_", 1)[1],
-        }
-        metadata_col = ColumnMetadata(fields)
-        parent_cols = [col if col in df.columns else None]
-        col_info_ = ColumnInfo(metadata_col)
-        col_info_.parent_columns = parent_cols
-        col_infos.append(col_info_)
-    metadata_table = TableMetadata(table_meta_info)
-    parent_tables = [dataset_name]
-    table_info = TableInfo(metadata_table, col_infos, parent_tables)
-    return table_info
-
-
 column_similarity_predicted_labels: Dict[str, str] = dict()
 columns_predicted_scores: Dict[str, float] = dict()
 current_wdr = os.path.dirname(os.path.abspath(__file__))
 input_dir = os.path.join(current_wdr, "datasets")
 input_jsons_path = os.path.join(current_wdr, "expected_output")
+table_info_copies_path = os.path.join(current_wdr, "logical_copies.pickle")
+if os.path.exists(table_info_copies_path):
+    with open(os.path.join(current_wdr, "logical_copies.pickle"), "rb") as handle:
+        table_info_copies = pickle.load(handle)
+else:
+    table_info_copies = None
 
 all_datasets_paths = {
     os.path.basename(file).rsplit(".", 1)[0]: file
@@ -345,27 +282,24 @@ post_pruning_mode_results: Dict[str, Tuple] = dict()
 
 logger.info("Creating Tables Info Objects.............")
 table_infos = {key: populate_tableinfo_object(key) for key in all_datasets_paths.keys()}
-table_info_copies = {
-    f"{key}_LOGICAL_COPY": populate_similar_tableinfo_object(key)
-    for key in all_datasets_paths.keys()
-}
-
-# with open("debug_report.text", "w") as f:
-#     for info in table_infos["1-MB-Test"].column_infos:
-#         f.write(f"Aliases {info.metadata.name} {info.metadata.datatype}\n")
-# with open("debug_report.text", "a") as file__:
-#     for info in table_info_copies["1-MB-Test_LOGICAL_COPY"].column_infos:
-#         file__.write(
-#             f"Aliases_LOGICAL_COPY {info.metadata.name} {info.metadata.datatype}\n"
-#         )
+# table_info_copies = {
+#     f"{key}_LOGICAL_COPY": populate_similar_tableinfo_object(key)
+#     for key in all_datasets_paths.keys()
+# }
 
 logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
-table_infos.update(table_info_copies)
+if table_info_copies:
+    table_info_copies = {
+        key: value
+        for key, value in table_info_copies.items()
+        if key[:-13] in all_datasets_paths.keys()
+    }
+    table_infos.update(table_info_copies)
 for key in all_datasets_paths.keys():
     table_pairs.append((key, f"{key}_LOGICAL_COPY"))
 
-logger.info("Starting check similarity.............")
+logger.info("Starting check similarity in pruning mode.............")
 pruning_mode_start_time = time.time()
 for table_pair in table_pairs:
     table_pair_list = sorted(table_pair, key=str.lower)
@@ -380,11 +314,11 @@ for table_pair in table_pairs:
     )
 pruning_mode_end_time = time.time()
 
+# Debugging workflow error:
 for col_info in table_infos["random_ibans"].column_infos:
     logger.debug(
         f"RANDOM IBAN Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
     )
-
 for col_info in table_infos["random_ibans_LOGICAL_COPY"].column_infos:
     logger.debug(
         f"RANDOM IBAN LOGICAL COPY Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
@@ -392,17 +326,17 @@ for col_info in table_infos["random_ibans_LOGICAL_COPY"].column_infos:
 logger.debug(
     f"TABLE SIMILARITY SCORE FOR random_ibans_SPLITTER_random_ibans_LOGICAL_COPY: {pruning_mode_results['random_ibans_SPLITTER_random_ibans_LOGICAL_COPY']}"
 )
+
 pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
     for key, value in pruning_mode_results.items()
 }
-# with open("pruning_table_similarity_labels_EXPECTED.json", "w") as file_:
-#     json.dump(pruning_mode_output_PREDICTED, file_, indent=4)
 
 post_pruning_mode_combinations = [
     key for key, value in pruning_mode_output_PREDICTED.items() if value == "similar"
 ]
 
+logger.info("Starting check similarity in non pruning mode.............")
 post_pruning_mode_start_time = time.time()
 for comb in post_pruning_mode_combinations:
     tables = comb.split("_SPLITTER_")
@@ -420,8 +354,6 @@ post_pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < FINAL_THRESHOLD else "similar")
     for key, value in post_pruning_mode_results.items()
 }
-# with open("post_pruning_table_similarity_labels_EXPECTED.json", "w") as file_:
-#     json.dump(post_pruning_mode_output_PREDICTED, file_, indent=4)
 
 pruning_tables_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_tables(
@@ -432,13 +364,6 @@ pruning_tables_similarity_mapping_unit_testing = (
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
         columns_predicted_scores[key] = value.score
-
-# column_similarity = {}
-# with open("column_similarity_scores_EXPECTED.json", "w") as file_:
-#     for pair, value in columns_predicted_scores.items():
-#         column_similarity[f"{pair[0]}_COLSPLITTER_{pair[1]}"] = value
-#     json.dump(column_similarity, file_, indent=4)
-
 
 columns_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_columns(
