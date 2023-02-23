@@ -221,6 +221,7 @@ def generate_report_for_column_similarity(true_labels, predicted_labels):
 def populate_tableinfo_object(dataset_name):
     """populate table info object for a dataset"""
     df = load_df(dataset_name)
+    np.random.seed(SEED)
     table_meta_info = {
         "Name": dataset_name,
         "Description": f"This table contains description of {dataset_name}",
@@ -251,6 +252,7 @@ def populate_similar_tableinfo_object(dataset_name):
     """populate table info object for a dataset by randomly adding some additional
     columns to the dataset, thus obtain a logical copy of input dataset"""
     df = load_df(dataset_name)
+    np.random.seed(SEED)
     random_df_key = list(
         key for key in all_datasets_paths.keys() if key != dataset_name
     )[np.random.randint(0, len(all_datasets_paths) - 1)]
@@ -265,6 +267,7 @@ def populate_similar_tableinfo_object(dataset_name):
     else:
         cols_to_keep = list(df.columns) + list(random_df.columns[:2])
     second_df = second_df[cols_to_keep]
+    np.random.seed(SEED)
     table_meta_info = {
         "Name": dataset_name + "_LOGICAL_COPY",
         "Description": f" {dataset_name}",
@@ -278,15 +281,18 @@ def populate_similar_tableinfo_object(dataset_name):
                          "@", "_", "~", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
                          ]
     # fmt:on
+    np.random.seed(SEED)
     for col in second_df.columns:
         col_name = col.split("_", 1)[1]
         col_name_with_variation = str(
             common_variations[np.random.randint(0, len(common_variations))]
         )
+        np.random.seed(SEED)
         for word in re.split("[^A-Za-z]", col_name):
             random_variation = str(
                 common_variations[np.random.randint(0, len(common_variations))]
             )
+            np.random.seed(SEED)
             is_swap_case = swap_case[np.random.randint(0, 2)]
             if is_swap_case:
                 word = word.swapcase()
@@ -344,14 +350,14 @@ table_info_copies = {
     for key in all_datasets_paths.keys()
 }
 
-with open("debug_report.text", "w") as f:
-    for info in table_infos["1-MB-Test"].column_infos:
-        f.write(f"Aliases {info.metadata.name} {info.metadata.datatype}\n")
-with open("debug_report.text", "a") as file__:
-    for info in table_info_copies["1-MB-Test_LOGICAL_COPY"].column_infos:
-        file__.write(
-            f"Aliases_LOGICAL_COPY {info.metadata.name} {info.metadata.datatype}\n"
-        )
+# with open("debug_report.text", "w") as f:
+#     for info in table_infos["1-MB-Test"].column_infos:
+#         f.write(f"Aliases {info.metadata.name} {info.metadata.datatype}\n")
+# with open("debug_report.text", "a") as file__:
+#     for info in table_info_copies["1-MB-Test_LOGICAL_COPY"].column_infos:
+#         file__.write(
+#             f"Aliases_LOGICAL_COPY {info.metadata.name} {info.metadata.datatype}\n"
+#         )
 
 logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
@@ -377,6 +383,9 @@ pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
     for key, value in pruning_mode_results.items()
 }
+# with open("pruning_table_similarity_labels_EXPECTED.json", "w") as file_:
+#     json.dump(pruning_mode_output_PREDICTED, file_, indent=4)
+
 post_pruning_mode_combinations = [
     key for key, value in pruning_mode_output_PREDICTED.items() if value == "similar"
 ]
@@ -398,6 +407,8 @@ post_pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < FINAL_THRESHOLD else "similar")
     for key, value in post_pruning_mode_results.items()
 }
+# with open("post_pruning_table_similarity_labels_EXPECTED.json", "w") as file_:
+#     json.dump(post_pruning_mode_output_PREDICTED, file_, indent=4)
 
 pruning_tables_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_tables(
@@ -408,6 +419,13 @@ pruning_tables_similarity_mapping_unit_testing = (
 for i, data_pair in enumerate(post_pruning_mode_results.keys()):
     for key, value in post_pruning_mode_results[data_pair][1].items():
         columns_predicted_scores[key] = value.score
+
+# column_similarity = {}
+# with open("column_similarity_scores_EXPECTED.json", "w") as file_:
+#     for pair, value in columns_predicted_scores.items():
+#         column_similarity[f"{pair[0]}_COLSPLITTER_{pair[1]}"] = value
+#     json.dump(column_similarity, file_, indent=4)
+
 
 columns_similarity_mapping_unit_testing = (
     get_predicted_expected_similarity_scores_mapping_for_columns(

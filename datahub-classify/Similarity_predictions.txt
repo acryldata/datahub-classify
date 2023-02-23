@@ -3,61 +3,61 @@ PRUNING THRESHOLD: 0.8
 FINAL THRESHOLD: 0.6
 -------------------------------------------
 Number of Tables 64
-Total Pruning Time: 0.6578903198242188 for 528 pairs
-Total Post Pruning Time: 3.442035675048828 for 54 pairsTotal Time 4.099925994873047
+Total Pruning Time: 0.7490320205688477 for 528 pairs
+Total Post Pruning Time: 3.5819664001464844 for 47 pairsTotal Time 4.330998420715332
 PRUNING MODE CLASSIFICATION REPORT
-[[474  10]
- [  0  44]]
-              precision    recall  f1-score   support
-
- not_similar       1.00      0.98      0.99       484
-     similar       0.81      1.00      0.90        44
-
-    accuracy                           0.98       528
-   macro avg       0.91      0.99      0.94       528
-weighted avg       0.98      0.98      0.98       528
-
-False Negatives
-[]
-POST PRUNING MODE CLASSIFICATION REPORT
-[[ 9  1]
- [ 1 43]]
-              precision    recall  f1-score   support
-
- not_similar       0.90      0.90      0.90        10
-     similar       0.98      0.98      0.98        44
-
-    accuracy                           0.96        54
-   macro avg       0.94      0.94      0.94        54
-weighted avg       0.96      0.96      0.96        54
-
-False Negatives
-['Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY']
-FINAL CLASSIFICATION REPORT
-[[483   1]
+[[480   4]
  [  1  43]]
               precision    recall  f1-score   support
 
+ not_similar       1.00      0.99      0.99       484
+     similar       0.91      0.98      0.95        44
+
+    accuracy                           0.99       528
+   macro avg       0.96      0.98      0.97       528
+weighted avg       0.99      0.99      0.99       528
+
+False Negatives
+['UCI_Credit_Card_SPLITTER_UCI_Credit_Card_LOGICAL_COPY']
+POST PRUNING MODE CLASSIFICATION REPORT
+[[ 4  0]
+ [ 1 42]]
+              precision    recall  f1-score   support
+
+ not_similar       0.80      1.00      0.89         4
+     similar       1.00      0.98      0.99        43
+
+    accuracy                           0.98        47
+   macro avg       0.90      0.99      0.94        47
+weighted avg       0.98      0.98      0.98        47
+
+False Negatives
+['random_ibans_SPLITTER_random_ibans_LOGICAL_COPY']
+FINAL CLASSIFICATION REPORT
+[[484   0]
+ [  2  42]]
+              precision    recall  f1-score   support
+
  not_similar       1.00      1.00      1.00       484
-     similar       0.98      0.98      0.98        44
+     similar       1.00      0.95      0.98        44
 
     accuracy                           1.00       528
-   macro avg       0.99      0.99      0.99       528
+   macro avg       1.00      0.98      0.99       528
 weighted avg       1.00      1.00      1.00       528
 
 False Negatives
-['Book1.xlsx-credit-card-number_SPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY']
+['random_ibans_SPLITTER_random_ibans_LOGICAL_COPY', 'UCI_Credit_Card_SPLITTER_UCI_Credit_Card_LOGICAL_COPY']
 COLUMN SIMILARITY CLASSIFICATION REPORT
-[[19015   863]
- [   23   481]]
+[[17880   821]
+ [   35   443]]
               precision    recall  f1-score   support
 
- not_similar       1.00      0.96      0.98     19878
-     similar       0.36      0.95      0.52       504
+ not_similar       1.00      0.96      0.98     18701
+     similar       0.35      0.93      0.51       478
 
-    accuracy                           0.96     20382
-   macro avg       0.68      0.96      0.75     20382
-weighted avg       0.98      0.96      0.97     20382
+    accuracy                           0.96     19179
+   macro avg       0.67      0.94      0.74     19179
+weighted avg       0.98      0.96      0.96     19179
 
 False Negatives
-['Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_test_SPLITTER_SSN', 'Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_train_SPLITTER_SSN', 'iban_SPLITTER_IBAN_Number_COLSPLITTER_random_ibans_SPLITTER_Random_IBAN', 'Age2_address1_credit_card3_SPLITTER_Total Debt_COLSPLITTER_Age2_address1_credit_card3_LOGICAL_COPY__SPLITTER_Total Debt', 'Age2_address1_credit_card3_SPLITTER_Num Credit Cards_COLSPLITTER_Age2_address1_credit_card3_LOGICAL_COPY__SPLITTER_Num Credit Cards', 'Airbnb_Open_Data_SPLITTER_reviews per month_COLSPLITTER_Airbnb_Open_Data_LOGICAL_COPY__SPLITTER_reviews per month', 'Airbnb_Open_Data_SPLITTER_review rate number_COLSPLITTER_Airbnb_Open_Data_LOGICAL_COPY__SPLITTER_review rate number', 'Book1.xlsx-credit-card-number_SPLITTER_Unnamed: 0_COLSPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY__SPLITTER_Unnamed: 0', 'Book1.xlsx-credit-card-number_SPLITTER_credit card_COLSPLITTER_Book1.xlsx-credit-card-number_LOGICAL_COPY__SPLITTER_credit card', 'Credit_Card2_SPLITTER_Card Brand_COLSPLITTER_Credit_Card2_LOGICAL_COPY__SPLITTER_Card Brand', 'Customer_Segmentation_SPLITTER_street_number_COLSPLITTER_Customer_Segmentation_LOGICAL_COPY__SPLITTER_street_number', 'test_SPLITTER_Payment_of_Min_Amount_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Payment_of_Min_Amount', 'train_SPLITTER_Num_of_Loan_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Num_of_Loan', 'train_SPLITTER_Type_of_Loan_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Type_of_Loan', 'UCI_Credit_Card_SPLITTER_BILL_AMT3_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_BILL_AMT3', 'UCI_Credit_Card_SPLITTER_PAY_AMT1_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT1', 'UCI_Credit_Card_SPLITTER_PAY_AMT3_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT3', 'UCI_Credit_Card_SPLITTER_PAY_AMT5_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT5', 'UCI_Credit_Card_SPLITTER_PAY_AMT6_COLSPLITTER_UCI_Credit_Card_LOGICAL_COPY__SPLITTER_PAY_AMT6', 'US_Driving_License_SPLITTER_lic_num_New Hampshire_COLSPLITTER_US_Driving_License_LOGICAL_COPY__SPLITTER_lic_num_New Hampshire', 'vehicles_2_SPLITTER_paint_color_COLSPLITTER_vehicles_2_LOGICAL_COPY__SPLITTER_paint_color', 'vehicles_5_SPLITTER_title_status_COLSPLITTER_vehicles_5_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_5_SPLITTER_paint_color_COLSPLITTER_vehicles_5_LOGICAL_COPY__SPLITTER_paint_color']
+['Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_test_SPLITTER_SSN', 'Book1.xlsx-us-social-security-22-cvs_SPLITTER_SSN_COLSPLITTER_train_SPLITTER_SSN', 'iban_SPLITTER_IBAN_Number_COLSPLITTER_random_ibans_SPLITTER_Random_IBAN', 'Airbnb_Open_Data_SPLITTER_instant_bookable_COLSPLITTER_Airbnb_Open_Data_LOGICAL_COPY__SPLITTER_instant_bookable', 'application_record_SPLITTER_DAYS_BIRTH_COLSPLITTER_application_record_LOGICAL_COPY__SPLITTER_DAYS_BIRTH', 'application_record_SPLITTER_FLAG_EMAIL_COLSPLITTER_application_record_LOGICAL_COPY__SPLITTER_FLAG_EMAIL', 'catalog_SPLITTER_storm_name_COLSPLITTER_catalog_LOGICAL_COPY__SPLITTER_storm_name', 'Customer_Segmentation_SPLITTER_street_address_COLSPLITTER_Customer_Segmentation_LOGICAL_COPY__SPLITTER_street_address', 'Customer_Segmentation_SPLITTER_street_number_COLSPLITTER_Customer_Segmentation_LOGICAL_COPY__SPLITTER_street_number', 'random_ibans_SPLITTER_Unnamed: 0_COLSPLITTER_random_ibans_LOGICAL_COPY__SPLITTER_Unnamed: 0', 'random_ibans_SPLITTER_Random_IBAN_COLSPLITTER_random_ibans_LOGICAL_COPY__SPLITTER_Random_IBAN', 'test_SPLITTER_Num_Bank_Accounts_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Num_Bank_Accounts', 'test_SPLITTER_Num_Credit_Card_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Num_Credit_Card', 'test_SPLITTER_Num_of_Loan_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Num_of_Loan', 'test_SPLITTER_Type_of_Loan_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Type_of_Loan', 'test_SPLITTER_Delay_from_due_date_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Delay_from_due_date', 'test_SPLITTER_Total_EMI_per_month_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Total_EMI_per_month', 'test_SPLITTER_Monthly_Balance_COLSPLITTER_test_LOGICAL_COPY__SPLITTER_Monthly_Balance', 'train_SPLITTER_Num_Bank_Accounts_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Num_Bank_Accounts', 'train_SPLITTER_Num_Credit_Card_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Num_Credit_Card', 'train_SPLITTER_Num_of_Loan_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Num_of_Loan', 'train_SPLITTER_Type_of_Loan_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Type_of_Loan', 'train_SPLITTER_Delay_from_due_date_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Delay_from_due_date', 'train_SPLITTER_Total_EMI_per_month_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Total_EMI_per_month', 'train_SPLITTER_Monthly_Balance_COLSPLITTER_train_LOGICAL_COPY__SPLITTER_Monthly_Balance', 'vehicles_1_SPLITTER_title_status_COLSPLITTER_vehicles_1_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_1_SPLITTER_paint_color_COLSPLITTER_vehicles_1_LOGICAL_COPY__SPLITTER_paint_color', 'vehicles_2_SPLITTER_title_status_COLSPLITTER_vehicles_2_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_2_SPLITTER_paint_color_COLSPLITTER_vehicles_2_LOGICAL_COPY__SPLITTER_paint_color', 'vehicles_3_SPLITTER_title_status_COLSPLITTER_vehicles_3_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_3_SPLITTER_paint_color_COLSPLITTER_vehicles_3_LOGICAL_COPY__SPLITTER_paint_color', 'vehicles_4_SPLITTER_title_status_COLSPLITTER_vehicles_4_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_4_SPLITTER_paint_color_COLSPLITTER_vehicles_4_LOGICAL_COPY__SPLITTER_paint_color', 'vehicles_5_SPLITTER_title_status_COLSPLITTER_vehicles_5_LOGICAL_COPY__SPLITTER_title_status', 'vehicles_5_SPLITTER_paint_color_COLSPLITTER_vehicles_5_LOGICAL_COPY__SPLITTER_paint_color']
