@@ -581,6 +581,7 @@ def check_similarity(
     return table_similarity_score, column_similarity_scores
 
 
+# TODO: Discussion Required - Remove the special characters or numbers from start and end of the
 def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
     try:
         all_strings = []

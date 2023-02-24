@@ -4,8 +4,6 @@ import json
 import logging
 import os
 import pickle
-
-# import re
 import time
 from typing import Dict, Tuple
 
@@ -168,7 +166,6 @@ def generate_report_for_table_similarity(true_labels, predicted_labels, threshol
         "not_similar" if label == 0 else "similar"
         for label in np.unique(y_pred + y_true)
     ]
-    # ["not_similar", "similar"]
     misclassification_report: Dict[str, list] = {"tp": [], "fp": [], "tn": [], "fn": []}
     for i in range(len(keys)):
         if y_true[i] == 0 and y_pred[i] == 0:
@@ -252,15 +249,12 @@ def populate_tableinfo_object(dataset_name):
 
 column_similarity_predicted_labels: Dict[str, str] = dict()
 columns_predicted_scores: Dict[str, float] = dict()
+
 current_wdr = os.path.dirname(os.path.abspath(__file__))
+
 input_dir = os.path.join(current_wdr, "datasets")
 input_jsons_path = os.path.join(current_wdr, "expected_output")
 table_info_copies_path = os.path.join(current_wdr, "logical_copies.pickle")
-if os.path.exists(table_info_copies_path):
-    with open(os.path.join(current_wdr, "logical_copies.pickle"), "rb") as handle:
-        table_info_copies = pickle.load(handle)
-else:
-    table_info_copies = None
 
 all_datasets_paths = {
     os.path.basename(file).rsplit(".", 1)[0]: file
@@ -282,10 +276,11 @@ post_pruning_mode_results: Dict[str, Tuple] = dict()
 
 logger.info("Creating Tables Info Objects.............")
 table_infos = {key: populate_tableinfo_object(key) for key in all_datasets_paths.keys()}
-# table_info_copies = {
-#     f"{key}_LOGICAL_COPY": populate_similar_tableinfo_object(key)
-#     for key in all_datasets_paths.keys()
-# }
+if os.path.exists(table_info_copies_path):
+    with open(os.path.join(current_wdr, "logical_copies.pickle"), "rb") as handle:
+        table_info_copies = pickle.load(handle)
+else:
+    table_info_copies = None
 
 logger.info("Creating Table Pairs List................")
 table_pairs = list(itertools.combinations(table_infos.keys(), 2))
@@ -314,19 +309,6 @@ for table_pair in table_pairs:
     )
 pruning_mode_end_time = time.time()
 
-# Debugging workflow error:
-for col_info in table_infos["random_ibans"].column_infos:
-    logger.debug(
-        f"RANDOM IBAN Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
-    )
-for col_info in table_infos["random_ibans_LOGICAL_COPY"].column_infos:
-    logger.debug(
-        f"RANDOM IBAN LOGICAL COPY Column_{col_info.metadata.name} dtype_{col_info.metadata.datatype}"
-    )
-logger.debug(
-    f"TABLE SIMILARITY SCORE FOR random_ibans_SPLITTER_random_ibans_LOGICAL_COPY: {pruning_mode_results['random_ibans_SPLITTER_random_ibans_LOGICAL_COPY']}"
-)
-
 pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
     for key, value in pruning_mode_results.items()
@@ -347,8 +329,6 @@ for comb in post_pruning_mode_combinations:
         use_embeddings=False,
     )
 post_pruning_mode_end_time = time.time()
-total_pruning_time = pruning_mode_end_time - pruning_mode_start_time
-total_post_pruning_time = post_pruning_mode_end_time - post_pruning_mode_start_time
 
 post_pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < FINAL_THRESHOLD else "similar")
@@ -371,11 +351,15 @@ columns_similarity_mapping_unit_testing = (
         column_similarity_scores_expected,
     )
 )
+
+total_pruning_time = pruning_mode_end_time - pruning_mode_start_time
+total_post_pruning_time = post_pruning_mode_end_time - post_pruning_mode_start_time
+total_check_similarity_time = total_post_pruning_time + total_pruning_time
+
 #
 # ###############################
 # # Generate Performance Report #
 # ###############################
-# pruning_report = generate_report(all_combinations_with_labels, pruning_mode_results, threshold=PRUNING_THRESHOLD)
 pruning_report = generate_report_for_table_similarity(
     table_similarity_labels_ideal,
     pruning_mode_output_PREDICTED,
@@ -398,10 +382,9 @@ final_table_report = generate_report_for_table_similarity(
 column_similarity_report = generate_report_for_column_similarity(
     column_similarity_labels_ideal, column_similarity_predicted_labels
 )
-#
-#
+
 with open("Similarity_predictions.txt", "w") as file_:
-    # TABLE SIMILARITY REPORT:
+    # TABLE AND COLUMN SIMILARITY REPORT:
     file_.write(
         f"-------------------------------------------\n"
         f"PRUNING THRESHOLD: {PRUNING_THRESHOLD}\n"
@@ -409,8 +392,8 @@ with open("Similarity_predictions.txt", "w") as file_:
         f"-------------------------------------------\n"
         f"Number of Tables {len(table_infos)}\n"
         f"Total Pruning Time: {total_pruning_time} for {len(pruning_mode_results)} pairs\n"
-        f"Total Post Pruning Time: {total_post_pruning_time} for {len(post_pruning_mode_results)} pairs"
-        f"Total Time {total_post_pruning_time + total_pruning_time}\n"
+        f"Total Post Pruning Time: {total_post_pruning_time} for {len(post_pruning_mode_results)} pairs\n"
+        f"Total Time {total_check_similarity_time}\n"
         f"PRUNING MODE CLASSIFICATION REPORT\n{pruning_report[0]}\n{pruning_report[1]}\n"
         f"False Negatives\n"
         f"{pruning_report[2]['fn']}\n"
