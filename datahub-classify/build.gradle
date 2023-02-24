@@ -68,9 +68,9 @@ task testQuick(type: Exec, dependsOn: installDev) {
   inputs.files(project.fileTree(dir: "tests/"))
   outputs.dir("${venv_name}")
   commandLine 'bash', '-x', '-c',
-    "source ${venv_name}/bin/activate && pytest -m 'not integration' -vv --continue-on-collection-errors --junit-xml=junit.quick.xml --log-cli-level=DEBUG"
+    "source ${venv_name}/bin/activate && pytest -m 'not integration' -vv --continue-on-collection-errors --junit-xml=junit.quick.xml"
 }
-// TODO: remove --log-cli-leve=DEBUG
+
 task installDevTest(type: Exec, dependsOn: [installDev]) {
   inputs.file file('setup.py')
   outputs.dir("${venv_name}")
@@ -95,7 +95,7 @@ task testSingle(dependsOn: [installDevTest]) {
 // TODO: Remove --log-cli-level=DEBUG
 task testFull(type: Exec, dependsOn: [testQuick, installDevTest]) {
   commandLine 'bash', '-x', '-c',
-    "source ${venv_name}/bin/activate && pytest -vv --continue-on-collection-errors --junit-xml=junit.full.xml --log-cli-level=DEBUG"
+    "source ${venv_name}/bin/activate && pytest -vv --continue-on-collection-errors --junit-xml=junit.full.xml"
 }
 
 task cleanPythonCache(type: Exec) {
