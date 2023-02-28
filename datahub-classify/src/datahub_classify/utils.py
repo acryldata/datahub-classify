@@ -35,10 +35,6 @@ def load_stopwords():
     return stop_words
 
 
-# model = SentenceTransformer("all-MiniLM-L6-v2")
-
-
-# TODO: Exception handling
 # Match regex for Name and Description
 def match_regex(text_to_match: str, regex_list: List[str]) -> float:
     original_text = text_to_match.lower()
@@ -46,8 +42,6 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
     match_score: float = 0
     for pattern in regex_list:
         try:
-            # TODO: evaluate a case if [A-Za-z] is present in the pattern then it will not give any error,
-            # TODO: are there any other cases like above?
             pattern = pattern.lower()
             cleaned_pattern = "".join(e for e in pattern if e.isalpha())
             if (cleaned_pattern == cleaned_text) or (
@@ -92,7 +86,6 @@ def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
             if len(values) == 0:
                 break
         except Exception as e:
-            # TODO: print the exception for debugging purpose
             logger.error(f"Regex match for values failed due to: {e}", exc_info=e)
     values_score = sum(values_score_list) / length_values
     return values_score
@@ -122,7 +115,6 @@ def perform_basic_checks(
         and len(values) < minimum_values_threshold
     ):
         basic_checks_status = False
-    # TODO: Add more basic checks
     return basic_checks_status
 
 
@@ -147,7 +139,6 @@ def read_glove_vector(glove_vector: str) -> dict:
     return word_to_vec_map
 
 
-# TODO:
 def get_fuzzy_score(
     text_1: str,
     text_2: str,
@@ -174,7 +165,6 @@ def get_fuzzy_score(
     return fuzzy_match_score
 
 
-# TODO:
 def get_embedding_score(
     text_1_emb: List[TextEmbeddings],
     text_2_emb: List[TextEmbeddings],

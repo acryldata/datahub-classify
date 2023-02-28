@@ -131,8 +131,6 @@ def table_schema_similarity(
 
                     if pair_score > pair_score_threshold:
                         num_matched_pairs += 1
-                        # TODO: table_2_cols_names_dtypes dict is getting used in the for loop and modified at runtime
-                        # TODO: verify: it will not create any problem
                         columns_to_remove.append(col2.metadata.column_id)
                         break
         schema_score = 2 * num_matched_pairs / (num_cols_table1 + num_cols_table2)
@@ -228,8 +226,6 @@ def compute_table_overall_similarity_score(
 
     weighted_score = sum(filter(None, weighted_factor_scores.values()))
 
-    # TODO: can we think of something like, if platform_score is 1 then boost by x% and if 0 then boost by y%
-    # TODO: here x < y, i.e. if platform_score 0 means less probability of having two tables as similar
     # Description Score
     if desc_score is not None:
         if desc_score >= config.table_desc_threshold:
@@ -265,7 +261,6 @@ def compute_column_overall_similarity_score(
     lineage_score: Optional[int],
 ) -> Tuple[float, Dict[str, Optional[float]]]:
     weighted_factor_scores: Dict[str, Optional[float]] = dict()
-    # TODO: Should we have weightage for name
     # Name Score
     weighted_factor_scores["name"] = name_score
 
@@ -373,7 +368,7 @@ def compute_table_similarity(
 
     if table_name_score is None or table_schema_score is None:
         overall_table_similarity_score = None
-        table_prediction_factor_confidence = None
+        table_prediction_factor_scores = None
     else:
         (
             overall_table_similarity_score,
@@ -385,8 +380,7 @@ def compute_table_similarity(
             table_lineage_score,
             table_schema_score,
         )
-        # TODO: Change 'table_prediction_factor_confidence' name to 'table_prediction_factor_debug_info'
-        table_prediction_factor_confidence = SimilarityDebugInfo(
+        table_prediction_factor_scores = SimilarityDebugInfo(
             name=FactorDebugInfo(
                 confidence=table_name_score,
                 weighted_score=weighted_factor_scores["name"],
@@ -408,7 +402,7 @@ def compute_table_similarity(
                 weighted_score=weighted_factor_scores["table_schema"],
             ),
         )
-    return overall_table_similarity_score, table_prediction_factor_confidence
+    return overall_table_similarity_score, table_prediction_factor_scores
 
 
 def compute_column_similarity(
@@ -581,7 +575,6 @@ def check_similarity(
     return table_similarity_score, column_similarity_scores
 
 
-# TODO: Discussion Required - Remove the special characters or numbers from start and end of the
 def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
     try:
         all_strings = []
