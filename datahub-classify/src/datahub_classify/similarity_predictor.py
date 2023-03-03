@@ -53,9 +53,8 @@ def column_dtype_similarity(
         else:
             column_dtype_score = 0
     except Exception as e:
-        logger.error(
-            f"Failed to compute column dtype similarity for '{column_1_dtype}' and '{column_2_dtype}' ",
-            exc_info=e,
+        logger.exception(
+            f"Failed to compute column dtype similarity for '{column_1_dtype}' and '{column_2_dtype}' due to {e}"
         )
         column_dtype_score = None
     return column_dtype_score
@@ -70,7 +69,7 @@ def table_platform_similarity(
         else:
             platform_score = 0
     except Exception as e:
-        logger.error("Failed to compute platform score", exc_info=e)
+        logger.exception(f"Failed to compute platform score due to {e}")
         platform_score = None
     return platform_score
 
@@ -87,9 +86,8 @@ def compute_lineage_score(
         else:
             lineage_score = 0
     except Exception as e:
-        logger.error(
-            f"Failed to compute lineage score for entities with IDs: '{entity_1_id}' and '{entity_2_id}'",
-            exc_info=e,
+        logger.exception(
+            f"Failed to compute lineage score for entities with IDs: '{entity_1_id}' and '{entity_2_id}' due to {e}"
         )
         lineage_score = None
     return lineage_score
@@ -135,7 +133,7 @@ def table_schema_similarity(
                         break
         schema_score = 2 * num_matched_pairs / (num_cols_table1 + num_cols_table2)
     except Exception as e:
-        logger.error("Failed to compute table schema similarity ", exc_info=e)
+        logger.exception(f"Failed to compute table schema similarity due to {e}")
         schema_score = None
     return schema_score
 
@@ -195,7 +193,7 @@ def table_schema_similarity_pruning(
         else:
             schema_score = None
     except Exception as e:
-        logger.error("Failed to compute table schema similarity ", exc_info=e)
+        logger.exception(f"Failed to compute table schema similarity due to {e}")
         schema_score = None
     return schema_score
 
@@ -507,10 +505,9 @@ def check_similarity(
             table_info1, table_info2, use_embeddings, pruning_mode
         )
     except Exception as e:
-        logger.error(
+        logger.exception(
             f"Failed to compute table similarity between Table "
-            f"{table_info1.metadata.table_id} and {table_info2.metadata.table_id}",
-            exc_info=e,
+            f"{table_info1.metadata.table_id} and {table_info2.metadata.table_id} due to {e}"
         )
         overall_table_similarity_score = None
         table_prediction_factor_confidence = None
@@ -556,10 +553,9 @@ def check_similarity(
                         overall_column_similarity_score = 0
                         col_prediction_factor_confidence = SimilarityDebugInfo()
                 except Exception as e:
-                    logger.error(
+                    logger.exception(
                         f"Failed to compute column similarity between Column "
-                        f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id}",
-                        exc_info=e,
+                        f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id} due to {e}"
                     )
                     overall_column_similarity_score = None
                     col_prediction_factor_confidence = None
@@ -636,5 +632,5 @@ def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
                         )
                     )
     except Exception as e:
-        logger.error("Failed to Generate Embeddings", exc_info=e)
+        logger.exception(f"Failed to Generate Embeddings due to {e}")
     return table_info_list

@@ -60,12 +60,12 @@ def populate_column_info_list(public_data_list):
     for i, (dataset_name, data) in enumerate(public_data_list.items()):
         for col in data.columns:
             fields = {
-                "Name": col,
-                "Description": f"This column contains name of the {col}",
-                "Datatype": "str",
-                "Dataset_Name": dataset_name,
+                "name": col,
+                "description": f"This column contains name of the {col}",
+                "datatype": "str",
+                "dataset_name": dataset_name,
             }
-            metadata = ColumnMetadata(fields)
+            metadata = ColumnMetadata(**fields)
             if len(data[col].dropna()) > 1000:
                 values = data[col].dropna().values[:1000]
             else:

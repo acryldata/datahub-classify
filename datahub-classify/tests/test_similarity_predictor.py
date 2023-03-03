@@ -156,7 +156,7 @@ def get_predicted_expected_similarity_scores_mapping_for_columns(
     return mapping
 
 
-def generate_report_for_table_similarity(true_labels, predicted_labels, threshold=None):
+def generate_report_for_table_similarity(true_labels, predicted_labels):
     keys = list(predicted_labels.keys())
     y_pred = [0 if predicted_labels[key] == "not_similar" else 1 for key in keys]
     y_true = [0 if true_labels[key] == "not_similar" else 1 for key in keys]
@@ -220,26 +220,26 @@ def populate_tableinfo_object(dataset_name):
     df = load_df(dataset_name)
     np.random.seed(SEED)
     table_meta_info = {
-        "Name": dataset_name,
-        "Description": f"This table contains description of {dataset_name}",
-        "Platform": PLATFORMS[np.random.randint(0, 5)],
-        "Table_Id": dataset_name,
+        "name": dataset_name,
+        "description": f"This table contains description of {dataset_name}",
+        "platform": PLATFORMS[np.random.randint(0, 5)],
+        "table_id": dataset_name,
     }
     col_infos = []
     for col in df.columns:
         fields = {
-            "Name": col,
-            "Description": f" {col}",
-            "Datatype": str(df[col].dropna().dtype),
-            "Dataset_Name": dataset_name,
-            "Column_Id": dataset_name + "_SPLITTER_" + col,
+            "name": col,
+            "description": f" {col}",
+            "datatype": str(df[col].dropna().dtype),
+            "dataset_name": dataset_name,
+            "column_id": dataset_name + "_SPLITTER_" + col,
         }
-        metadata_col = ColumnMetadata(fields)
+        metadata_col = ColumnMetadata(**fields)
         # parent_cols = list()
         col_info_ = ColumnInfo(metadata_col)
         col_infos.append(col_info_)
 
-    metadata_table = TableMetadata(table_meta_info)
+    metadata_table = TableMetadata(**table_meta_info)
     # parent_tables = list()
     table_info = TableInfo(metadata_table, col_infos)
     return table_info
@@ -361,7 +361,6 @@ total_check_similarity_time = total_post_pruning_time + total_pruning_time
 pruning_report = generate_report_for_table_similarity(
     table_similarity_labels_ideal,
     pruning_mode_output_PREDICTED,
-    threshold=PRUNING_THRESHOLD,
 )
 final_results = {}
 for key in pruning_mode_output_PREDICTED.keys():
@@ -370,19 +369,17 @@ for key in pruning_mode_output_PREDICTED.keys():
     else:
         final_results[key] = "not_similar"
 post_pruning_report = generate_report_for_table_similarity(
-    table_similarity_labels_ideal,
-    post_pruning_mode_output_PREDICTED,
-    threshold=FINAL_THRESHOLD,
+    table_similarity_labels_ideal, post_pruning_mode_output_PREDICTED
 )
 final_table_report = generate_report_for_table_similarity(
-    table_similarity_labels_ideal, final_results, threshold=FINAL_THRESHOLD
+    table_similarity_labels_ideal, final_results
 )
 column_similarity_report = generate_report_for_column_similarity(
     column_similarity_labels_ideal, column_similarity_predicted_labels
 )
 
 with open("Similarity_predictions.txt", "w") as file_:
-    # TABLE AND COLUMN SIMILARITY REPORT:
+    """TABLE AND COLUMN SIMILARITY REPORT:"""
     file_.write(
         f"-------------------------------------------\n"
         f"PRUNING THRESHOLD: {PRUNING_THRESHOLD}\n"

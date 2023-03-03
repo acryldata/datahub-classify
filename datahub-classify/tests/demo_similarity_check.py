@@ -23,26 +23,26 @@ def populate_tableinfo_object(df, dataset_name):
 
     np.random.seed(SEED)
     table_meta_info = {
-        "Name": dataset_name,
-        "Description": f"This table contains description of {dataset_name}",
-        "Platform": platforms[np.random.randint(0, 5)],
-        "Table_Id": dataset_name,
+        "name": dataset_name,
+        "description": f"This table contains description of {dataset_name}",
+        "platform": platforms[np.random.randint(0, 5)],
+        "table_id": dataset_name,
     }
     col_infos = []
     for col in df.columns:
         fields = {
-            "Name": col,
-            "Description": f" {col}",
-            "Datatype": str(df[col].dropna().dtype),
-            "Dataset_Name": dataset_name,
-            "Column_Id": dataset_name + "_SPLITTER_" + col,
+            "name": col,
+            "description": f" {col}",
+            "datatype": str(df[col].dropna().dtype),
+            "dataset_name": dataset_name,
+            "column_id": dataset_name + "_SPLITTER_" + col,
         }
-        metadata_col = ColumnMetadata(fields)
+        metadata_col = ColumnMetadata(**fields)
         # parent_cols = list()
         col_info_ = ColumnInfo(metadata_col)
         col_infos.append(col_info_)
 
-    metadata_table = TableMetadata(table_meta_info)
+    metadata_table = TableMetadata(**table_meta_info)
     # parent_tables = list()
     table_info = TableInfo(metadata_table, col_infos)
     return table_info
