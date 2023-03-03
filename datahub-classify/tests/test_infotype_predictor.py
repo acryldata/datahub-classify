@@ -64,6 +64,7 @@ def populate_column_info_list(public_data_list):
                 "description": f"This column contains name of the {col}",
                 "datatype": "str",
                 "dataset_name": dataset_name,
+                "column_id": dataset_name + "_SPLITTER_" + col,
             }
             metadata = ColumnMetadata(**fields)
             if len(data[col].dropna()) > 1000:
