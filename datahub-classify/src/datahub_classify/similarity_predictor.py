@@ -31,7 +31,7 @@ try:
 
     model = SentenceTransformer("all-MiniLM-L6-v2")
 except Exception as e:
-    print(e)
+    logger.exception(f"Failed to load sentence transformer due to {e}")
     model = None
 
 
