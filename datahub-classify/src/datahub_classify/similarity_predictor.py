@@ -164,8 +164,6 @@ def table_schema_similarity_pruning(
                         "_",
                         re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
                     )
-                # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
-                # dtype = re.sub("[^a-z0-9]", "_", dtype.lower())
                 text_1 = text_1 + " " + f"{name}_{dtype}"
 
         for col in col_infos2:
@@ -183,8 +181,6 @@ def table_schema_similarity_pruning(
                         "_",
                         re.sub(r"^[^a-zA-Z]+", "", name.lower().strip()),
                     )
-                # name = re.sub("[^a-z0-9]", "_", name.lower()).strip()
-                # dtype = re.sub("[^a-z0-9]", "_", dtype.lower()).strip()
                 text_2 = text_2 + " " + f"{name}_{dtype}"
         if text_1 != "" and text_2 != "":
             schema_score = get_fuzzy_score(
@@ -525,9 +521,6 @@ def check_similarity(
         )
         for col_info1 in table_info1.column_infos:
             for col_info2 in table_info2.column_infos:
-                # logger.debug(
-                #     f"Processing pair: {(col_info1.metadata.column_id, col_info2.metadata.column_id)}"
-                # )
                 try:
                     if (
                         overall_table_similarity_score is not None
@@ -575,9 +568,6 @@ def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
     try:
         all_strings = []
         for table_info in table_info_list:
-            # logger.debug(
-            #     f"** Generating Embeddings for {table_info.metadata.table_id} **"
-            # )
             if table_info.metadata.name:
                 all_strings.append(table_info.metadata.name)
             if table_info.metadata.description:
