@@ -21,8 +21,6 @@ from datahub_classify.helper_classes import (
 from datahub_classify.similarity_predictor import check_similarity
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
-logger.info("libraries Imported..................")
 
 SEED = 100
 np.random.seed(SEED)

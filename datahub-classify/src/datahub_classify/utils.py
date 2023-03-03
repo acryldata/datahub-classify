@@ -1,13 +1,11 @@
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 import nltk
 import numpy as np
 from numpy.linalg import norm
-
-# from sentence_transformers import SentenceTransformer
 from thefuzz import fuzz
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
@@ -17,8 +15,8 @@ logger = logging.getLogger(__name__)
 GLOVE_URL = "https://nlp.stanford.edu/data/glove.6B.zip"
 
 
-# Load Stopwords
-def load_stopwords():
+def load_stopwords() -> Set[str]:
+    """Load Stopwords"""
     try:
         from nltk.corpus import stopwords
 
@@ -35,8 +33,8 @@ def load_stopwords():
     return stop_words
 
 
-# Match regex for Name and Description
 def match_regex(text_to_match: str, regex_list: List[str]) -> float:
+    """Match regex for Name and Description"""
     original_text = text_to_match.lower()
     cleaned_text = "".join(e for e in original_text if e.isalpha())
     match_score: float = 0
@@ -49,9 +47,6 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
             ):
                 match_score = 1
                 break
-            # elif re.match(pattern,cleaned_text):  ## revisit later
-            #     match_score = 1
-            #     break
             elif pattern in original_text:
                 match_score = 0.65
             else:
@@ -61,8 +56,8 @@ def match_regex(text_to_match: str, regex_list: List[str]) -> float:
     return match_score
 
 
-# Match data type
 def match_datatype(dtype_to_match: str, dtype_list: List[str]) -> int:
+    """Match data type"""
     dtype_list = [str(s).lower() for s in dtype_list]
     dtype_to_match = dtype_to_match.lower()
     if dtype_to_match in dtype_list:
@@ -72,8 +67,8 @@ def match_datatype(dtype_to_match: str, dtype_list: List[str]) -> int:
     return match_score
 
 
-# Match regex for values
 def match_regex_for_values(values: List[Any], regex_list: List[str]) -> float:
+    """Match regex for values"""
     values_score_list = []
     length_values = len(values)
     values = [str(x).lower() for x in values]

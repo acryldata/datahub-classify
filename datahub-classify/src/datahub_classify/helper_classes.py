@@ -108,9 +108,9 @@ class ColumnMetadata:
 @dataclass
 class ColumnInfo:
     metadata: ColumnMetadata
-    values: List = field(default_factory=list)
+    values: List[Any] = field(default_factory=list)
     infotype_proposals: Optional[List[InfotypeProposal]] = None
-    parent_columns: List = field(default_factory=list)
+    parent_columns: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -136,8 +136,8 @@ class TableMetadata:
 @dataclass
 class TableInfo:
     metadata: TableMetadata
-    column_infos: List
-    parent_tables: List = field(default_factory=list)
+    column_infos: List[ColumnInfo]
+    parent_tables: List[str] = field(default_factory=list)
 
 
 @dataclass

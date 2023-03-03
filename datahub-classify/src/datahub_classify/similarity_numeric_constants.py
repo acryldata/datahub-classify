@@ -1,26 +1,26 @@
 # All Thresholds, Weights, Penalties and Boost factors
-column_desc_threshold = 0.65
-column_weighted_score_threshold = 0.7
-column_lineage_threshold = 0.7
-table_similarity_threshold = 0.7
-table_desc_threshold = 0.65
-table_weighted_score_threshold = 0.7
+COLUMN_DESC_THRESHOLD = 0.65
+COLUMN_WEIGHTED_SCORE_THRESHOLD = 0.7
+COLUMN_LINEAGE_THRESHOLD = 0.7
+TABLE_SIMILARITY_THRESHOLD = 0.7
+TABLE_DESC_THRESHOLD = 0.65
+TABLE_WEIGHTED_SCORE_THRESHOLD = 0.7
 
-schema_col_pair_score_threshold = 0.7
-schema_col_name_weight = 0.8
-schema_col_dtype_weight = 0.2
+SCHEMA_COL_PAIR_SCORE_THRESHOLD = 0.7
+SCHEMA_COL_NAME_WEIGHT = 0.8
+SCHEMA_COL_DTYPE_WEIGHT = 0.2
 
-overall_name_score_weight = 0.3
-overall_platform_score_weight = 0.1
-overall_schema_score_weight = 0.6
-overall_desc_boost = 1.2
-overall_desc_penalty = 0.9
-overall_desc_score_threshold = 0.5
-overall_table_similarity_threshold = 0.6
+OVERALL_NAME_SCORE_WEIGHT = 0.3
+OVERALL_PLATFORM_SCORE_WEIGHT = 0.1
+OVERALL_SCHEMA_SCORE_WEIGHT = 0.6
+OVERALL_DESC_BOOST = 1.2
+OVERALL_DESC_PENALTY = 0.9
+OVERALL_DESC_SCORE_THRESHOLD = 0.5
+OVERALL_TABLE_SIMILARITY_THRESHOLD = 0.6
 
-column_dtype_boost = 1.2
-column_dtype_penalty = 0.95
-column_desc_boost = 1.2
-column_desc_penalty = 0.9
-column_table_similarity_boost = 1.2
-column_lineage_boost = 1.2
+COLUMN_DTYPE_BOOST = 1.2
+COLUMN_DTYPE_PENALTY = 0.95
+COLUMN_DESC_BOOST = 1.2
+COLUMN_DESC_PENALTY = 0.9
+COLUMN_TABLE_SIMILARITY_BOOST = 1.2
+COLUMN_LINEAGE_BOOST = 1.2

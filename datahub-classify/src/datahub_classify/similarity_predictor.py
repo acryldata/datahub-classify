@@ -99,7 +99,7 @@ def table_schema_similarity(
     col_infos1: List[ColumnInfo],
     col_infos2: List[ColumnInfo],
     use_embeddings: bool,
-    pair_score_threshold: float = config.schema_col_pair_score_threshold,
+    pair_score_threshold: float = config.SCHEMA_COL_PAIR_SCORE_THRESHOLD,
 ) -> Optional[float]:
     try:
         num_matched_pairs = 0
@@ -125,8 +125,8 @@ def table_schema_similarity(
                 )
                 if col_name_score is not None and col_dtype_score is not None:
                     pair_score = (
-                        config.schema_col_name_weight * col_name_score
-                        + config.schema_col_dtype_weight * col_dtype_score
+                        config.SCHEMA_COL_NAME_WEIGHT * col_name_score
+                        + config.SCHEMA_COL_DTYPE_WEIGHT * col_dtype_score
                     )
 
                     if pair_score > pair_score_threshold:
@@ -210,10 +210,10 @@ def compute_table_overall_similarity_score(
     weighted_factor_scores: Dict[str, Optional[float]] = dict()
 
     # Name Score
-    weighted_factor_scores["name"] = config.overall_name_score_weight * name_score
+    weighted_factor_scores["name"] = config.OVERALL_NAME_SCORE_WEIGHT * name_score
     # Schema Score
     weighted_factor_scores["table_schema"] = (
-        config.overall_schema_score_weight * schema_score
+        config.OVERALL_SCHEMA_SCORE_WEIGHT * schema_score
     )
 
     # Platform Score
@@ -221,17 +221,17 @@ def compute_table_overall_similarity_score(
         weighted_factor_scores["platform"] = None
     else:
         weighted_factor_scores["platform"] = (
-            config.overall_platform_score_weight * platform_score
+            config.OVERALL_PLATFORM_SCORE_WEIGHT * platform_score
         )
 
     weighted_score = sum(filter(None, weighted_factor_scores.values()))
 
     # Description Score
     if desc_score is not None:
-        if desc_score >= config.table_desc_threshold:
-            weighted_score = np.minimum(config.overall_desc_boost * weighted_score, 1)
-        if desc_score < config.overall_desc_score_threshold:
-            weighted_score = config.overall_desc_penalty * weighted_score
+        if desc_score >= config.TABLE_DESC_THRESHOLD:
+            weighted_score = np.minimum(config.OVERALL_DESC_BOOST * weighted_score, 1)
+        if desc_score < config.OVERALL_DESC_SCORE_THRESHOLD:
+            weighted_score = config.OVERALL_DESC_PENALTY * weighted_score
         weighted_factor_scores["description"] = weighted_score - sum(
             filter(None, weighted_factor_scores.values())
         )
@@ -242,7 +242,7 @@ def compute_table_overall_similarity_score(
 
     # Lineage Score
     if (
-        weighted_score >= config.table_weighted_score_threshold
+        weighted_score >= config.TABLE_WEIGHTED_SCORE_THRESHOLD
         and lineage_score is not None
         and lineage_score == 1
     ):
@@ -266,17 +266,17 @@ def compute_column_overall_similarity_score(
 
     # Datatype Score
     if dtype_score == 1:
-        weighted_score = config.column_dtype_boost * name_score
+        weighted_score = config.COLUMN_DTYPE_BOOST * name_score
     else:
-        weighted_score = config.column_dtype_penalty * name_score
+        weighted_score = config.COLUMN_DTYPE_PENALTY * name_score
     weighted_factor_scores["datatype"] = weighted_score - name_score
 
     # Description Score
     if desc_score is not None:
-        if desc_score >= config.column_desc_threshold:
-            weighted_score = config.column_desc_boost * weighted_score
-        if desc_score < config.overall_desc_score_threshold:
-            weighted_score = config.column_desc_penalty * weighted_score
+        if desc_score >= config.COLUMN_DESC_THRESHOLD:
+            weighted_score = config.COLUMN_DESC_BOOST * weighted_score
+        if desc_score < config.OVERALL_DESC_SCORE_THRESHOLD:
+            weighted_score = config.COLUMN_DESC_PENALTY * weighted_score
         weighted_factor_scores["description"] = weighted_score - sum(
             filter(None, weighted_factor_scores.values())
         )
@@ -284,19 +284,19 @@ def compute_column_overall_similarity_score(
         weighted_factor_scores["description"] = None
 
     # Schema Score & Lineage Score
-    if weighted_score > config.column_weighted_score_threshold:
+    if weighted_score > config.COLUMN_WEIGHTED_SCORE_THRESHOLD:
         if (
             table_similarity_score is not None
-            and table_similarity_score > config.table_similarity_threshold
+            and table_similarity_score > config.TABLE_SIMILARITY_THRESHOLD
         ):
-            weighted_score = config.column_table_similarity_boost * weighted_score
+            weighted_score = config.COLUMN_TABLE_SIMILARITY_BOOST * weighted_score
             weighted_factor_scores["table_schema"] = weighted_score - sum(
                 filter(None, weighted_factor_scores.values())
             )
         else:
             weighted_factor_scores["table_schema"] = 0.0
         if lineage_score is not None and lineage_score == 1:
-            weighted_score = config.column_lineage_boost * weighted_score
+            weighted_score = config.COLUMN_LINEAGE_BOOST * weighted_score
             weighted_factor_scores["lineage"] = weighted_score - sum(
                 filter(None, weighted_factor_scores.values())
             )
@@ -535,7 +535,7 @@ def check_similarity(
                     if (
                         overall_table_similarity_score is not None
                         and overall_table_similarity_score
-                        > config.overall_table_similarity_threshold
+                        > config.OVERALL_TABLE_SIMILARITY_THRESHOLD
                     ):
                         if col_info1.metadata.datatype == col_info2.metadata.datatype:
                             (
@@ -583,14 +583,15 @@ def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
             #     f"** Generating Embeddings for {table_info.metadata.table_id} **"
             # )
             if table_info.metadata.name:
-                all_strings.append(table_info.metadata.name.lower().strip())
+                all_strings.append(table_info.metadata.name)
             if table_info.metadata.description:
-                all_strings.append(table_info.metadata.description.lower().strip())
+                all_strings.append(table_info.metadata.description)
             for col_info in table_info.column_infos:
                 if col_info.metadata.name:
-                    all_strings.append(col_info.metadata.name.lower().strip())
+                    all_strings.append(col_info.metadata.name)
                 if col_info.metadata.description:
-                    all_strings.append(col_info.metadata.description.lower().strip())
+                    all_strings.append(col_info.metadata.description)
+        all_strings = list(map(lambda x: x.lower().strip(), all_strings))
         all_embeddings = model.encode(all_strings)
         all_strings_with_embeddings = {
             key: value for key, value in zip(all_strings, all_embeddings)
