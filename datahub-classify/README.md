@@ -115,7 +115,11 @@ A debug information is associated with each infotype proposal, it provides detai
 - If value prediction factor weight is non-zero (indicating values should be used for infotype inspection) then a minimum 50 non-null column values should be present.
 
 # API 'check_similarity()'
-This API computes the similarity score between a pair of tables and also between all possible pairs of their constituent columns. Following are the input and output contract:
+This API computes the similarity score between a pair of tables and also between all possible pairs of their constituent columns.
+
+API works in two modes "pruning" and "non-pruning". In "pruning" mode only table similarity is calculated with a lenient algorithm and in "non-pruning" mode both table and column similarity are calculated. The table similarity is calculated with a stricter method in non pruning mode.
+
+Following are the input and output contract:
 ### API Input
 API expects following parameters in the input
 - `table_info1` & `table_info2` -  These are instances of TableInfo object. Each TableInfo object contains following class variables:
