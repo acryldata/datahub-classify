@@ -115,7 +115,8 @@ def perform_basic_checks(
 
 def cosine_similarity_score(vec1: np.ndarray, vec2: np.ndarray) -> Optional[float]:
     """Cosine similarity measures the similarity between two vectors of an inner product space.
-    This function is used to calculate the cosine similarity between vector representations of two strings"""
+    This function is used to calculate the cosine similarity between vector representations of two strings
+    """
     try:
         cos_sim = np.dot(vec1, vec2) / (norm(vec1) * norm(vec2))
     except ValueError as e:
