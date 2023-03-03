@@ -8,8 +8,8 @@ import numpy as np
 import datahub_classify.similarity_numeric_constants as config
 from datahub_classify.helper_classes import (
     ColumnInfo,
-    FactorDebugInfo,
-    SimilarityDebugInfo,
+    ScoreInfo,
+    SimilarityFactorScoreInfo,
     SimilarityInfo,
     TableInfo,
     TextEmbeddings,
@@ -309,7 +309,7 @@ def compute_table_similarity(
     table_info2: TableInfo,
     use_embeddings: bool,
     pruning_mode: bool,
-) -> Tuple[Optional[float], Optional[SimilarityDebugInfo]]:
+) -> Tuple[Optional[float], Optional[SimilarityFactorScoreInfo]]:
     table_name_score = compute_string_similarity(
         table_info1.metadata.name,
         table_info2.metadata.name,
@@ -374,24 +374,24 @@ def compute_table_similarity(
             table_lineage_score,
             table_schema_score,
         )
-        table_prediction_factor_scores = SimilarityDebugInfo(
-            name=FactorDebugInfo(
+        table_prediction_factor_scores = SimilarityFactorScoreInfo(
+            name=ScoreInfo(
                 confidence=table_name_score,
                 weighted_score=weighted_factor_scores["name"],
             ),
-            description=FactorDebugInfo(
+            description=ScoreInfo(
                 confidence=table_desc_score,
                 weighted_score=weighted_factor_scores["description"],
             ),
-            platform=FactorDebugInfo(
+            platform=ScoreInfo(
                 confidence=table_platform_score,
                 weighted_score=weighted_factor_scores["platform"],
             ),
-            lineage=FactorDebugInfo(
+            lineage=ScoreInfo(
                 confidence=table_lineage_score,
                 weighted_score=weighted_factor_scores["lineage"],
             ),
-            table_schema=FactorDebugInfo(
+            table_schema=ScoreInfo(
                 confidence=table_schema_score,
                 weighted_score=weighted_factor_scores["table_schema"],
             ),
@@ -404,7 +404,7 @@ def compute_column_similarity(
     col_info2: ColumnInfo,
     overall_table_similarity_score: Optional[float],
     use_embeddings: bool,
-) -> Tuple[Optional[float], Optional[SimilarityDebugInfo]]:
+) -> Tuple[Optional[float], Optional[SimilarityFactorScoreInfo]]:
     column_name_score = compute_string_similarity(
         col_info1.metadata.name,
         col_info2.metadata.name,
@@ -458,24 +458,24 @@ def compute_column_similarity(
             overall_table_similarity_score,
             column_lineage_score,
         )
-        col_prediction_factor_confidence = SimilarityDebugInfo(
-            name=FactorDebugInfo(
+        col_prediction_factor_confidence = SimilarityFactorScoreInfo(
+            name=ScoreInfo(
                 confidence=column_name_score,
                 weighted_score=weighted_factor_scores["name"],
             ),
-            description=FactorDebugInfo(
+            description=ScoreInfo(
                 confidence=column_desc_score,
                 weighted_score=weighted_factor_scores["description"],
             ),
-            datatype=FactorDebugInfo(
+            datatype=ScoreInfo(
                 confidence=column_dtype_score,
                 weighted_score=weighted_factor_scores["datatype"],
             ),
-            lineage=FactorDebugInfo(
+            lineage=ScoreInfo(
                 confidence=column_lineage_score,
                 weighted_score=weighted_factor_scores["lineage"],
             ),
-            table_schema=FactorDebugInfo(
+            table_schema=ScoreInfo(
                 confidence=overall_table_similarity_score,
                 weighted_score=weighted_factor_scores["table_schema"],
             ),
@@ -539,12 +539,14 @@ def check_similarity(
                             )
                         else:
                             overall_column_similarity_score = 0
-                            col_prediction_factor_confidence = SimilarityDebugInfo(
-                                datatype=FactorDebugInfo(confidence=0, weighted_score=0)
+                            col_prediction_factor_confidence = (
+                                SimilarityFactorScoreInfo(
+                                    datatype=ScoreInfo(confidence=0, weighted_score=0)
+                                )
                             )
                     else:
                         overall_column_similarity_score = 0
-                        col_prediction_factor_confidence = SimilarityDebugInfo()
+                        col_prediction_factor_confidence = SimilarityFactorScoreInfo()
                 except Exception as e:
                     logger.exception(
                         f"Failed to compute column similarity between Column "

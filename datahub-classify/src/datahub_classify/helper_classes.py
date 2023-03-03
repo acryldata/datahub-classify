@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 
 @dataclass
-class FactorDebugInfo:
+class ScoreInfo:
     confidence: Optional[float] = field(default=None)
     weighted_score: Optional[float] = field(default=None)
 
@@ -39,32 +39,32 @@ class DebugInfo(BaseModel):
     )
 
 
-class SimilarityDebugInfo(BaseModel):
-    name: Optional[FactorDebugInfo] = Field(
+class SimilarityFactorScoreInfo(BaseModel):
+    name: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using name",
     )
-    description: Optional[FactorDebugInfo] = Field(
+    description: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using description",
     )
-    datatype: Optional[FactorDebugInfo] = Field(
+    datatype: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using datatype. For tables, it is None",
     )
-    values: Optional[FactorDebugInfo] = Field(
+    values: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using values. For tables, it is None",
     )
-    platform: Optional[FactorDebugInfo] = Field(
+    platform: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using platform. For columns, it is None",
     )
-    table_schema: Optional[FactorDebugInfo] = Field(
+    table_schema: Optional[ScoreInfo] = Field(
         default=None,
         description="For tables, it is confidence score and weighted score contribution using table schema. For columns, it is table_similarity_score",
     )
-    lineage: Optional[FactorDebugInfo] = Field(
+    lineage: Optional[ScoreInfo] = Field(
         default=None,
         description="confidence score and weighted score contribution using lineage",
     )
@@ -122,4 +122,4 @@ class TableInfo:
 @dataclass
 class SimilarityInfo:
     score: Optional[float]
-    prediction_factors_scores: Optional[SimilarityDebugInfo]
+    prediction_factors_scores: Optional[SimilarityFactorScoreInfo]
