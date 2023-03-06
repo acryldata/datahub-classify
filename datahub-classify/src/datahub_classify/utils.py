@@ -109,7 +109,7 @@ def perform_basic_checks(
         config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
         and len(values) < minimum_values_threshold
     ):
-        basic_checks_status = False
+        return False
     return basic_checks_status
 
 
@@ -204,7 +204,7 @@ def get_embedding_score(
                     emb_2 = text_emb.embedding
                     break
         if emb_1 is None or emb_2 is None:
-            raise Exception("Embeddings Not Found!!!")
+            raise Exception("Sentence Transformer Embeddings Not Found!!!")
         emb_match_score = cosine_similarity_score(emb_1, emb_2)
     except Exception as e:
         logger.exception(f"Failed to calculate cosine similarity {e}")
