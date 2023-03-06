@@ -12,18 +12,10 @@ import pandas as pd
 import pytest
 from sklearn.metrics import classification_report, confusion_matrix
 
-from datahub_classify.helper_classes import (
-    ColumnInfo,
-    ColumnMetadata,
-    TableInfo,
-    TableMetadata,
-)
 from datahub_classify.similarity_predictor import check_similarity
 
 logger = logging.getLogger(__name__)
 
-SEED = 100
-np.random.seed(SEED)
 PRUNING_THRESHOLD = 0.8
 FINAL_THRESHOLD = 0.6
 COLUMN_SIMILARITY_THRESHOLD = 0.8
@@ -215,36 +207,6 @@ def generate_report_for_column_similarity(true_labels, predicted_labels):
     )
 
 
-def populate_tableinfo_object(dataset_name):
-    """populate table info object for a dataset"""
-    df = load_df(dataset_name)
-    np.random.seed(SEED)
-    table_meta_info = {
-        "name": dataset_name,
-        "description": f"This table contains description of {dataset_name}",
-        "platform": PLATFORMS[np.random.randint(0, 5)],
-        "table_id": dataset_name,
-    }
-    col_infos = []
-    for col in df.columns:
-        fields = {
-            "name": col,
-            "description": f" {col}",
-            "datatype": str(df[col].dropna().dtype),
-            "dataset_name": dataset_name,
-            "column_id": dataset_name + "_SPLITTER_" + col,
-        }
-        metadata_col = ColumnMetadata(**fields)
-        # parent_cols = list()
-        col_info_ = ColumnInfo(metadata_col)
-        col_infos.append(col_info_)
-
-    metadata_table = TableMetadata(**table_meta_info)
-    # parent_tables = list()
-    table_info = TableInfo(metadata_table, col_infos)
-    return table_info
-
-
 column_similarity_predicted_labels: Dict[str, str] = dict()
 columns_predicted_scores: Dict[str, float] = dict()
 
@@ -273,10 +235,16 @@ post_pruning_mode_results: Dict[str, Tuple] = dict()
 ) = load_jsons(input_jsons_path)
 
 logger.info("Creating Tables Info Objects.............")
-table_infos = {key: populate_tableinfo_object(key) for key in all_datasets_paths.keys()}
+
+with open(
+    os.path.join(current_wdr, "table_info_objects.pickle"), "rb"
+) as table_info_file:
+    table_infos = pickle.load(table_info_file)
 if os.path.exists(table_info_copies_path):
-    with open(os.path.join(current_wdr, "logical_copies.pickle"), "rb") as handle:
-        table_info_copies = pickle.load(handle)
+    with open(
+        os.path.join(current_wdr, "logical_copies.pickle"), "rb"
+    ) as table_info_copies_file:
+        table_info_copies = pickle.load(table_info_copies_file)
 else:
     table_info_copies = None
 

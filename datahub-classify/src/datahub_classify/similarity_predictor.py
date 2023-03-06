@@ -501,7 +501,7 @@ def check_similarity(
             table_info1, table_info2, use_embeddings, pruning_mode
         )
     except Exception as e:
-        logger.exception(
+        logger.warning(
             f"Failed to compute table similarity between Table "
             f"{table_info1.metadata.table_id} and {table_info2.metadata.table_id} due to {e}"
         )
@@ -548,7 +548,7 @@ def check_similarity(
                         overall_column_similarity_score = 0
                         col_prediction_factor_confidence = SimilarityFactorScoreInfo()
                 except Exception as e:
-                    logger.exception(
+                    logger.warning(
                         f"Failed to compute column similarity between Column "
                         f"{col_info1.metadata.column_id} and {col_info1.metadata.column_id} due to {e}"
                     )

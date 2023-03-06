@@ -206,10 +206,10 @@ def get_embedding_score(
         if emb_1 is None or emb_2 is None:
             raise Exception("Sentence Transformer Embeddings Not Found!!!")
         emb_match_score = cosine_similarity_score(emb_1, emb_2)
+        return emb_match_score
     except Exception as e:
         logger.exception(f"Failed to calculate cosine similarity {e}")
-        emb_match_score = None
-    return emb_match_score
+    return None
 
 
 def compute_string_similarity(
