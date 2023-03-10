@@ -201,11 +201,13 @@ def get_similarity_predictions(
     )
 
 
-def get_true_predicted_mappings() -> Tuple[
-    List[Tuple[str, str, str, str]],
-    List[Tuple[str, str, str, str]],
-    List[Tuple[str, str, float, str, float, str]],
-]:
+def get_true_predicted_mappings() -> (
+    Tuple[
+        List[Tuple[str, str, str, str]],
+        List[Tuple[str, str, str, str]],
+        List[Tuple[str, str, float, str, float, str]],
+    ]
+):
     table_infos, table_pairs = get_table_infos_and_pairs()
     (
         pruning_mode_output_PREDICTED,

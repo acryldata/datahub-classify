@@ -27,11 +27,16 @@ glove_vec = os.path.join(current_wdr, "glove.6B.50d.txt")
 stop_words = load_stopwords()
 
 try:
+    import torch
     from sentence_transformers import SentenceTransformer
 
-    model = SentenceTransformer("all-MiniLM-L6-v2")
+    if torch.cuda.is_available():
+        device = "cuda"
+    else:
+        device = "cpu"
+    model = SentenceTransformer("all-MiniLM-L6-v2", device=device)
 except Exception as e:
-    logger.exception(f"Failed to load sentence transformer due to {e}")
+    logger.warning(f"Failed to load sentence transformers due to {e}")
     model = None
 
 
@@ -580,7 +585,7 @@ def preprocess_tables(table_info_list: List[TableInfo]) -> List[TableInfo]:
                 if col_info.metadata.description:
                     all_strings.append(col_info.metadata.description)
         all_strings = list(map(lambda x: x.lower().strip(), all_strings))
-        all_embeddings = model.encode(all_strings)
+        all_embeddings = model.encode(all_strings, device=device)
         all_strings_with_embeddings = {
             key: value for key, value in zip(all_strings, all_embeddings)
         }

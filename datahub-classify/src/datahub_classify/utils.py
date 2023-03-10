@@ -23,7 +23,7 @@ def load_stopwords() -> Set[str]:
         stop_words = set(stopwords.words("english"))
 
     except Exception as e:
-        logger.exception(
+        logger.warning(
             f"Could not Load Stopwords due to {e}: Downloading Stopwords......."
         )
         nltk.download("stopwords")
