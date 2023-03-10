@@ -47,7 +47,6 @@ def predict_infotypes(
         # iterate over all infotype functions
         proposal_list = []
         for infotype, infotype_fn in infotype_function_map.items():
-
             # get the configuration
             config_dict = global_config[infotype]
 
