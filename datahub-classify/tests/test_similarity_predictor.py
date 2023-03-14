@@ -26,12 +26,12 @@ NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH = os.path.join(
 COLUMN_SIMILARITY_EXPECTED_OUTPUT_PATH = os.path.join(
     INPUT_DIR, "column_similarity_scores_EXPECTED.json"
 )
-TABLE_INFOS_PATH = os.path.join(CURRENT_WDR, "table_info_objects.pickle")
-TABLE_INFO_COPIES_PATH = os.path.join(CURRENT_WDR, "logical_copies.pickle")
+TABLE_INFOS_PATH = os.path.join(INPUT_DIR, "table_info_objects.pickle")
+TABLE_INFO_COPIES_PATH = os.path.join(INPUT_DIR, "logical_copies.pickle")
 
-PRUNING_TABLE_PAIRS_PATH = os.path.join(CURRENT_WDR, "pruning_mode_table_pairs.pkl")
+PRUNING_TABLE_PAIRS_PATH = os.path.join(INPUT_DIR, "pruning_mode_table_pairs.pkl")
 NON_PRUNING_TABLE_PAIRS_PATH = os.path.join(
-    CURRENT_WDR, "non_pruning_mode_table_pairs.pkl"
+    INPUT_DIR, "non_pruning_mode_table_pairs.pkl"
 )
 
 
