@@ -1,4 +1,3 @@
-import itertools
 import json
 import logging
 import os
@@ -17,302 +16,169 @@ PRUNING_THRESHOLD = 0.8
 FINAL_THRESHOLD = 0.6
 COLUMN_SIMILARITY_THRESHOLD = 0.8
 CURRENT_WDR = os.path.dirname(os.path.abspath(__file__))
+INPUT_DIR = os.path.join(CURRENT_WDR, "test_input")
+PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH = os.path.join(
+    INPUT_DIR, "pruning_table_similarity_labels_EXPECTED.json"
+)
+NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH = os.path.join(
+    INPUT_DIR, "non_pruning_table_similarity_labels_EXPECTED.json"
+)
+COLUMN_SIMILARITY_EXPECTED_OUTPUT_PATH = os.path.join(
+    INPUT_DIR, "column_similarity_scores_EXPECTED.json"
+)
 TABLE_INFOS_PATH = os.path.join(CURRENT_WDR, "table_info_objects.pickle")
 TABLE_INFO_COPIES_PATH = os.path.join(CURRENT_WDR, "logical_copies.pickle")
-INPUT_JSONS_PATH = os.path.join(CURRENT_WDR, "expected_output")
+
+PRUNING_TABLE_PAIRS_PATH = os.path.join(CURRENT_WDR, "pruning_mode_table_pairs.pkl")
+NON_PRUNING_TABLE_PAIRS_PATH = os.path.join(
+    CURRENT_WDR, "non_pruning_mode_table_pairs.pkl"
+)
 
 
-def load_jsons(
-    input_jsons_dir: str,
-) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, float]]:
-    with open(
-        os.path.join(input_jsons_dir, "pruning_table_similarity_labels_EXPECTED.json")
-    ) as filename:
-        pruning_table_similarity_labels_expected_ = json.load(filename)
-    with open(
-        os.path.join(
-            input_jsons_dir, "post_pruning_table_similarity_labels_EXPECTED.json"
-        )
-    ) as filename:
-        post_pruning_table_similarity_labels_expected_ = json.load(filename)
-
-    with open(
-        os.path.join(INPUT_JSONS_PATH, "column_similarity_scores_EXPECTED.json")
-    ) as filename_:
-        column_similarity_scores_expected_ = json.load(filename_)
-
-    return (
-        pruning_table_similarity_labels_expected_,
-        post_pruning_table_similarity_labels_expected_,
-        column_similarity_scores_expected_,
-    )
-
-
-def get_predicted_expected_similarity_scores_mapping_for_tables(
-    predicted_similarity_labels_unit_testing: Dict[str, str],
-    expected_similarity_labels_unit_testing: Dict[str, str],
-) -> List[Tuple[str, str, str, str]]:
-    """generate mapping of predicted - expected similarity scores, required for unit testing"""
-
-    mapping = []
-    for key_ in predicted_similarity_labels_unit_testing.keys():
-        pair = key_.split("_SPLITTER_", 1)
-        if expected_similarity_labels_unit_testing.get(key_, None):
-            expected_similarity_label_unit_testing = (
-                expected_similarity_labels_unit_testing[key_]
-            )
-            mapping.append(
-                (
-                    pair[0],
-                    pair[1],
-                    predicted_similarity_labels_unit_testing[key_],
-                    expected_similarity_label_unit_testing,
-                )
-            )
-    return mapping
-
-
-def get_predicted_expected_similarity_scores_mapping_for_columns(
-    predicted_similarity_scores_unit_testing: Dict[str, float],
-    expected_similarity_scores_unit_testing: Dict[str, float],
-) -> List[Tuple[str, str, float, str, float, str]]:
-    """generate mapping of predicted - expected similarity scores, required for unit testing"""
-
-    mapping = []
-    for pair in predicted_similarity_scores_unit_testing.keys():
-        key_ = f"{pair[0]}_COLSPLITTER_{pair[1]}"
-        if key_ in expected_similarity_scores_unit_testing.keys():
-            if expected_similarity_scores_unit_testing[key_] is None:
-                expected_similarity_label = "not_similar"
-                expected_similarity_score = 0.0
-            elif (
-                expected_similarity_scores_unit_testing[key_]
-                >= COLUMN_SIMILARITY_THRESHOLD
-            ):
-                expected_similarity_label = "similar"
-                expected_similarity_score = expected_similarity_scores_unit_testing[
-                    key_
-                ]
-            else:
-                expected_similarity_label = "not_similar"
-                expected_similarity_score = expected_similarity_scores_unit_testing[
-                    key_
-                ]
-            if predicted_similarity_scores_unit_testing[pair] is None:
-                predicted_similarity_label = "not_similar"
-                predicted_similarity_score = 0.0
-            elif (
-                predicted_similarity_scores_unit_testing[pair]
-                >= COLUMN_SIMILARITY_THRESHOLD
-            ):
-                predicted_similarity_label = "similar"
-                predicted_similarity_score = predicted_similarity_scores_unit_testing[
-                    pair
-                ]
-            else:
-                predicted_similarity_label = "not_similar"
-                predicted_similarity_score = predicted_similarity_scores_unit_testing[
-                    pair
-                ]
-            mapping.append(
-                (
-                    pair[0],
-                    pair[1],
-                    predicted_similarity_score,
-                    predicted_similarity_label,
-                    expected_similarity_score,
-                    expected_similarity_label,
-                )
-            )
-    return mapping
-
-
-def get_table_infos_and_pairs() -> Tuple[Dict[str, TableInfo], List[Tuple[str, str]]]:
+def get_table_info_objects() -> Dict[str, TableInfo]:
     with open(TABLE_INFOS_PATH, "rb") as table_info_file:
         table_infos = pickle.load(table_info_file)
-    if os.path.exists(TABLE_INFO_COPIES_PATH):
-        with open(TABLE_INFO_COPIES_PATH, "rb") as table_info_copies_file:
-            table_info_copies = pickle.load(table_info_copies_file)
-    else:
-        table_info_copies = None
-
-    logger.info("Creating Table Pairs List................")
-    table_pairs = list(itertools.combinations(table_infos.keys(), 2))
+    with open(TABLE_INFO_COPIES_PATH, "rb") as table_info_copies_file:
+        table_info_copies = pickle.load(table_info_copies_file)
     if table_info_copies:
-        for key in table_infos.keys():
-            table_pairs.append((key, f"{key}_LOGICAL_COPY"))
         table_infos.update(table_info_copies)
+    return table_infos
 
-    return table_infos, table_pairs
+
+def get_pruning_mode_table_pairs() -> List[Tuple[str, str]]:
+    with open(PRUNING_TABLE_PAIRS_PATH, "rb") as fp:
+        table_pairs = pickle.load(fp)
+    return table_pairs
 
 
-def get_similarity_predictions(
-    table_infos: Dict[str, TableInfo], table_pairs: List[Tuple[str, str]]
-) -> Tuple[Dict[str, str], Dict[str, str], Dict[str, float]]:
-    columns_predicted_scores: Dict[str, float] = dict()
-    pruning_mode_results: Dict[str, Tuple] = dict()
-    post_pruning_mode_results: Dict[str, Tuple] = dict()
+def get_non_pruning_mode_table_pairs() -> List[str]:
+    with open(NON_PRUNING_TABLE_PAIRS_PATH, "rb") as fp:
+        table_pairs = pickle.load(fp)
+    return table_pairs
 
-    logger.info("Starting check similarity in pruning mode.............")
-    for table_pair in table_pairs:
-        table_pair_list = sorted(table_pair, key=str.lower)
-        table_pair = (table_pair_list[0], table_pair_list[1])
-        pruning_mode_results[
-            f"{table_pair[0]}_SPLITTER_{table_pair[1]}"
-        ] = check_similarity(
-            table_infos[table_pair[0]],
-            table_infos[table_pair[1]],
-            pruning_mode=True,
-            use_embeddings=False,
-        )
-    pruning_mode_output_predicted = {
-        key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
-        for key, value in pruning_mode_results.items()
-    }
 
-    post_pruning_mode_combinations = [
-        key
-        for key, value in pruning_mode_output_predicted.items()
-        if value == "similar"
-    ]
+def get_table_pair_expected_similarity_label(key: str, pruning: bool) -> str:
+    """generate mapping of predicted - expected similarity scores, required for unit testing"""
+    if pruning:
+        expected_labels_json_path = PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
+    else:
+        expected_labels_json_path = NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
+    with open(expected_labels_json_path) as file_:
+        table_similarity_labels_expected = json.load(file_)
 
-    logger.info("Starting check similarity in non pruning mode.............")
-    for comb in post_pruning_mode_combinations:
-        tables = comb.split("_SPLITTER_")
-        post_pruning_mode_results[comb] = check_similarity(
-            table_infos[tables[0]],
-            table_infos[tables[1]],
-            pruning_mode=False,
-            use_embeddings=False,
-        )
+    expected_similarity_label = table_similarity_labels_expected[key]
+    return expected_similarity_label
 
-    post_pruning_mode_output_predicted = {
-        key: ("not_similar" if value[0].score < FINAL_THRESHOLD else "similar")
-        for key, value in post_pruning_mode_results.items()
-    }
-    for i, data_pair in enumerate(post_pruning_mode_results.keys()):
-        for key, value in post_pruning_mode_results[data_pair][1].items():
-            columns_predicted_scores[key] = value.score
 
+def get_column_pair_expected_similarity_label(
+    column_pair: Tuple[str, str], predicted_score: float
+) -> Tuple[str, str, float, float]:
+    with open(COLUMN_SIMILARITY_EXPECTED_OUTPUT_PATH) as filename_:
+        column_similarity_scores_expected = json.load(filename_)
+
+    key = f"{column_pair[0]}_COLSPLITTER_{column_pair[1]}"
+    if column_similarity_scores_expected[key] is None:
+        expected_label = "not_similar"
+        expected_score = 0.0
+    elif column_similarity_scores_expected[key] >= COLUMN_SIMILARITY_THRESHOLD:
+        expected_label = "similar"
+        expected_score = column_similarity_scores_expected[key]
+    else:
+        expected_label = "not_similar"
+        expected_score = column_similarity_scores_expected[key]
+    if predicted_score is None:
+        predicted_label = "not_similar"
+        predicted_score = 0.0
+    elif predicted_score >= COLUMN_SIMILARITY_THRESHOLD:
+        predicted_label = "similar"
+    else:
+        predicted_label = "not_similar"
     return (
-        pruning_mode_output_predicted,
-        post_pruning_mode_output_predicted,
-        columns_predicted_scores,
+        predicted_label,
+        expected_label,
+        predicted_score,
+        expected_score,
     )
 
-
-def get_true_predicted_mappings() -> (
-    Tuple[
-        List[Tuple[str, str, str, str]],
-        List[Tuple[str, str, str, str]],
-        List[Tuple[str, str, float, str, float, str]],
-    ]
-):
-    table_infos, table_pairs = get_table_infos_and_pairs()
-    (
-        pruning_mode_output_PREDICTED,
-        post_pruning_mode_output_PREDICTED,
-        columns_predicted_scores,
-    ) = get_similarity_predictions(table_infos=table_infos, table_pairs=table_pairs)
-
-    (
-        pruning_table_similarity_labels_expected,
-        post_pruning_table_similarity_labels_expected,
-        column_similarity_scores_expected,
-    ) = load_jsons(INPUT_JSONS_PATH)
-
-    pruning_tables_similarity_mapping_unit_testing_ = (
-        get_predicted_expected_similarity_scores_mapping_for_tables(
-            pruning_mode_output_PREDICTED, pruning_table_similarity_labels_expected
-        )
-    )
-
-    post_pruning_tables_similarity_mapping_unit_testing_ = (
-        get_predicted_expected_similarity_scores_mapping_for_tables(
-            post_pruning_mode_output_PREDICTED,
-            post_pruning_table_similarity_labels_expected,
-        )
-    )
-
-    columns_similarity_mapping_unit_testing_ = (
-        get_predicted_expected_similarity_scores_mapping_for_columns(
-            columns_predicted_scores,
-            column_similarity_scores_expected,
-        )
-    )
-    return (
-        pruning_tables_similarity_mapping_unit_testing_,
-        post_pruning_tables_similarity_mapping_unit_testing_,
-        columns_similarity_mapping_unit_testing_,
-    )
-
-
-(
-    pruning_tables_similarity_mapping_unit_testing,
-    post_pruning_tables_similarity_mapping_unit_testing,
-    columns_similarity_mapping_unit_testing,
-) = get_true_predicted_mappings()
 
 ############################
 # Start unit testing #
 ############################
-# Unit Test for Columns Similarity #
-logger.info("--- Unit Test for Columns Similarity ---")
-
-
-@pytest.mark.parametrize(
-    "col_id_1, col_id_2, predicted_score, predicted_label, expected_score, expected_label",
-    [
-        (a, b, c, d, e, f)
-        for a, b, c, d, e, f in columns_similarity_mapping_unit_testing
-    ],
-)
-def test_columns_similarity_public_datasets(
-    col_id_1,
-    col_id_2,
-    predicted_score,
-    predicted_label,
-    expected_score,
-    expected_label,
-):
-    assert (
-        predicted_label == expected_label
-    ), f"Test1 failed for column pair: '{(col_id_1, col_id_2)}'"
-    if predicted_score is not None and expected_score is not None:
-        assert (
-            predicted_score >= np.floor(expected_score * 10) / 10
-        ), f"Test2 failed for column pair: '{(col_id_1, col_id_2)}'"
-
-
 # Unit Test for Table Similarity #
 @pytest.mark.parametrize(
-    "table_id_1, table_id_2, predicted_label, expected_label",
-    [(a, b, c, d) for a, b, c, d in pruning_tables_similarity_mapping_unit_testing],
+    "table_1, table_2",
+    [(a, b) for a, b in get_pruning_mode_table_pairs()],
 )
 def test_pruning_tables_similarity_public_datasets(
-    table_id_1,
-    table_id_2,
-    predicted_label,
-    expected_label,
+    table_1,
+    table_2,
 ):
+    table_pair = f"{table_1}_SPLITTER_{table_2}"
+    table_infos = get_table_info_objects()
+    table_id_1 = table_infos[table_1].metadata.table_id
+    table_id_2 = table_infos[table_2].metadata.table_id
+
+    table_1_info = table_infos[table_1]
+    table_2_info = table_infos[table_2]
+    table_similarity_score, _ = check_similarity(
+        table_1_info, table_2_info, pruning_mode=True, use_embeddings=False
+    )
+
+    predicted_label = (
+        "not_similar" if table_similarity_score.score < PRUNING_THRESHOLD else "similar"
+    )
+    expected_label = get_table_pair_expected_similarity_label(table_pair, pruning=True)
     assert (
         predicted_label == expected_label
     ), f"Pruning mode test failed for table pair: '{(table_id_1, table_id_2)}'"
 
 
 @pytest.mark.parametrize(
-    "table_id_1, table_id_2, predicted_label, expected_label",
-    [
-        (a, b, c, d)
-        for a, b, c, d in post_pruning_tables_similarity_mapping_unit_testing
-    ],
+    "table_1, table_2",
+    [tuple(pair.split("_SPLITTER_", 1)) for pair in get_non_pruning_mode_table_pairs()],
 )
-def test_post_pruning_tables_similarity_public_datasets(
-    table_id_1,
-    table_id_2,
-    predicted_label,
-    expected_label,
+def test_non_pruning_tables_similarity_public_datasets(
+    table_1,
+    table_2,
 ):
+    table_pair = f"{table_1}_SPLITTER_{table_2}"
+    table_infos = get_table_info_objects()
+    table_id_1 = table_infos[table_1].metadata.table_id
+    table_id_2 = table_infos[table_2].metadata.table_id
+
+    table_1_info = table_infos[table_1]
+    table_2_info = table_infos[table_2]
+    table_similarity_score, column_similarity_scores = check_similarity(
+        table_1_info, table_2_info, pruning_mode=False, use_embeddings=False
+    )
+
+    table_predicted_label = (
+        "not_similar" if table_similarity_score.score < FINAL_THRESHOLD else "similar"
+    )
+    table_expected_label = get_table_pair_expected_similarity_label(
+        table_pair, pruning=False
+    )
+
     assert (
-        predicted_label == expected_label
+        table_predicted_label == table_expected_label
     ), f"Non Pruning Mode test failed for table pair: '{(table_id_1, table_id_2)}'"
+
+    for column_pair, value in column_similarity_scores.items():
+        col_id_1, col_id_2 = column_pair
+        column_predicted_score = value.score
+        (
+            column_predicted_label,
+            column_expected_label,
+            column_predicted_score,
+            column_expected_score,
+        ) = get_column_pair_expected_similarity_label(
+            column_pair, column_predicted_score
+        )
+
+        assert (
+            column_predicted_label == column_expected_label
+        ), f"Test1 failed for column pair: '{(col_id_1, col_id_2)}'"
+        if column_predicted_score is not None and column_expected_score is not None:
+            assert (
+                column_predicted_score >= np.floor(column_expected_score * 10) / 10
+            ), f"Test2 failed for column pair: '{(col_id_1, col_id_2)}'"
