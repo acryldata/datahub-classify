@@ -35,7 +35,26 @@ NON_PRUNING_TABLE_PAIRS_PATH = os.path.join(
 )
 
 
-def get_table_info_objects() -> Dict[str, TableInfo]:
+@pytest.fixture(scope="module")
+def fixture_pruning_table_similarity_expected_labels():
+    with open(PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH) as file_:
+        return json.load(file_)
+
+
+@pytest.fixture(scope="module")
+def fixture_non_pruning_table_similarity_expected_labels():
+    with open(NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH) as file_:
+        return json.load(file_)
+
+
+@pytest.fixture(scope="module")
+def fixture_column_similarity_expected_labels():
+    with open(COLUMN_SIMILARITY_EXPECTED_OUTPUT_PATH) as file_:
+        return json.load(file_)
+
+
+@pytest.fixture(scope="module")
+def fixture_table_info_objects() -> Dict[str, TableInfo]:
     with open(TABLE_INFOS_PATH, "rb") as table_info_file:
         table_infos = pickle.load(table_info_file)
     with open(TABLE_INFO_COPIES_PATH, "rb") as table_info_copies_file:
@@ -57,25 +76,24 @@ def get_non_pruning_mode_table_pairs() -> List[str]:
     return table_pairs
 
 
-def get_table_pair_expected_similarity_label(key: str, pruning: bool) -> str:
-    """generate mapping of predicted - expected similarity scores, required for unit testing"""
-    if pruning:
-        expected_labels_json_path = PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
-    else:
-        expected_labels_json_path = NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
-    with open(expected_labels_json_path) as file_:
-        table_similarity_labels_expected = json.load(file_)
-
-    expected_similarity_label = table_similarity_labels_expected[key]
-    return expected_similarity_label
+# def get_table_pair_expected_similarity_label(key: str, pruning: bool) -> str:
+#     """generate mapping of predicted - expected similarity scores, required for unit testing"""
+#     if pruning:
+#         expected_labels_json_path = PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
+#     else:
+#         expected_labels_json_path = NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
+#     with open(expected_labels_json_path) as file_:
+#         table_similarity_labels_expected = json.load(file_)
+#
+#     expected_similarity_label = table_similarity_labels_expected[key]
+#     return expected_similarity_label
 
 
 def get_column_pair_expected_similarity_label(
-    column_pair: Tuple[str, str], predicted_score: float
+    column_pair: Tuple[str, str],
+    predicted_score: float,
+    column_similarity_scores_expected: Dict[str, float],
 ) -> Tuple[str, str, float, float]:
-    with open(COLUMN_SIMILARITY_EXPECTED_OUTPUT_PATH) as filename_:
-        column_similarity_scores_expected = json.load(filename_)
-
     key = f"{column_pair[0]}_COLSPLITTER_{column_pair[1]}"
     if column_similarity_scores_expected[key] is None:
         expected_label = "not_similar"
@@ -110,11 +128,13 @@ def get_column_pair_expected_similarity_label(
     [(a, b) for a, b in get_pruning_mode_table_pairs()],
 )
 def test_pruning_tables_similarity_public_datasets(
+    fixture_table_info_objects,
+    fixture_pruning_table_similarity_expected_labels,
     table_1,
     table_2,
 ):
     table_pair = f"{table_1}_SPLITTER_{table_2}"
-    table_infos = get_table_info_objects()
+    table_infos = fixture_table_info_objects
     table_id_1 = table_infos[table_1].metadata.table_id
     table_id_2 = table_infos[table_2].metadata.table_id
 
@@ -127,7 +147,7 @@ def test_pruning_tables_similarity_public_datasets(
     predicted_label = (
         "not_similar" if table_similarity_score.score < PRUNING_THRESHOLD else "similar"
     )
-    expected_label = get_table_pair_expected_similarity_label(table_pair, pruning=True)
+    expected_label = fixture_pruning_table_similarity_expected_labels[table_pair]
     assert (
         predicted_label == expected_label
     ), f"Pruning mode test failed for table pair: '{(table_id_1, table_id_2)}'"
@@ -138,11 +158,14 @@ def test_pruning_tables_similarity_public_datasets(
     [tuple(pair.split("_SPLITTER_", 1)) for pair in get_non_pruning_mode_table_pairs()],
 )
 def test_non_pruning_tables_similarity_public_datasets(
+    fixture_table_info_objects,
+    fixture_non_pruning_table_similarity_expected_labels,
+    fixture_column_similarity_expected_labels,
     table_1,
     table_2,
 ):
     table_pair = f"{table_1}_SPLITTER_{table_2}"
-    table_infos = get_table_info_objects()
+    table_infos = fixture_table_info_objects
     table_id_1 = table_infos[table_1].metadata.table_id
     table_id_2 = table_infos[table_2].metadata.table_id
 
@@ -155,10 +178,9 @@ def test_non_pruning_tables_similarity_public_datasets(
     table_predicted_label = (
         "not_similar" if table_similarity_score.score < FINAL_THRESHOLD else "similar"
     )
-    table_expected_label = get_table_pair_expected_similarity_label(
-        table_pair, pruning=False
-    )
-
+    table_expected_label = fixture_non_pruning_table_similarity_expected_labels[
+        table_pair
+    ]
     assert (
         table_predicted_label == table_expected_label
     ), f"Non Pruning Mode test failed for table pair: '{(table_id_1, table_id_2)}'"
@@ -172,7 +194,9 @@ def test_non_pruning_tables_similarity_public_datasets(
             column_predicted_score,
             column_expected_score,
         ) = get_column_pair_expected_similarity_label(
-            column_pair, column_predicted_score
+            column_pair,
+            column_predicted_score,
+            fixture_column_similarity_expected_labels,
         )
 
         assert (
