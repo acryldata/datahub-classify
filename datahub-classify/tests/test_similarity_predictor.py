@@ -76,19 +76,6 @@ def get_non_pruning_mode_table_pairs() -> List[str]:
     return table_pairs
 
 
-# def get_table_pair_expected_similarity_label(key: str, pruning: bool) -> str:
-#     """generate mapping of predicted - expected similarity scores, required for unit testing"""
-#     if pruning:
-#         expected_labels_json_path = PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
-#     else:
-#         expected_labels_json_path = NON_PRUNING_TABLE_SIMILARITY_EXPECTED_LABELS_PATH
-#     with open(expected_labels_json_path) as file_:
-#         table_similarity_labels_expected = json.load(file_)
-#
-#     expected_similarity_label = table_similarity_labels_expected[key]
-#     return expected_similarity_label
-
-
 def get_column_pair_expected_similarity_label(
     column_pair: Tuple[str, str],
     predicted_score: float,
