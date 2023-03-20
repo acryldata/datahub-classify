@@ -132,7 +132,6 @@ table_infos = get_table_info_objects()
 num_pruning_mode_tables = len(table_infos)
 
 logger.info("Starting check similarity.............")
-# pruning_mode_start_time = time.time()
 total_pruning_time = 0.0
 for table_pair in pruning_mode_table_pairs:
     table_pair_list = sorted(table_pair, key=str.lower)
@@ -148,7 +147,6 @@ for table_pair in pruning_mode_table_pairs:
     )
     pruning_mode_end_time = time.time()
     total_pruning_time += pruning_mode_end_time - pruning_mode_start_time
-# pruning_mode_end_time = time.time()
 
 pruning_mode_output_PREDICTED = {
     key: ("not_similar" if value[0].score < PRUNING_THRESHOLD else "similar")
