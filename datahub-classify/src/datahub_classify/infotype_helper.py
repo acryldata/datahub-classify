@@ -30,16 +30,26 @@ from datahub_classify.infotype_utils import (
 )
 
 logger = logging.getLogger(__name__)
-spacy_model_name = "en_core_web_sm"
-try:
-    nlp_english = spacy.load(spacy_model_name)
-except OSError:
-    logger.info("Downloading language model for the spaCy")
-    from spacy.cli import download
 
-    download(spacy_model_name)
-    nlp_english = spacy.load(spacy_model_name)
-spacy_models_list = [nlp_english]
+def init_spacy(language):
+    if language == "spanish":
+        spacy_model_name = "es_core_news_sm"
+    
+    elif len(language)>0 and language not in ("spanish", "english") :
+        raise Exception(
+            f"The language {language} is not available"
+        )
+    else:
+        spacy_model_name = "en_core_web_sm"
+    try:
+        nlp = spacy.load(spacy_model_name)
+    except OSError:
+        logger.info("Downloading language model for the spaCy")
+        from spacy.cli import download
+
+        download(spacy_model_name)
+        nlp = spacy.load(spacy_model_name)
+    return [nlp]
 
 
 def compute_name_description_dtype_score(
@@ -93,7 +103,7 @@ def compute_overall_confidence(debug_info: DebugInfo, config: Dict[str, Dict]) -
 
 
 def inspect_for_email_address(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -122,7 +132,7 @@ def inspect_for_email_address(
 
 
 def inspect_for_street_address(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict], spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -163,7 +173,7 @@ def inspect_for_street_address(
 
 
 def inspect_for_gender(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -210,7 +220,7 @@ def inspect_for_gender(
 
 
 def inspect_for_credit_debit_card_number(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -247,7 +257,7 @@ def inspect_for_credit_debit_card_number(
 
 
 def inspect_for_phone_number(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -313,7 +323,7 @@ def inspect_for_phone_number(
 
 
 def inspect_for_full_name(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict], spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -370,7 +380,7 @@ def inspect_for_full_name(
 
 
 def inspect_for_age(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -410,7 +420,7 @@ def inspect_for_age(
 
 
 def inspect_for_iban(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -445,7 +455,7 @@ def inspect_for_iban(
 
 
 def inspect_for_vehicle_identification_number(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -481,7 +491,7 @@ def inspect_for_vehicle_identification_number(
 
 
 def inspect_for_ip_address_v4(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -516,7 +526,7 @@ def inspect_for_ip_address_v4(
 
 
 def inspect_for_ip_address_v6(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -551,7 +561,7 @@ def inspect_for_ip_address_v6(
 
 
 def inspect_for_us_driving_license_number(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -582,7 +592,7 @@ def inspect_for_us_driving_license_number(
 
 
 def inspect_for_us_social_security_number(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()
@@ -617,7 +627,7 @@ def inspect_for_us_social_security_number(
 
 
 def inspect_for_swift_code(
-    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict],  spacy_models_list
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
     prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
     debug_info = DebugInfo()

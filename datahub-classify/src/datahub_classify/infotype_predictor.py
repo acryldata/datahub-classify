@@ -25,19 +25,28 @@ def get_infotype_function_mapping(
         else:
             fn_name = f"inspect_for_{infotype.lower()}"
             infotype_function_map[infotype] = module_fn_dict[fn_name]
-    return infotype_function_map
+    return infotype_function_map#,  spacy_models_list
 
 
 def predict_infotypes(
     column_infos: List[ColumnInfo],
     confidence_level_threshold: float,
+    language: float,
     global_config: Dict[str, Dict],
     infotypes: Optional[List[str]] = None,
 ) -> List[ColumnInfo]:
+    
     infotype_function_map = get_infotype_function_mapping(infotypes, global_config)
     logger.debug(f"Total columns to be processed --> {len(column_infos)}")
     logger.debug(f"Confidence Level Threshold set to --> {confidence_level_threshold}")
+    logger.debug(f"Spacy language set to --> {language}")
     logger.debug("===========================================================")
+
+    module_name = "datahub_classify.infotype_helper"
+    function_name ="init_spacy"
+    module = importlib.import_module(module_name)
+    init_spacy = getattr(module, function_name)
+    spacy_models_list = init_spacy(language)
     basic_checks_failed_columns = []
     num_cols_with_infotype_assigned = 0
     for column_info in column_infos:
@@ -61,7 +70,7 @@ def predict_infotypes(
                     column_info.metadata, column_info.values, config_dict, infotype
                 ):
                     confidence_level, debug_info = infotype_fn(
-                        column_info.metadata, column_info.values, config_dict
+                        column_info.metadata, column_info.values, config_dict,  spacy_models_list
                     )
                     if confidence_level > confidence_level_threshold:
                         infotype_proposal = InfotypeProposal(
