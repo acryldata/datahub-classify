@@ -31,7 +31,7 @@ def get_infotype_function_mapping(
 def predict_infotypes(
     column_infos: List[ColumnInfo],
     confidence_level_threshold: float,
-    language: float,
+    language: str,
     global_config: Dict[str, Dict],
     infotypes: Optional[List[str]] = None,
 ) -> List[ColumnInfo]:
