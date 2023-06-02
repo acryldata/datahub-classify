@@ -121,6 +121,35 @@ def inspect_for_email_address(
     return confidence_level, debug_info
 
 
+def inspect_for_custom_infotype(
+    metadata: Metadata, values: List[Any], config: Dict[str, Dict]
+) -> Tuple[float, DebugInfo]:
+    prediction_factors_weights = config[PREDICTION_FACTORS_AND_WEIGHTS]
+    debug_info = DebugInfo()
+    # Value Logic
+    if prediction_factors_weights.get(VALUES, 0) > 0:
+        values_score = 0.0
+        try:
+            if config[VALUES][PREDICTION_TYPE] == "regex":
+                values_score = match_regex_for_values(values, config[VALUES][REGEX])
+            elif config[VALUES][PREDICTION_TYPE] == "library":
+                raise Exception(
+                    "Currently prediction type 'library' is not supported for custom infotype"
+                )
+            else:
+                raise Exception(
+                    f"Inappropriate Prediction type {config[VALUES][PREDICTION_TYPE]}"
+                )
+        except Exception as e:
+            logger.error(f"Column {metadata.name} failed due to {e}")
+        values_score = np.round(values_score, 2)
+        debug_info.values = values_score
+
+    debug_info = compute_name_description_dtype_score(metadata, config, debug_info)
+    confidence_level = compute_overall_confidence(debug_info, config)
+    return confidence_level, debug_info
+
+
 def inspect_for_street_address(
     metadata: Metadata, values: List[Any], config: Dict[str, Dict]
 ) -> Tuple[float, DebugInfo]:  # noqa: C901
