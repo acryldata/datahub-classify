@@ -24,7 +24,11 @@ def get_infotype_function_mapping(
             logger.warning(f"Configuration is not available for infotype - {infotype}")
         else:
             fn_name = f"inspect_for_{infotype.lower()}"
-            infotype_function_map[infotype] = module_fn_dict[fn_name]
+            if fn_name in module_fn_dict:
+                infotype_function_map[infotype] = module_fn_dict[fn_name]
+            else:
+                fn_name = "inspect_for_custom_infotype"
+                infotype_function_map[infotype] = module_fn_dict[fn_name]
     return infotype_function_map
 
 
@@ -75,7 +79,7 @@ def predict_infotypes(
 
             except Exception as e:
                 # traceback.print_exc()
-                logger.warning(f"Failed to extract info type due to {e}")
+                logger.warning(f"Failed to extract info type {infotype} due to {e}")
         if len(proposal_list) > 0:
             num_cols_with_infotype_assigned += 1
         column_info.infotype_proposals = proposal_list

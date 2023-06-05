@@ -3,10 +3,18 @@ from typing import Any, Dict, List, Optional
 
 
 @dataclass
+class DebugInfo:
+    name: Optional[float] = None
+    description: Optional[float] = None
+    datatype: Optional[float] = None
+    values: Optional[float] = None
+
+
+@dataclass
 class InfotypeProposal:
     infotype: str
     confidence_level: float
-    debug_info: Dict[str, Any]
+    debug_info: DebugInfo
 
 
 @dataclass
@@ -29,11 +37,3 @@ class ColumnInfo:
     metadata: Metadata
     values: List[Any]
     infotype_proposals: Optional[List[InfotypeProposal]] = None
-
-
-@dataclass
-class DebugInfo:
-    name: Optional[float] = None
-    description: Optional[float] = None
-    datatype: Optional[float] = None
-    values: Optional[float] = None
