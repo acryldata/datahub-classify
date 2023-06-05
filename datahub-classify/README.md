@@ -95,6 +95,7 @@ A debug information is associated with each infotype proposal, it provides detai
 
 ## Supported Infotypes
 
+Below Infotypes are supported out of the box.
 1. Age
 2. Gender
 3. Person Name / Full Name
@@ -109,6 +110,8 @@ A debug information is associated with each infotype proposal, it provides detai
 12. Ipv6 Address
 13. Swift Code
 14. US Driving License Number
+
+Regex based custom infotypes are supported. Specify custom infotype configuration in format mentioned [here](#infotype-configuration).
 
 ## Assumptions
 
