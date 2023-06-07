@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 from datahub_classify.helper_classes import Metadata
