@@ -37,6 +37,7 @@ def predict_infotypes(
     confidence_level_threshold: float,
     global_config: Dict[str, Dict],
     infotypes: Optional[List[str]] = None,
+    minimum_values_threshold: int = 50,
 ) -> List[ColumnInfo]:
     infotype_function_map = get_infotype_function_mapping(infotypes, global_config)
     logger.debug(f"Total columns to be processed --> {len(column_infos)}")
@@ -62,7 +63,11 @@ def predict_infotypes(
             ]
             try:
                 if perform_basic_checks(
-                    column_info.metadata, column_info.values, config_dict, infotype
+                    column_info.metadata,
+                    column_info.values,
+                    config_dict,
+                    infotype,
+                    minimum_values_threshold,
                 ):
                     confidence_level, debug_info = infotype_fn(
                         column_info.metadata, column_info.values, config_dict
