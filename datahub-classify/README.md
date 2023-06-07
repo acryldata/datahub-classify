@@ -18,6 +18,7 @@ API expects following parameters in the output
 - `confidence_level_threshold` - If the infotype prediction confidence is greater than the confidence threshold then the prediction is considered as a proposal. This is the common threshold for all infotypes.
 - `global_config` - This dictionary contains configuration details about all supported infotypes. Refer section [Infotype Configuration](#infotype-configuration) for more information.
 - `infotypes` - This is a list of infotypes that is to be processed. This is an optional argument, if specified then it will override the default list of all supported infotypes. If user is interested in only few infotypes then this list can be specified with correct infotype names. Infotype names are case sensitive.
+- `minimum_values_threshold` - Minimum number of column values required for processing. This is an optional argument, default is 50.
 
 ### API Output
 

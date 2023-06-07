@@ -83,10 +83,10 @@ def perform_basic_checks(
     metadata: Metadata,
     values: List[Any],
     config_dict: Dict[str, Dict],
-    infotype: Optional[str] = None,
+    infotype: str,
+    minimum_values_threshold: int,
 ) -> bool:
     basic_checks_status = True
-    minimum_values_threshold = 50
     if (
         config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
         and len(values) < minimum_values_threshold
