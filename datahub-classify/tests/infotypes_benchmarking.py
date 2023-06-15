@@ -1,3 +1,10 @@
+"""
+How to Run?
+$ cd datahub-classify/tests
+$ python infotypes_benchmarking.py
+"""
+
+
 import os
 import time
 
@@ -85,11 +92,12 @@ def get_predictions(public_data_list):
     return result_df
 
 
-datasets = get_public_data(input_data_dir)
-result = get_predictions(datasets)
-result.to_csv(
-    f"datahub_classify_execution_time_rows_{NUM_ROWS}.csv", header=True, index=False
-)
-print(result)
-print("======================")
-print(pd.read_csv(f"datahub_classify_execution_time_rows_{NUM_ROWS}.csv"))
+if __name__ == "__main__":
+    datasets = get_public_data(input_data_dir)
+    result = get_predictions(datasets)
+    result.to_csv(
+        f"datahub_classify_execution_time_rows_{NUM_ROWS}.csv", header=True, index=False
+    )
+    print(result)
+    print("======================")
+    print(pd.read_csv(f"datahub_classify_execution_time_rows_{NUM_ROWS}.csv"))
