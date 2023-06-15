@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
 from datahub_classify.helper_classes import Metadata
@@ -83,10 +83,10 @@ def perform_basic_checks(
     metadata: Metadata,
     values: List[Any],
     config_dict: Dict[str, Dict],
-    infotype: Optional[str] = None,
+    infotype: str,
+    minimum_values_threshold: int,
 ) -> bool:
     basic_checks_status = True
-    minimum_values_threshold = 50
     if (
         config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
         and len(values) < minimum_values_threshold
