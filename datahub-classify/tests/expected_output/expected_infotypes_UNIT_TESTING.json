@@ -52,7 +52,7 @@
         "General Manager": "Full_Name"
     },
     "2018-seattle-business-districts": {
-        "Address": "Street_Address",
+        "Address": "no_infotype",
         "E-mail": "Email_Address"
     },
     "Customer_Segmentation": {
@@ -129,7 +129,7 @@
         "Full_Name": "Full_Name"
     },
     "1-MB-Test": {
-        "First and Last Name": "no_infotype",
+        "First and Last Name": "Full_Name",
         "SSN" :"US_Social_Security_Number",
         "Credit Card Number" : "Credit_Debit_Card_Number"
     },
