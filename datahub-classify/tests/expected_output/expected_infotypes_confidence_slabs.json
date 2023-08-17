@@ -54,7 +54,6 @@
         "General Manager": 0.6
     },
     "2018-seattle-business-districts": {
-        "Address": 0.6,
         "E-mail": 1.0
     },
     "Customer_Segmentation": {
@@ -129,6 +128,7 @@
         "Full_Name": 0.9
     },
     "1-MB-Test": {
+        "First and Last Name": 0.7,
         "SSN": 1.0,
         "Credit Card Number": 1.0
     },

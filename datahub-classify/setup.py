@@ -18,7 +18,7 @@ base_requirements = {
     "schwifty>=2022.9.0",
     "python-stdnum>=1.17",
     "ipaddress>=1.0.23",
-    "spacy>=3.4.1,<=3.4.3",
+    "spacy>=3.4.1,<=3.5.0",
     "phonenumbers>=8.12.56,<=8.13.0",
 }
 
