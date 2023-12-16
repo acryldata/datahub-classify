@@ -2,6 +2,7 @@ import importlib
 import logging
 from typing import Any, Dict, List, Optional
 
+from datahub_classify.constants import EXCLUDE_NAME
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
 from datahub_classify.infotype_utils import perform_basic_checks
 
@@ -45,6 +46,7 @@ def predict_infotypes(
     logger.debug("===========================================================")
     basic_checks_failed_columns = []
     num_cols_with_infotype_assigned = 0
+
     for column_info in column_infos:
         logger.debug(
             f"processing column: {column_info.metadata.name} -- dataset: {column_info.metadata.dataset_name}"
@@ -54,6 +56,10 @@ def predict_infotypes(
         for infotype, infotype_fn in infotype_function_map.items():
             # get the configuration
             config_dict = global_config[infotype]
+
+            # convert exclude_name list into a set for o(1) checking
+            if EXCLUDE_NAME in config_dict:
+                config_dict[EXCLUDE_NAME] = set(config_dict[EXCLUDE_NAME])
 
             # call the infotype prediction function
             column_info.values = [

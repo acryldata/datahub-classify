@@ -2,7 +2,11 @@ import logging
 import re
 from typing import Any, Dict, List
 
-from datahub_classify.constants import PREDICTION_FACTORS_AND_WEIGHTS, VALUES
+from datahub_classify.constants import (
+    PREDICTION_FACTORS_AND_WEIGHTS,
+    EXCLUDE_NAME,
+    VALUES,
+)
 from datahub_classify.helper_classes import Metadata
 
 logger = logging.getLogger(__name__)
@@ -91,6 +95,13 @@ def perform_basic_checks(
         config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
         and len(values) < minimum_values_threshold
     ):
+        logger.warning(
+            f"The number of values for column {metadata.name}"
+            f"does not meet minimum threshold for {infotype}"
+        )
+        basic_checks_status = False
+    elif metadata.name in config_dict.get(EXCLUDE_NAME, set()):
+        logger.warning(f"Excluding match for {infotype} on column {metadata.name}")
         basic_checks_status = False
     # TODO: Add more basic checks
     return basic_checks_status

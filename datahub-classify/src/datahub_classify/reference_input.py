@@ -3,11 +3,12 @@
 input1 = {
     "Email_Address": {
         "Prediction_Factors_and_Weights": {
-            "Name": 0.4,
+            "Name": 1,
             "Description": 0,
             "Datatype": 0,
-            "Values": 0.6,
+            "Values": 0,
         },
+        "ExcludeName": ["email_sent", "email_recieved"],
         "Name": {
             "regex": [
                 "^.*mail.*id.*$",

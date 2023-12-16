@@ -1,5 +1,6 @@
 # Input config dictionary keys
 PREDICTION_FACTORS_AND_WEIGHTS = "Prediction_Factors_and_Weights"
+EXCLUDE_NAME = "ExcludeName"
 NAME = "Name"
 DESCRIPTION = "Description"
 DATATYPE = "Datatype"

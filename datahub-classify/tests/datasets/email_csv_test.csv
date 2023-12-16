@@ -1,0 +1,11 @@
+id,email_from,email_to,email_sent,email_received
+1,bob.myers@gmail.com,susan.bones@msn.com,false,false
+2,jeremy.strong@nyu.edu,craig.chatterson@datahub.io,true,true
+3,alice.smith@yahoo.com,john.doe@example.com,true,false
+4,maria.lopez@outlook.com,kevin.miller@company.com,false,false
+5,lucas.grant@edu.org,emily.harris@webmail.com,true,true
+6,nora.jones@live.com,philip.watson@service.net,false,false
+7,ethan.knight@techhub.com,diana.ross@music.com,true,false
+8,chloe.wilson@health.org,brad.pitts@cinema.com,true,true
+9,leonard.hayes@finance.com,grace.adams@legalteam.org,false,false
+10,sophie.turner@arts.com,rick.martin@sports.net,true,false
