@@ -1,5 +1,3 @@
-import pytest
-
 from exclude_name_test_config import exclude_name_test_config
 from datahub_classify.helper_classes import ColumnInfo, Metadata
 from datahub_classify.infotype_utils import perform_basic_checks
