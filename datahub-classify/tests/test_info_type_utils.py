@@ -1,4 +1,7 @@
-from exclude_name_test_config import exclude_name_test_config
+from exclude_name_test_config import (
+    exclude_name_test_config,
+    none_exclude_name_test_config,
+)
 from datahub_classify.helper_classes import ColumnInfo, Metadata
 from datahub_classify.infotype_utils import perform_basic_checks
 
@@ -85,7 +88,7 @@ def column_infos():
     ]
 
 
-def test_perform_basic_checks():
+def test_perform_basic_checks_with_exclude_name():
     for col_data in column_infos():
         result = perform_basic_checks(
             Metadata(col_data.metadata.meta_info),
@@ -98,3 +101,15 @@ def test_perform_basic_checks():
             assert not result
         else:
             assert result
+
+
+def test_perform_basic_checks_with_none_exclude_name():
+    for col_data in column_infos():
+        result = perform_basic_checks(
+            Metadata(col_data.metadata.meta_info),
+            col_data.values,
+            none_exclude_name_test_config["Email_Address"],
+            "Email_Address",
+            1,
+        )
+        assert result

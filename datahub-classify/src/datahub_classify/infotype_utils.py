@@ -100,7 +100,9 @@ def perform_basic_checks(
             f"does not meet minimum threshold for {infotype}"
         )
         basic_checks_status = False
-    elif metadata.name in config_dict.get(EXCLUDE_NAME, set()):
+    elif config_dict[EXCLUDE_NAME] is not None and metadata.name in config_dict.get(
+        EXCLUDE_NAME, set()
+    ):
         logger.warning(f"Excluding match for {infotype} on column {metadata.name}")
         basic_checks_status = False
     # TODO: Add more basic checks

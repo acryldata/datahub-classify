@@ -58,8 +58,10 @@ def predict_infotypes(
             config_dict = global_config[infotype]
 
             # convert exclude_name list into a set for o(1) checking
-            if EXCLUDE_NAME in config_dict:
+            if EXCLUDE_NAME in config_dict and config_dict[EXCLUDE_NAME] is not None:
                 config_dict[EXCLUDE_NAME] = set(config_dict[EXCLUDE_NAME])
+            else:
+                config_dict[EXCLUDE_NAME] = set()
 
             # call the infotype prediction function
             column_info.values = [
