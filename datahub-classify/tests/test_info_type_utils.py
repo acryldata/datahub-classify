@@ -100,6 +100,3 @@ def test_perform_basic_checks():
             assert not result
         else:
             assert result
-
-
-test_perform_basic_checks()
