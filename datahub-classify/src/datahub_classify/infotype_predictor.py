@@ -4,8 +4,7 @@ from typing import Any, Dict, List, Optional
 
 from datahub_classify.constants import EXCLUDE_NAME
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
-from datahub_classify.infotype_utils import strip_formatting
-from datahub_classify.infotype_utils import perform_basic_checks
+from datahub_classify.infotype_utils import perform_basic_checks, strip_formatting
 
 logger = logging.getLogger(__name__)
 
