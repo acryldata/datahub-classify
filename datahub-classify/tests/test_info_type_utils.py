@@ -3,7 +3,7 @@ from exclude_name_test_config import (
     none_exclude_name_test_config,
 )
 from datahub_classify.helper_classes import ColumnInfo, Metadata
-from datahub_classify.infotype_utils import perform_basic_checks
+from datahub_classify.infotype_utils import perform_basic_checks, strip_formatting
 
 
 def column_infos():
@@ -113,3 +113,9 @@ def test_perform_basic_checks_with_none_exclude_name():
             1,
         )
         assert result
+
+
+def test_strip_formatting():
+    assert strip_formatting("Name") == "name"
+    assert strip_formatting("my_column_name") == "mycolumnname"
+    assert strip_formatting("Col.Name") == "colname"
