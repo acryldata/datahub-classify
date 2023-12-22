@@ -1,6 +1,10 @@
+from typing import Any, Dict, List, Union
+
 # Input Dictionary Format
 
-exclude_name_test_config = {
+exclude_name_test_config: Dict[
+    str, Dict[str, Union[Dict[str, Any], List[str], None]]
+] = {
     "Email_Address": {
         "Prediction_Factors_and_Weights": {
             "Name": 1,
@@ -29,7 +33,7 @@ exclude_name_test_config = {
     },
 }
 
-none_exclude_name_test_config = {
+none_exclude_name_test_config: Dict[str, Dict[str, Union[Dict[str, Any], List[str], None]]] = {  # type: ignore
     "Email_Address": {
         "Prediction_Factors_and_Weights": {
             "Name": 1,

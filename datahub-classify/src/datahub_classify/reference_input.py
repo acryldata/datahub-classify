@@ -1,6 +1,8 @@
+from typing import Any, Dict, List, Union
+
 # Input Dictionary Format
 
-input1 = {
+input1: Dict[str, Dict[str, Union[Dict[str, Any], List[str], None]]] = {
     "Email_Address": {
         "Prediction_Factors_and_Weights": {
             "Name": 0.4,

@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Union
 
 from datahub_classify.constants import (
     EXCLUDE_NAME,
@@ -92,7 +92,7 @@ def detect_named_entity_spacy(
 def perform_basic_checks(
     metadata: Metadata,
     values: List[Any],
-    config_dict: Dict[str, Dict],
+    config_dict: Dict[str, Union[Dict, List[str], None]],
     infotype: str,
     minimum_values_threshold: int,
 ) -> bool:
@@ -102,8 +102,11 @@ def perform_basic_checks(
         if not config_dict.get("strip_formatting")
         else strip_formatting(metadata.name)
     )
+    prediction_factors = config_dict.get(PREDICTION_FACTORS_AND_WEIGHTS)
+    exclude_name = config_dict.get(EXCLUDE_NAME, [])
     if (
-        config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
+        isinstance(prediction_factors, dict)
+        and prediction_factors.get(VALUES, None)
         and len(values) < minimum_values_threshold
     ):
         logger.warning(
@@ -111,9 +114,7 @@ def perform_basic_checks(
             f"does not meet minimum threshold for {infotype}"
         )
         basic_checks_status = False
-    elif config_dict[EXCLUDE_NAME] is not None and metadata.name in config_dict.get(
-        EXCLUDE_NAME, set()
-    ):
+    elif exclude_name is not None and metadata.name in exclude_name:
         logger.warning(f"Excluding match for {infotype} on column {metadata.name}")
         basic_checks_status = False
     # TODO: Add more basic checks
