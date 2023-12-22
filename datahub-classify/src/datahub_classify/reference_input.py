@@ -3,10 +3,10 @@
 input1 = {
     "Email_Address": {
         "Prediction_Factors_and_Weights": {
-            "Name": 1,
+            "Name": 0.4,
             "Description": 0,
             "Datatype": 0,
-            "Values": 0,
+            "Values": 0.6,
         },
         "ExcludeName": ["email_sent", "email_recieved"],
         "Name": {

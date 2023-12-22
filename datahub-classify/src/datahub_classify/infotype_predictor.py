@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional
 
 from datahub_classify.constants import EXCLUDE_NAME
 from datahub_classify.helper_classes import ColumnInfo, InfotypeProposal
+from datahub_classify.infotype_utils import strip_formatting
 from datahub_classify.infotype_utils import perform_basic_checks
 
 logger = logging.getLogger(__name__)
@@ -46,6 +47,7 @@ def predict_infotypes(
     logger.debug("===========================================================")
     basic_checks_failed_columns = []
     num_cols_with_infotype_assigned = 0
+    strip_exclusion_formatting = global_config.get("strip_exclusion_formatting")
 
     for column_info in column_infos:
         logger.debug(
@@ -59,7 +61,11 @@ def predict_infotypes(
 
             # convert exclude_name list into a set for o(1) checking
             if EXCLUDE_NAME in config_dict and config_dict[EXCLUDE_NAME] is not None:
-                config_dict[EXCLUDE_NAME] = set(config_dict[EXCLUDE_NAME])
+                config_dict[EXCLUDE_NAME] = (
+                    set(config_dict[EXCLUDE_NAME])
+                    if not strip_exclusion_formatting
+                    else set([strip_formatting(s) for s in config_dict[EXCLUDE_NAME]])
+                )
             else:
                 config_dict[EXCLUDE_NAME] = set()
 

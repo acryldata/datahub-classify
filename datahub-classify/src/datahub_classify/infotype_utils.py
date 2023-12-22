@@ -12,6 +12,12 @@ from datahub_classify.helper_classes import Metadata
 logger = logging.getLogger(__name__)
 
 
+def strip_formatting(s):
+    s = s.lower()
+    s = re.sub(r"[^a-z0-9\s]", "", s)
+    return s
+
+
 # TODO: Exception handling
 # Match regex for Name and Description
 def match_regex(text_to_match: str, regex_list: List[str]) -> float:
@@ -91,6 +97,11 @@ def perform_basic_checks(
     minimum_values_threshold: int,
 ) -> bool:
     basic_checks_status = True
+    metadata.name = (
+        metadata.name
+        if not config_dict.get("strip_formatting")
+        else strip_formatting(metadata.name)
+    )
     if (
         config_dict[PREDICTION_FACTORS_AND_WEIGHTS].get(VALUES, None)
         and len(values) < minimum_values_threshold
