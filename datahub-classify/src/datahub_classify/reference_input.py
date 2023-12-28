@@ -10,7 +10,7 @@ input1: Dict[str, Dict[str, Union[Dict[str, Any], List[str], None]]] = {
             "Datatype": 0,
             "Values": 0.6,
         },
-        "ExcludeName": ["email_sent", "email_recieved"],
+        "ExcludeName": [],
         "Name": {
             "regex": [
                 "^.*mail.*id.*$",
