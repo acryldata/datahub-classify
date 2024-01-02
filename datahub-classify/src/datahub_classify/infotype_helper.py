@@ -86,7 +86,7 @@ def compute_overall_confidence(debug_info: DebugInfo, config: Dict[str, Dict]) -
     }
     confidence_level = 0
     for key, value in vars(debug_info).items():
-        if value and type(value) != str:
+        if value and not isinstance(value, str):
             confidence_level += prediction_factors_weights[key] * value
     confidence_level = np.round(confidence_level, 2)
     return confidence_level

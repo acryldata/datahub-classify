@@ -40,6 +40,7 @@ Infotype configuration is a dictionary with all infotypes at root level key. Eac
   2. Description
   3. Datatype
   4. Values
+- `ExcludeName` - optional exact match list for column names to exclude from classification for this info_type
 - `Name` - regex list which is to be matched against column name
 - `Description` - regex list which is to be matched against column description
 - `Datatype` - list of datatypes to be matched against column datatype
