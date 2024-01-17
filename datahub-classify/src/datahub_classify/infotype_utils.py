@@ -109,13 +109,13 @@ def perform_basic_checks(
         and prediction_factors.get(VALUES, None)
         and len(values) < minimum_values_threshold
     ):
-        logger.warning(
+        logger.debug(
             f"The number of values for column {metadata.name}"
             f"does not meet minimum threshold for {infotype}"
         )
         basic_checks_status = False
     elif exclude_name is not None and metadata.name in exclude_name:
-        logger.warning(f"Excluding match for {infotype} on column {metadata.name}")
+        logger.debug(f"Excluding match for {infotype} on column {metadata.name}")
         basic_checks_status = False
     # TODO: Add more basic checks
     return basic_checks_status
