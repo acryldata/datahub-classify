@@ -4,7 +4,6 @@ $ cd datahub-classify/tests
 $ python infotypes_benchmarking.py
 """
 
-
 import os
 import time
 
