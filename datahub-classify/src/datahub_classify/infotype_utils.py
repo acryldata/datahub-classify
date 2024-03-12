@@ -110,7 +110,7 @@ def perform_basic_checks(
         and len(values) < minimum_values_threshold
     ):
         logger.debug(
-            f"The number of values for column {metadata.name}"
+            f"The number of values for column {metadata.name} "
             f"does not meet minimum threshold for {infotype}"
         )
         basic_checks_status = False
