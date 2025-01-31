@@ -39,6 +39,14 @@ jobs:
             **/build/reports/tests/test/**
             **/build/test-results/test/**
             **/junit.*.xml
+      - name: Upload datahub-classify coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+          name: datahub-actions
+          verbose: true
+
   event-file:
     runs-on: ubuntu-latest
     steps:
