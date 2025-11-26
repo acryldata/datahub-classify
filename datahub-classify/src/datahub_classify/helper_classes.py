@@ -26,10 +26,19 @@ class Metadata:
     dataset_name: str = field(init=False)
 
     def __post_init__(self):
-        self.name = self.meta_info.get("Name", None)
-        self.description = self.meta_info.get("Description", None)
-        self.datatype = self.meta_info.get("Datatype", None)
-        self.dataset_name = self.meta_info.get("Dataset_Name", None)
+        assert "Name" in self.meta_info, "meta_info must contain 'Name' field"
+        assert (
+            "Description" in self.meta_info
+        ), "meta_info must contain 'Description' field"
+        assert "Datatype" in self.meta_info, "meta_info must contain 'Datatype' field"
+        assert (
+            "Dataset_Name" in self.meta_info
+        ), "meta_info must contain 'Dataset_Name' field"
+
+        self.name = self.meta_info["Name"]
+        self.description = self.meta_info["Description"]
+        self.datatype = self.meta_info["Datatype"]
+        self.dataset_name = self.meta_info["Dataset_Name"]
 
 
 @dataclass

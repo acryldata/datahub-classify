@@ -245,64 +245,65 @@ def get_prediction_statistics(mapping, infotypes_to_use, confidence_threshold):
     df_confusion_matrix.to_csv(f"confusion_matrix_{confidence_threshold}.csv")
 
 
-# TODO: think of adding 'if __name__ == “main”' block for following executable code
-# if __name__ == '__main__':
-logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-logger.info("--------------------STARTING RUN--------------------  ")
-logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-logger.info(
-    f"Start Time --->  {datetime.now()}",
-)
-
-public_data_list = get_public_data(input_data_dir)
-(
-    expected_output_ideal,
-    expected_output_unit_testing,
-    expected_infotypes_confidence_slabs,
-) = get_public_data_expected_output(public_data_list, infotypes_to_use)
-(
-    public_data_predicted_infotype,
-    expected_output_unit_testing,
-    public_data_predicted_infotype_confidence,
-) = get_best_infotype_pred(
-    public_data_list,
-    confidence_threshold,
-    expected_output_unit_testing,
-    update_confidence_slabs_json,
-)
-infotype_mapping_ideal = get_pred_exp_infotype_mapping(
-    public_data_predicted_infotype,
-    expected_output_ideal,
-    expected_infotypes_confidence_slabs,
-    public_data_predicted_infotype_confidence,
-)
-infotype_mapping_unit_testing = get_pred_exp_infotype_mapping(
-    public_data_predicted_infotype,
-    expected_output_unit_testing,
-    expected_infotypes_confidence_slabs,
-    public_data_predicted_infotype_confidence,
-)
-get_prediction_statistics(
-    infotype_mapping_ideal, infotypes_to_use, confidence_threshold
-)
-
-
-@pytest.mark.parametrize(
-    "dataset_name,column_name, predicted_output, expected_output,"
-    "predicted_output_confidence, expected_confidence_slab",
-    [(a, b, c, d, e, f) for a, b, c, d, e, f in infotype_mapping_unit_testing],
-)
-def test_public_datasets(
-    dataset_name,
-    column_name,
-    predicted_output,
-    expected_output,
-    predicted_output_confidence,
-    expected_confidence_slab,
-):
-    assert (
-        predicted_output == expected_output
-    ), f"Test1 failed for column '{column_name}' in {dataset_name}"
-    assert predicted_output_confidence >= expected_confidence_slab, (
-        f"Test2 failed for column '{column_name}' in " f"{dataset_name}"
+@pytest.fixture(scope="session")
+def infotype_test_data():
+    """Fixture to load and process test data once per session."""
+    logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    logger.info("--------------------STARTING RUN--------------------  ")
+    logger.info("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    logger.info(
+        f"Start Time --->  {datetime.now()}",
     )
+
+    public_data_list = get_public_data(input_data_dir)
+    (
+        expected_output_ideal,
+        expected_output_unit_testing,
+        expected_infotypes_confidence_slabs,
+    ) = get_public_data_expected_output(public_data_list, infotypes_to_use)
+    (
+        public_data_predicted_infotype,
+        expected_output_unit_testing,
+        public_data_predicted_infotype_confidence,
+    ) = get_best_infotype_pred(
+        public_data_list,
+        confidence_threshold,
+        expected_output_unit_testing,
+        update_confidence_slabs_json,
+    )
+    infotype_mapping_ideal = get_pred_exp_infotype_mapping(
+        public_data_predicted_infotype,
+        expected_output_ideal,
+        expected_infotypes_confidence_slabs,
+        public_data_predicted_infotype_confidence,
+    )
+    infotype_mapping_unit_testing = get_pred_exp_infotype_mapping(
+        public_data_predicted_infotype,
+        expected_output_unit_testing,
+        expected_infotypes_confidence_slabs,
+        public_data_predicted_infotype_confidence,
+    )
+    get_prediction_statistics(
+        infotype_mapping_ideal, infotypes_to_use, confidence_threshold
+    )
+
+    return infotype_mapping_unit_testing
+
+
+def test_public_datasets(infotype_test_data):
+    """Test each column's infotype prediction against expected values."""
+    # Parametrize dynamically based on fixture data
+    for (
+        dataset_name,
+        column_name,
+        predicted_output,
+        expected_output,
+        predicted_output_confidence,
+        expected_confidence_slab,
+    ) in infotype_test_data:
+        assert (
+            predicted_output == expected_output
+        ), f"Test1 failed for column '{column_name}' in {dataset_name}"
+        assert predicted_output_confidence >= expected_confidence_slab, (
+            f"Test2 failed for column '{column_name}' in " f"{dataset_name}"
+        )
