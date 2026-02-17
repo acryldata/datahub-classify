@@ -42,18 +42,18 @@ setuptools.setup(
     # Package metadata.
     name=package_metadata["__package_name__"],
     version=package_metadata["__version__"],
-    url="https://datahubproject.io/",
+    url="https://datahub.com/",
     project_urls={
-        "Documentation": "https://datahubproject.io/docs/",
+        "Documentation": "https://datahub.com/docs/",
         "Source": "https://github.com/acryldata/datahub-classify",
         "Changelog": "https://github.com/acryldata/datahub-classify/releases",
     },
     license="Apache License 2.0",
-    description="Library to predict info types for DataHub",
+    description="[DEPRECATED] Library to predict info types for DataHub",
     long_description=get_long_description(),
     long_description_content_type="text/markdown",
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 7 - Inactive",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3 :: Only",
