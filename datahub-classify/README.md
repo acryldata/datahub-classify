@@ -1,6 +1,8 @@
 # datahub-classify
 
-Predict InfoTypes for [DataHub](https://datahubproject.io/).
+> **DEPRECATED:** This library is deprecated and is no longer actively maintained. It will not receive further updates or bug fixes. Please migrate away from `acryl-datahub-classify` at your earliest convenience.
+
+Predict InfoTypes for [DataHub](https://datahub.com/).
 
 ## Installation
 

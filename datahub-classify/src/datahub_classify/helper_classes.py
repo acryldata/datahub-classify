@@ -20,10 +20,10 @@ class InfotypeProposal:
 @dataclass
 class Metadata:
     meta_info: Dict[str, Any]
-    name: str = field(init=False)
-    description: str = field(init=False)
-    datatype: str = field(init=False)
-    dataset_name: str = field(init=False)
+    name: Optional[str] = field(init=False)
+    description: Optional[str] = field(init=False)
+    datatype: Optional[str] = field(init=False)
+    dataset_name: Optional[str] = field(init=False)
 
     def __post_init__(self):
         self.name = self.meta_info.get("Name", None)
